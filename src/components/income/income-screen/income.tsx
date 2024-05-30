@@ -4,7 +4,7 @@ import FloatingButton from "@/components/form-data/floating-button/floating-butt
 import IncomeRender from "./render/main-list/income-list-render";
 
 interface IncomeListInDayProps {
-  incomes: IIncome[][];
+  incomes?: IIncome[][];
 }
 
 const IncomeListInDay: React.FC<IncomeListInDayProps> = ({ incomes }) => {
@@ -21,6 +21,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({ incomes }) => {
       }, 1000);
     });
   };
+
+  if (incomes === undefined) {
+    return <>Google Sheets URL Error</>;
+  }
 
   return (
     <>
