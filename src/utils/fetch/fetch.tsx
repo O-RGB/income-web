@@ -40,13 +40,25 @@ export async function Fetcher<Input = any, Result = any>(
   var formParam: FormData | undefined =
     param?.method === "POST" ? QueryPost(param.data) : undefined;
 
-  console.log("url fetch = ", url);
+  console.log("url fetch = ", url, {
+    method: param?.method ? param.method : "GET",
+    body: formParam,
+    // headers: headers,
+    // mode: "no-cors",
+    headers: new Headers({
+      "Content-Type": "text/plain",
+    }),
+  });
 
   //FETCH
   return await fetch(url, {
     method: param?.method ? param.method : "GET",
     body: formParam,
-    headers: headers,
+    // headers: headers,
+    // mode: "no-cors",
+    headers: new Headers({
+      "Content-Type": "text/plain",
+    }),
   })
     .then((response) => {
       return response.json() as IGeneralReturnFetch<Result>;
