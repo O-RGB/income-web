@@ -26,7 +26,8 @@ function QueryPost(params: any): FormData {
 export async function Fetcher<Input = any, Result = any>(
   url: string,
   param?: IFetcher<Input, IInitQuery>,
-  loading?: (load: boolean) => void
+  loading?: (load: boolean) => void,
+  headers: any = undefined
 ) {
   //LOAD
   loading?.(true);
@@ -45,6 +46,7 @@ export async function Fetcher<Input = any, Result = any>(
   return await fetch(url, {
     method: param?.method ? param.method : "GET",
     body: formParam,
+    headers: headers,
   })
     .then((response) => {
       return response.json() as IGeneralReturnFetch<Result>;
