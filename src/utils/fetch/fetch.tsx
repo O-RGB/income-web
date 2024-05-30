@@ -45,9 +45,10 @@ export async function Fetcher<Input = any, Result = any>(
     body: formParam,
     // headers: headers,
     // mode: "no-cors",
-    headers: new Headers({
-      "Content-Type": "text/plain",
-    }),
+    cache: "no-store",
+    // headers: new Headers({
+    //   "Content-Type": "text/plain",
+    // }),
   });
 
   //FETCH
