@@ -1,3 +1,5 @@
+const apiUrl = process.env.API_URL;
+
 interface IFetcher<Input = any, query = any> {
   data?: Input | query;
   method?: "GET" | "POST";
@@ -40,16 +42,7 @@ export async function Fetcher<Input = any, Result = any>(
   var formParam: FormData | undefined =
     param?.method === "POST" ? QueryPost(param.data) : undefined;
 
-  console.log("url fetch = ", url, {
-    method: param?.method ? param.method : "GET",
-    body: formParam,
-    // headers: headers,
-    // mode: "no-cors",
-    cache: "no-store",
-    // headers: new Headers({
-    //   "Content-Type": "text/plain",
-    // }),
-  });
+  console.log(apiUrl);
 
   //FETCH
   return await fetch(url, {
@@ -57,6 +50,7 @@ export async function Fetcher<Input = any, Result = any>(
     body: formParam,
     // headers: headers,
     // mode: "no-cors",
+    cache: "no-store",
     headers: new Headers({
       "Content-Type": "text/plain",
     }),
