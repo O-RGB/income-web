@@ -51,6 +51,7 @@ export async function Fetcher<Input = any, Result = any>(
   return await fetch(url, {
     method: param?.method ? param.method : "GET",
     body: formParam,
+    cache: 'force-cache'
   })
     .then((response) => {
       return response.json() as IGeneralReturnFetch<Result>;
