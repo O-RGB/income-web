@@ -1,3 +1,4 @@
+"use client";
 const apiUrl = process.env.API_URL;
 
 interface IFetcher<Input = any, query = any> {
@@ -51,7 +52,7 @@ export async function Fetcher<Input = any, Result = any>(
   return await fetch(url, {
     method: param?.method ? param.method : "GET",
     body: formParam,
-    cache: 'force-cache'
+    cache: "force-cache",
   })
     .then((response) => {
       return response.json() as IGeneralReturnFetch<Result>;
