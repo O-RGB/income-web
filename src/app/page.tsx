@@ -37,8 +37,9 @@ export default function Home() {
 
   const [f, setf] = useState<string>("");
   const testFetcj = () => {
-    console.log("URL: ", f);
-    fetch(f).then((data) => {
+    var url = `https://${process.env.VERCEL_URL}/macros/s/${f}`;
+    console.log("URL: ", url);
+    fetch(url, {}).then((data) => {
       console.log(data);
     });
   };

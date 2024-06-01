@@ -53,6 +53,10 @@ export async function Fetcher<Input = any, Result = any>(
     method: param?.method ? param.method : "GET",
     body: formParam,
     cache: "force-cache",
+    mode: "cors",
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
   })
     .then((response) => {
       return response.json() as IGeneralReturnFetch<Result>;
