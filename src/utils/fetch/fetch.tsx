@@ -31,14 +31,19 @@ function QueryPost(params: any): FormData {
 }
 
 export async function Fetcher<Input = any, Result = any>(
-  url: string,
+  key: string,
   param?: IFetcher<Input, IInitQuery>,
   loading?: (load: boolean) => void
 ) {
   //LOAD
   loading?.(true);
   //GET
-  var url: string = GetURL(url);
+  var url: string = "https://script.google.com/macros/s/" + key;
+  
+  if (!url.endsWith("exec")) {
+    url = url + "/exec";
+  }
+
   url =
     param?.method === "GET" || param?.method === undefined
       ? url + QueryGet(param?.data)

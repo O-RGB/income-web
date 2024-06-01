@@ -4,7 +4,6 @@ import { FetchGetOfDay } from "@/fetcher/get/test.fetch";
 import { ConventIncomeSorting } from "@/libs/income-lib";
 import { getLocalByKey, setLocal } from "@/libs/local";
 import { useEffect, useState } from "react";
-const domain = process.env.API_URL;
 export default function Home() {
   const [data, setData] = useState<IIncome[][] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
@@ -46,7 +45,7 @@ export default function Home() {
       .finally(() => {
         console.log("URL F: ", f);
         console.log(data);
-      }); 
+      });
     fetch(`https://script.google.com/macros/s/${f}`, { method: "GET" })
       .then((data) => {})
       .finally(() => {
@@ -70,7 +69,7 @@ export default function Home() {
           Update
         </button>
       </div>
-      <div>Test Fecth</div>
+      {/* <div>Test Fecth</div>
       <div className="border p-2 flex gap-2">
         <input
           className="border w-full"
@@ -83,7 +82,7 @@ export default function Home() {
         <button className="p-2 border" onClick={testFetcj}>
           Update
         </button>
-      </div>
+      </div> */}
       {loading ? (
         <>loading</>
       ) : (
