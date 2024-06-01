@@ -47,6 +47,13 @@ export default function Home() {
     fetch(f, { cache: "no-store", mode: "cors" }).then((data) => {
       console.log(data);
     });
+    const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
+    console.log("URL NEXT_PUBLIC_API_URL: ", NEXT_PUBLIC_API_URL + f);
+    fetch(NEXT_PUBLIC_API_URL + f, { cache: "no-store", mode: "cors" }).then(
+      (data) => {
+        console.log(data);
+      }
+    );
   };
 
   return (
