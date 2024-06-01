@@ -1,6 +1,11 @@
 "use client";
 const apiUrl = process.env.API_URL;
 
+const GetURL = (path: string) => {
+  const domain = process.env.API_URL;
+  return `https://${domain}/${path}`;
+};
+
 interface IFetcher<Input = any, query = any> {
   data?: Input | query;
   method?: "GET" | "POST";
@@ -29,19 +34,17 @@ function QueryPost(params: any): FormData {
 export async function Fetcher<Input = any, Result = any>(
   url: string,
   param?: IFetcher<Input, IInitQuery>,
-  loading?: (load: boolean) => void,
-  headers: any = undefined
+  loading?: (load: boolean) => void
 ) {
   //LOAD
   loading?.(true);
   //GET
-  var url: string =
+  var url: string = GetURL(url);
+  url =
     param?.method === "GET" || param?.method === undefined
       ? url + QueryGet(param?.data)
       : url;
 
-  const vercel = process.env.VERCEL_URL;
-  url = url + `${vercel !== undefined ? "" : ""}`;
   //POST
   var formParam: FormData | undefined =
     param?.method === "POST" ? QueryPost(param.data) : undefined;
@@ -54,9 +57,6 @@ export async function Fetcher<Input = any, Result = any>(
     body: formParam,
     cache: "no-store",
     mode: "cors",
-    // headers: {
-    //   "Access-Control-Allow-Origin": "*",
-    // },
   })
     .then((response) => {
       return response.json() as IGeneralReturnFetch<Result>;
