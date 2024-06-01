@@ -11,6 +11,29 @@ import IncomeInputCountItem from "./draft-input/input-count-item";
 import LayoutIncomeItem from "./layout-income";
 import { Button, Form } from "antd";
 
+interface IncomeFormInput {
+  name: string;
+  price: string;
+  types: string;
+  count: string;
+  priceType: priceType;
+}
+
+// let newElement: IIncome = {
+//   sheetsIndex: findIndexNotDelete() + 2,
+//   _priceType: "Expenses",
+//   day: dayIndex,
+//   expensesCount: 0,
+//   expensesPrice: 0,
+//   name: "",
+//   revenueCount: 0,
+//   revenuePrice: 0,
+//   types: "",
+//   delete: false,
+//   fetching: false,
+//   draft: true,
+// };
+
 interface IncomeListProps {
   indexOfDay: number;
   income: IIncome;
@@ -21,6 +44,7 @@ interface IncomeListProps {
     action: "add" | "update" | "delete",
     element: IIncome
   ) => Promise<IIncome | undefined>;
+  IncomeTypesOptions: RadioOptions[];
 }
 
 const IncomeElement: React.FC<IncomeListProps> = ({
@@ -30,6 +54,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   setDelete,
   onUpdate,
   indexOfDay,
+  IncomeTypesOptions,
 }) => {
   const [onDetail, setDetail] = useState<boolean>(false);
   const [initIncome, setIncome] = useState<IIncome>(income);
@@ -37,9 +62,52 @@ const IncomeElement: React.FC<IncomeListProps> = ({
     setDetail(!onDetail);
   };
 
-  const [input, setInput] = useState<string>("");
-  const oninputChange = (value: string) => {
-    setInput(value);
+  const hanndelInputIncome = (input: IncomeFormInput) => {
+    const expenses = {
+      expensesCount: 0,
+      expensesPrice: 0,
+    };
+
+    const revenue = {
+      revenueCount: 0,
+      revenuePrice: 0,
+    };
+
+    if (input.priceType == "Expenses") {
+      expenses.expensesCount = Number(input.count);
+      expenses.expensesPrice = Number(input.price);
+    } else {
+      revenue.revenueCount = Number(input.count);
+      revenue.revenuePrice = Number(input.price);
+    }
+
+    var types: string = "";
+    const nameType: RadioOptions | undefined = IncomeTypesOptions.find(
+      (x) => x.value === input.types
+    );
+
+    if (nameType) {
+      if (nameType.value == "T00") {
+        types = nameType.label ?? "";
+      } else {
+        types = "";
+      }
+    }
+
+    const incomeData: IIncome = {
+      day: income.day,
+      delete: false,
+      draft: false,
+      name: input.name,
+      fetching: true,
+      sheetsIndex: income.sheetsIndex,
+      ...expenses,
+      ...revenue,
+      types: types,
+      _priceType: input.priceType,
+    };
+
+    return incomeData;
   };
 
   useEffect(() => {
@@ -52,8 +120,12 @@ const IncomeElement: React.FC<IncomeListProps> = ({
       <LayoutIncomeItem initIncome={initIncome}>
         <Form
           layout="vertical"
-          onFinish={(e) => {
-            console.log(e);
+          onFinish={(input: IncomeFormInput) => {
+            if (initIncome.fetching !== true) {
+              setIncome({ ...initIncome, fetching: true });
+              const incomeData = hanndelInputIncome(input);
+              onUpdate("add", incomeData);
+            }
           }}
         >
           <div
@@ -155,6 +227,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               <IncomeInputName name="name" lable="ชื่อรายการ"></IncomeInputName>
               <IncomeInputPrice name="price" lable="ราคา"></IncomeInputPrice>
               <IncomeInputTypes
+                options={IncomeTypesOptions}
                 name="types"
                 lable="หมวดหมู่"
               ></IncomeInputTypes>
@@ -163,20 +236,24 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 lable="จำนวน"
               ></IncomeInputCountItem>
               <IncomePriceType
-                lable=""
-                name="option"
+                defaultValue={"Expenses"}
+                name="priceType"
                 options={[
                   {
                     label: "รายจ่าย",
-                    value: "ex",
+                    value: "Expenses",
                   },
                   {
                     label: "รายรับ",
-                    value: "re",
+                    value: "Revenue",
                   },
                 ]}
               ></IncomePriceType>
-              <Button type="primary" htmlType="submit">
+              <Button
+                disabled={initIncome.fetching}
+                type="primary"
+                htmlType="submit"
+              >
                 สร้างรายการ
               </Button>
             </div>

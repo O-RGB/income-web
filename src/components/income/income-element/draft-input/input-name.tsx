@@ -10,7 +10,12 @@ interface IncomeInputNameProps {
 const IncomeInputName: React.FC<IncomeInputNameProps> = ({ lable, name }) => {
   return (
     <>
-      <Form.Item name={name} className="m-0 w-full" label={lable}>
+      <Form.Item
+        rules={[{ required: true }]}
+        name={name}
+        className="m-0 w-full"
+        label={lable}
+      >
         <InputCommon className={"w-full"} placeholder={lable} />
       </Form.Item>
     </>

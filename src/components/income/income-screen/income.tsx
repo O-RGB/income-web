@@ -12,6 +12,7 @@ interface IncomeListInDayProps {
     sheetsIndex: number
   ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
   stopFetch: boolean;
+  IncomeTypesOptions: RadioOptions[];
 }
 
 const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
@@ -19,6 +20,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   addIncome,
   deleteIncome,
   stopFetch,
+  IncomeTypesOptions,
 }) => {
   const dateNow = new Date();
 
@@ -105,6 +107,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
                 incomeOfday={income}
                 dayIndex={dayIndex + 1}
                 date={dateNow}
+                IncomeTypesOptions={IncomeTypesOptions}
               ></IncomeRender>
             </React.Fragment>
           );

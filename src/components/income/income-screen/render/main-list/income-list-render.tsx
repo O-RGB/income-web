@@ -12,6 +12,7 @@ interface IncomeRenderProps {
     element: IIncome
   ) => Promise<IIncome | undefined>;
   stopFetch: boolean;
+  IncomeTypesOptions: RadioOptions[];
 }
 
 const IncomeRender: React.FC<IncomeRenderProps> = ({
@@ -20,6 +21,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   incomeOfday = [],
   onUpdate,
   stopFetch,
+  IncomeTypesOptions,
 }) => {
   const [IncomeOfDay, setIncomeOfDay] = useState<IIncome[] | "load" | null>(
     incomeOfday
@@ -73,14 +75,14 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
         sheetsIndex: findIndexNotDelete() + 2,
         _priceType: "Expenses",
         day: dayIndex,
-        expensesCount: 1,
-        expensesPrice: 1000,
-        name: "ทดสอบ",
+        expensesCount: 0,
+        expensesPrice: 0,
+        name: "",
         revenueCount: 0,
         revenuePrice: 0,
         types: "",
         delete: false,
-        fetching: true,
+        fetching: false,
         draft: true,
       };
 
@@ -108,6 +110,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
           </div>
         )}
         <IncomeGroupOfDay
+          IncomeTypesOptions={IncomeTypesOptions}
           setDelete={setDelete}
           onUpdate={onUpdate}
           date={date}
