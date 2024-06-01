@@ -34,36 +34,13 @@ export default function Home() {
   useEffect(() => {
     checktofetch();
   }, []);
-
   const [f, setf] = useState<string>("");
   const testFetcj = () => {
-    const remove = process.env.VERCEL_URL;
-    var url = f + remove !== undefined ? "" : "";
-
-    fetch(url, { method: "GET", cache: "no-store" })
-      .then((data) => {
-        console.log(data);
-      })
-      .finally(() => {
-        console.log("VERCEL_URL: ", remove);
-        console.log("URL: ", url);
-      });
-    fetch(f, { method: "GET", cache: "no-store" })
+    fetch(`https://script.google.com/macros/s/${f}`, { method: "GET" })
       .then((data) => {})
       .finally(() => {
         console.log("URL F: ", f);
         console.log(data);
-      });
-    const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-    fetch(NEXT_PUBLIC_API_URL + f, {
-      method: "GET",
-      cache: "no-store",
-    })
-      .then((data) => {
-        console.log(data);
-      })
-      .finally(() => {
-        console.log("URL NEXT_PUBLIC_API_URL: ", NEXT_PUBLIC_API_URL + f);
       });
   };
 
