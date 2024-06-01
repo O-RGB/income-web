@@ -41,7 +41,7 @@ export async function Fetcher<Input = any, Result = any>(
       : url;
 
   const vercel = process.env.VERCEL_URL;
-  url = url + `${vercel !== undefined ? vercel : ""}`;
+  url = url + `${vercel !== undefined ? "" : ""}`;
   //POST
   var formParam: FormData | undefined =
     param?.method === "POST" ? QueryPost(param.data) : undefined;
@@ -52,7 +52,7 @@ export async function Fetcher<Input = any, Result = any>(
   return await fetch(url, {
     method: param?.method ? param.method : "GET",
     body: formParam,
-    cache: "force-cache",
+    cache: "no-store",
     mode: "cors",
     headers: {
       "Access-Control-Allow-Origin": "*",
