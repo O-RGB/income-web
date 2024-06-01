@@ -1,8 +1,7 @@
 "use client";
-const apiUrl = process.env.API_URL;
+const domain = process.env.API_URL;
 
 const GetURL = (path: string) => {
-  const domain = process.env.API_URL;
   return `https://${domain}/${path}`;
 };
 

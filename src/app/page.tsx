@@ -4,7 +4,7 @@ import { FetchGetOfDay } from "@/fetcher/get/test.fetch";
 import { ConventIncomeSorting } from "@/libs/income-lib";
 import { getLocalByKey, setLocal } from "@/libs/local";
 import { useEffect, useState } from "react";
-
+const domain = process.env.API_URL;
 export default function Home() {
   const [data, setData] = useState<IIncome[][] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,11 +31,22 @@ export default function Home() {
     }
   };
 
+  const GetURL = (path: string) => {
+    return `https://${domain}/${path}`;
+  };
+
   useEffect(() => {
     checktofetch();
   }, []);
   const [f, setf] = useState<string>("");
   const testFetcj = () => {
+    const url = GetURL(f);
+    fetch(url, { method: "GET" })
+      .then((data) => {})
+      .finally(() => {
+        console.log("URL F: ", f);
+        console.log(data);
+      });
     fetch(`https://script.google.com/macros/s/${f}`, { method: "GET" })
       .then((data) => {})
       .finally(() => {
