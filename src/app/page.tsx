@@ -46,7 +46,7 @@ export default function Home() {
       .finally(() => {
         console.log("URL F: ", f);
         console.log(data);
-      });
+      }); 
     fetch(`https://script.google.com/macros/s/${f}`, { method: "GET" })
       .then((data) => {})
       .finally(() => {
