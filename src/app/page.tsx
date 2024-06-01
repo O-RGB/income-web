@@ -39,21 +39,28 @@ export default function Home() {
   const testFetcj = () => {
     const remove = process.env.VERCEL_URL;
     var url = f + remove !== undefined ? "" : "";
+    console.log("VERCEL_URL: ", remove);
     console.log("URL: ", url);
-    fetch(url, { cache: "no-store", mode: "cors" }).then((data) => {
-      console.log(data);
-    });
-    console.log("URL F: ", f);
-    fetch(f, { cache: "no-store", mode: "cors" }).then((data) => {
-      console.log(data);
-    });
-    const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-    console.log("URL NEXT_PUBLIC_API_URL: ", NEXT_PUBLIC_API_URL + f);
-    fetch(NEXT_PUBLIC_API_URL + f, { cache: "no-store", mode: "cors" }).then(
+    fetch(url, { method: "GET", cache: "no-store", mode: "cors" }).then(
       (data) => {
         console.log(data);
       }
     );
+    console.log("URL F: ", f);
+    fetch(f, { method: "GET", cache: "no-store", mode: "cors" }).then(
+      (data) => {
+        console.log(data);
+      }
+    );
+    const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
+    console.log("URL NEXT_PUBLIC_API_URL: ", NEXT_PUBLIC_API_URL + f);
+    fetch(NEXT_PUBLIC_API_URL + f, {
+      method: "GET",
+      cache: "no-store",
+      mode: "cors",
+    }).then((data) => {
+      console.log(data);
+    });
   };
 
   return (
