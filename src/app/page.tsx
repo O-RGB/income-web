@@ -43,6 +43,10 @@ export default function Home() {
     fetch(url, { cache: "no-store", mode: "cors" }).then((data) => {
       console.log(data);
     });
+    console.log("URL F: ", f);
+    fetch(f, { cache: "no-store", mode: "cors" }).then((data) => {
+      console.log(data);
+    });
   };
 
   return (
