@@ -52,8 +52,8 @@ export async function Fetcher<Input = any, Result = any>(
   return await fetch(url, {
     method: param?.method ? param.method : "GET",
     body: formParam,
-    // cache: "no-store",
-    // mode: "cors",
+    cache: "no-store",
+    mode: "cors",
     // headers: {
     //   "Access-Control-Allow-Origin": "*",
     // },
