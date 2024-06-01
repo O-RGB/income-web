@@ -39,7 +39,7 @@ export default function Home() {
   const testFetcj = () => {
     var url = `https://${process.env.VERCEL_URL}/macros/s/${f}`;
     console.log("URL: ", url);
-    fetch(url, {}).then((data) => {
+    fetch(url, { cache: "no-store" }).then((data) => {
       console.log(data);
     });
   };
