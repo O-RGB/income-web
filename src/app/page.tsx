@@ -35,13 +35,13 @@ export default function Home() {
     checktofetch();
   }, []);
 
-  // const [f, setf] = useState<string>("");
-  // const testFetcj = () => {
-  //   console.log("URL: ", f);
-  //   fetch(f).then((data) => {
-  //     console.log(data);
-  //   });
-  // };
+  const [f, setf] = useState<string>("");
+  const testFetcj = () => {
+    console.log("URL: ", f);
+    fetch(f).then((data) => {
+      console.log(data);
+    });
+  };
 
   return (
     <div>
@@ -58,7 +58,7 @@ export default function Home() {
           Update
         </button>
       </div>
-      {/* <div>Test Fecth</div>
+      <div>Test Fecth</div>
       <div className="border p-2 flex gap-2">
         <input
           className="border w-full"
@@ -71,7 +71,7 @@ export default function Home() {
         <button className="p-2 border" onClick={testFetcj}>
           Update
         </button>
-      </div> */}
+      </div>
       {loading ? (
         <>loading</>
       ) : (
