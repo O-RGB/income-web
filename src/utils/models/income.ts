@@ -1,5 +1,5 @@
 export class IncomeModel implements IIncome {
-  // indexSheets: number;
+  sheetsIndex: number;
   day: number;
   types: string;
   name: string;
@@ -8,10 +8,13 @@ export class IncomeModel implements IIncome {
   revenueCount: number | string;
   revenuePrice: number | string;
   _priceType: priceType = "Expenses";
+  delete: boolean = false;
+  fetching: boolean = false;
+  draft: boolean = false;
 
   public constructor(
+    sheetsIndex: number,
     day: number,
-    // indexSheets: number,
     types: string,
     name: string,
     expensesCount: number | string,
@@ -19,7 +22,7 @@ export class IncomeModel implements IIncome {
     revenueCount: number | string,
     revenuePrice: number | string
   ) {
-    // this.indexSheets = indexSheets;
+    this.sheetsIndex = sheetsIndex;
     this.day = day;
     this.types = types;
     this.name = name;
@@ -37,7 +40,9 @@ export class IncomeModel implements IIncome {
 
   public getIncome(): IIncome {
     return {
-      // indexSheets: this.indexSheets,
+      draft: this.draft,
+      fetching: this.fetching,
+      sheetsIndex: this.sheetsIndex,
       day: this.day,
       types: this.types,
       name: this.name,
@@ -46,6 +51,7 @@ export class IncomeModel implements IIncome {
       revenueCount: this.revenueCount,
       revenuePrice: this.revenuePrice,
       _priceType: this._priceType,
+      delete: this.delete,
     };
   }
 }

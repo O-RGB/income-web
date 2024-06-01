@@ -31,10 +31,12 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
     let re: number = 0;
     if (incomeOfday !== "load" && incomeOfday !== null) {
       incomeOfday?.map((data) => {
-        if (data.expensesPrice !== "") {
-          ex = ex + Number(data.expensesPrice);
-        } else if (data.revenuePrice !== "") {
-          re = re + Number(data.revenuePrice);
+        if (data.delete !== true) {
+          if (data.expensesPrice !== "") {
+            ex = ex + Number(data.expensesPrice);
+          } else if (data.revenuePrice !== "") {
+            re = re + Number(data.revenuePrice);
+          }
         }
       });
     }

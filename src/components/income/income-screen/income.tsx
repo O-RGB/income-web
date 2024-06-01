@@ -5,21 +5,70 @@ import IncomeRender from "./render/main-list/income-list-render";
 
 interface IncomeListInDayProps {
   incomes?: IIncome[][];
+  addIncome?: (
+    income: IIncome
+  ) => Promise<IGeneralReturnFetch<IIncome | undefined>>;
+  deleteIncome?: (
+    sheetsIndex: number
+  ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
+  stopFetch: boolean;
 }
 
-const IncomeListInDay: React.FC<IncomeListInDayProps> = ({ incomes }) => {
+const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
+  incomes,
+  addIncome,
+  deleteIncome,
+  stopFetch,
+}) => {
   const dateNow = new Date();
 
   const onElementUpdate = async (
     action: "add" | "update" | "delete",
     element: IIncome
   ) => {
-    console.log(action, element);
-    return new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        resolve(false);
-      }, 1000);
-    });
+    if (stopFetch) {
+      return undefined;
+    }
+    if (!deleteIncome || !addIncome) {
+      return undefined;
+    }
+
+    try {
+      switch (action) {
+        case "add":
+          return addIncome(element).then((data) => {
+            if (data) {
+              if (data.success) {
+                element.fetching = false;
+                return element;
+              } else {
+                return undefined;
+              }
+            } else {
+              return undefined;
+            }
+          });
+
+        case "delete":
+          return deleteIncome(element.sheetsIndex).then((data) => {
+            if (data) {
+              if (data.success) {
+                element.delete = true;
+                return element;
+              } else {
+                return undefined;
+              }
+            } else {
+              return undefined;
+            }
+          });
+
+        default:
+          return undefined;
+      }
+    } catch (error) {
+      return undefined;
+    }
   };
 
   if (incomes === undefined) {
@@ -28,13 +77,30 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({ incomes }) => {
 
   return (
     <>
-      <FloatingButton></FloatingButton>
+      <FloatingButton
+        onClick={() => {
+          onElementUpdate("add", {
+            sheetsIndex: 1,
+            day: dateNow.getDate(),
+            expensesCount: 1,
+            expensesPrice: 100,
+            name: "ทดสอบเท่านั้น",
+            types: "",
+            revenueCount: "",
+            revenuePrice: "",
+            delete: false,
+            fetching: true,
+            draft: false,
+          });
+        }}
+      ></FloatingButton>
       <DetailOfMonth incomes={incomes}></DetailOfMonth>
       <div className="flex gap-10 flex-col-reverse">
         {incomes?.map((income, dayIndex) => {
           return (
             <React.Fragment key={`incomes-day-${dayIndex}`}>
               <IncomeRender
+                stopFetch={stopFetch}
                 onUpdate={onElementUpdate}
                 incomeOfday={income}
                 dayIndex={dayIndex + 1}

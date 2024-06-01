@@ -2,10 +2,13 @@ import React from "react";
 
 interface RenderNameProps {
   name: string;
-  _priceType: priceType;
+  _priceType?: priceType;
 }
 
-const RenderName: React.FC<RenderNameProps> = ({ name, _priceType }) => {
+const RenderName: React.FC<RenderNameProps> = ({
+  name,
+  _priceType = "Expenses",
+}) => {
   return (
     <>
       <div

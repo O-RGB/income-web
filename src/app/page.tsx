@@ -1,12 +1,14 @@
 "use client";
 import IncomeListInDay from "@/components/income/income-screen/income";
-import { FetchGetOfDay } from "@/fetcher/get/test.fetch";
+import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
+import { AddIncome, DeleteIncome } from "@/fetcher/POST/incomes.post";
 import { ConventIncomeSorting } from "@/libs/income-lib";
 import { getLocalByKey, setLocal } from "@/libs/local";
 import { useEffect, useState } from "react";
 export default function Home() {
   const [data, setData] = useState<IIncome[][] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
+  const [stopFetch, setFetching] = useState<boolean>(false);
 
   const onChangeInput = (value: string) => {
     setLocal("google_sheets", value);
@@ -15,6 +17,7 @@ export default function Home() {
   const checktofetch = () => {
     let getUrl = getLocalByKey("google_sheets");
     if (getUrl) {
+      setFetching(true);
       FetchGetOfDay(getUrl, setLoading)
         .then((data) => {
           if (data) {
@@ -24,33 +27,50 @@ export default function Home() {
         })
         .catch((e) => {
           setData(undefined);
+        })
+        .finally(() => {
+          setFetching(false);
         });
     } else {
       setData(undefined);
+      setFetching(false);
     }
   };
 
- 
+  const onAddIncome = async (income: IIncome) => {
+    let getUrl = getLocalByKey("google_sheets");
+    if (getUrl) {
+      setFetching(true);
+      return AddIncome(getUrl, income).finally(() => {
+        setFetching(false);
+      });
+    } else {
+      return {
+        data: undefined,
+        message: undefined,
+        success: false,
+      };
+    }
+  };
+  const onDeleteIncome = async (sheetsIndex: number) => {
+    let getUrl = getLocalByKey("google_sheets");
+    if (getUrl) {
+      setFetching(true);
+      return DeleteIncome(getUrl, sheetsIndex).finally(() => {
+        setFetching(false);
+      });
+    } else {
+      return {
+        data: undefined,
+        message: undefined,
+        success: false,
+      };
+    }
+  };
 
   useEffect(() => {
     checktofetch();
   }, []);
-  const [f, setf] = useState<string>("");
-  // const testFetcj = () => {
-  //   const url = GetURL(f);
-  //   fetch(url, { method: "GET" })
-  //     .then((data) => {})
-  //     .finally(() => {
-  //       console.log("URL F: ", f);
-  //       console.log(data);
-  //     });
-  //   fetch(`https://script.google.com/macros/s/${f}`, { method: "GET" })
-  //     .then((data) => {})
-  //     .finally(() => {
-  //       console.log("URL F: ", f);
-  //       console.log(data);
-  //     });
-  // };
 
   return (
     <div>
@@ -67,25 +87,18 @@ export default function Home() {
           Update
         </button>
       </div>
-      {/* <div>Test Fecth</div>
-      <div className="border p-2 flex gap-2">
-        <input
-          className="border w-full"
-          placeholder="google sheets url"
-          type="text"
-          onChange={(e) => {
-            setf(e.target.value);
-          }}
-        />
-        <button className="p-2 border" onClick={testFetcj}>
-          Update
-        </button>
-      </div> */}
+
       {loading ? (
         <>loading</>
       ) : (
-        <IncomeListInDay incomes={data}></IncomeListInDay>
+        <IncomeListInDay
+          stopFetch={stopFetch}
+          addIncome={onAddIncome}
+          deleteIncome={onDeleteIncome}
+          incomes={data}
+        ></IncomeListInDay>
       )}
+      {JSON.stringify(stopFetch)}
     </div>
   );
 }

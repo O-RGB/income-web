@@ -3,149 +3,188 @@ import RenderDay from "./render/day";
 import RenderName from "./render/name";
 import RenderType from "./render/type";
 import RenderPrice from "./render/price";
-import RenderDetail from "./render/detail";
+import IncomeInputName from "./draft-input/input-name";
+import IncomeInputPrice from "./draft-input/input-price";
+import IncomePriceType from "./draft-input/input-price-type";
+import IncomeInputTypes from "./draft-input/input-types";
+import IncomeInputCountItem from "./draft-input/input-count-item";
+import LayoutIncomeItem from "./layout-income";
+import { Button, Form } from "antd";
 
 interface IncomeListProps {
+  indexOfDay: number;
   income: IIncome;
   dayRender?: boolean;
+  // fetch: boolean;
+  setDelete: (indexOfDay: number) => IIncome | undefined;
   onUpdate: (
     action: "add" | "update" | "delete",
     element: IIncome
-  ) => Promise<boolean>;
+  ) => Promise<IIncome | undefined>;
 }
 
 const IncomeElement: React.FC<IncomeListProps> = ({
   income,
-  // action,
+  // fetch = false,
   dayRender = true,
+  setDelete,
   onUpdate,
+  indexOfDay,
 }) => {
-  // const [deleteing, setDeleteing] = useState<boolean>(false);
-
-  const [isDelete, setDelete] = useState<boolean>(false);
-  const [show, setShow] = useState<boolean>(false);
-  const [fetching, setFetching] = useState<boolean>(true);
   const [onDetail, setDetail] = useState<boolean>(false);
+  const [initIncome, setIncome] = useState<IIncome>(income);
   const onClickIncomeHandel = () => {
     setDetail(!onDetail);
   };
 
+  const [input, setInput] = useState<string>("");
+  const oninputChange = (value: string) => {
+    setInput(value);
+  };
+
   useEffect(() => {
-    setTimeout(() => {
-      setFetching(false);
-    }, 3000);
-    setTimeout(() => {
-      setShow(true);
-    }, 100);
-  }, []);
+    setIncome(income);
+  }, [income]);
 
   // if(income.types === "ของใช้ร่วมกัน")
   return (
     <div className="w-full overflow-hidden">
-      <div
-        className={` transition-all ${show ? "" : "translate-x-full"} ${
-          isDelete ? "max-h-0" : "max-h-[200px]"
-        } duration-1000`}
-      >
-        <div
-          className={`flex flex-col px-3 py-2 gap-2  ${
-            fetching
-              ? "bg-gray-200"
-              : income._priceType == "Expenses"
-              ? "bg-red-50/50"
-              : "bg-green-50/50"
-          } ${
-            onDetail ? "h-max" : "h-max"
-          } overflow-hidden duration-300 transition-all border border-white rounded-sm w-full hover:bg-gray-100`}
+      <LayoutIncomeItem initIncome={initIncome}>
+        <Form
+          layout="vertical"
+          onFinish={(e) => {
+            console.log(e);
+          }}
         >
           <div
-            onClick={onClickIncomeHandel}
+            onClick={initIncome.draft ? () => {} : onClickIncomeHandel}
             className={`flex cursor-pointer ${
-              income._priceType == "Expenses" ? "flex-row" : "flex-row-reverse"
+              initIncome._priceType == "Expenses"
+                ? "flex-row"
+                : "flex-row-reverse"
             } justify-between items-center `}
           >
             <div className="w-full">
               <div
                 className={`flex ${
-                  income._priceType == "Expenses"
+                  initIncome._priceType == "Expenses"
                     ? "flex-row"
                     : "flex-row-reverse"
                 } gap-3 items-center w-full`}
               >
                 <RenderDay
-                  loading={fetching}
-                  _priceType={income._priceType}
-                  day={income.day}
+                  state={
+                    initIncome.draft
+                      ? "draft"
+                      : initIncome.fetching
+                      ? "loading"
+                      : undefined
+                  }
+                  _priceType={initIncome._priceType}
+                  day={initIncome.day}
                 ></RenderDay>
-                <RenderName
-                  _priceType={income._priceType}
-                  name={income.name}
-                ></RenderName>
+
+                {initIncome.draft === false ? (
+                  <RenderName
+                    _priceType={initIncome._priceType}
+                    name={initIncome.name}
+                  ></RenderName>
+                ) : (
+                  <>สร้างรายการใหม่</>
+                )}
               </div>
               <RenderType
-                _priceType={income._priceType}
-                types={income.types}
+                _priceType={initIncome._priceType}
+                types={initIncome.types}
               ></RenderType>
             </div>
             <div className={`flex gap-2 justify-center items-center`}>
-              {/* <div className="text-sm text-gray-400">฿</div> */}
-              <RenderPrice
-                _priceType={income._priceType}
-                expensesPrice={income.expensesPrice}
-                revenuePrice={income.revenuePrice}
-              ></RenderPrice>
+              {initIncome.draft == false && (
+                <RenderPrice
+                  _priceType={initIncome._priceType}
+                  expensesPrice={initIncome.expensesPrice}
+                  revenuePrice={initIncome.revenuePrice}
+                ></RenderPrice>
+              )}
+            </div>
+          </div>
+          {initIncome.draft == false && (
+            <div
+              className={`transition-all ${
+                !onDetail
+                  ? "max-h-0 duration-500"
+                  : "max-h-[100px] duration-500"
+              } `}
+            >
+              <div className="pt-4"></div>
+              <div
+                onClick={() => {
+                  if (initIncome.fetching !== true) {
+                    setIncome({ ...initIncome, fetching: true });
+                    onUpdate?.("delete", initIncome).then((data) => {
+                      if (data) {
+                        setDelete(indexOfDay);
+                      }
+                    });
+                  }
+                }}
+                className="w-fit border p-1"
+              >
+                delete
+              </div>
+              <div
+                onClick={() => {
+                  if (initIncome.fetching !== true) {
+                    setIncome({ ...initIncome, fetching: true });
+                    onUpdate?.("update", initIncome).then((data) => {
+                      if (data) {
+                        setIncome(data);
+                      }
+                    });
+                  }
+                }}
+                className="w-fit border p-1"
+              >
+                Edit
+              </div>
+            </div>
+          )}
 
-              {/* {action && <div>{action?.(income)}</div>} */}
+          {initIncome.draft ? (
+            <div className="flex flex-col gap-2 pt-2">
+              <IncomeInputName name="name" lable="ชื่อรายการ"></IncomeInputName>
+              <IncomeInputPrice name="price" lable="ราคา"></IncomeInputPrice>
+              <IncomeInputTypes
+                name="types"
+                lable="หมวดหมู่"
+              ></IncomeInputTypes>
+              <IncomeInputCountItem
+                name="count"
+                lable="จำนวน"
+              ></IncomeInputCountItem>
+              <IncomePriceType
+                lable=""
+                name="option"
+                options={[
+                  {
+                    label: "รายจ่าย",
+                    value: "ex",
+                  },
+                  {
+                    label: "รายรับ",
+                    value: "re",
+                  },
+                ]}
+              ></IncomePriceType>
+              <Button type="primary" htmlType="submit">
+                สร้างรายการ
+              </Button>
             </div>
-          </div>
-          <div
-            className={`transition-all ${
-              !onDetail ? "max-h-0 duration-500" : "max-h-[100px] duration-500"
-            } `}
-          >
-            <div className="pt-4"></div>
-            <div
-              onClick={() => {
-                setFetching(true);
-                onUpdate?.("delete", income)
-                  .then((data) => {
-                    setFetching(data);
-                    if (!data) {
-                      setDelete(true);
-                    }
-                  })
-                  .catch((e) => {
-                    setFetching(false);
-                  });
-              }}
-              className="w-fit border p-1"
-            >
-              delete
-            </div>
-            <div
-              onClick={() => {
-                setFetching(true);
-                onUpdate?.("update", income)
-                  .then((data) => {
-                    setFetching(data);
-                  })
-                  .catch((e) => {
-                    setFetching(false);
-                  });
-              }}
-              className="w-fit border p-1"
-            >
-              Edit
-            </div>
-          </div>
-          {/* <RenderDetail
-          action={() => {
-            setDeleteing(true);
-          }}
-          open={onDetail}
-        ></RenderDetail> */}
-        </div>
-      </div>
+          ) : (
+            <></>
+          )}
+        </Form>
+      </LayoutIncomeItem>
     </div>
   );
 };

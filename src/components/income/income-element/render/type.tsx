@@ -2,10 +2,13 @@ import React from "react";
 
 interface RenderTypeProps {
   types: string;
-  _priceType: priceType;
+  _priceType?: priceType;
 }
 
-const RenderType: React.FC<RenderTypeProps> = ({ types, _priceType }) => {
+const RenderType: React.FC<RenderTypeProps> = ({
+  types,
+  _priceType = "Expenses",
+}) => {
   return (
     <>
       {types && types.trim().length > 0 && (

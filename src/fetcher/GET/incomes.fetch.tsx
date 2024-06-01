@@ -16,7 +16,6 @@ export const FetchGetOfDay = async (
     loading
   );
 
-  console.log("res'< ", res);
   if (res.success === true) {
     var income: IncomeModel[] = [];
     res.data?.map((list) => {
@@ -28,7 +27,8 @@ export const FetchGetOfDay = async (
           list[3],
           list[4],
           list[5],
-          list[6]
+          list[6],
+          list[7],
         )
       );
     });

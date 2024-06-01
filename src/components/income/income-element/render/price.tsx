@@ -2,13 +2,13 @@ import React from "react";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 
 interface RenderPriceProps {
-  _priceType: priceType;
+  _priceType?: priceType;
   expensesPrice: number | string;
   revenuePrice: number | string;
 }
 
 const RenderPrice: React.FC<RenderPriceProps> = ({
-  _priceType,
+  _priceType = "Expenses",
   expensesPrice,
   revenuePrice,
 }) => {

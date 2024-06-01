@@ -35,15 +35,13 @@ const DayHeader: React.FC<DayHeaderProps> = ({ date, dayIndex }) => {
     );
     return dayNumber;
   } else if (dayIndex > date.getDate()) {
-    return <></>;
+    return undefined;
   } else {
     dayNumber = renderDayNumber(
       `${dayIndex}/${date.getMonth()}/${date.getFullYear()}`
     );
     return dayNumber;
   }
-
-  return <></>;
 };
 
 export default DayHeader;

@@ -34,12 +34,12 @@ export async function Fetcher<Input = any, Result = any>(
   key: string,
   param?: IFetcher<Input, IInitQuery>,
   loading?: (load: boolean) => void
-) {
+): Promise<IGeneralReturnFetch<Result | undefined>> {
   //LOAD
   loading?.(true);
   //GET
   var url: string = "https://script.google.com/macros/s/" + key;
-  
+
   if (!url.endsWith("exec")) {
     url = url + "/exec";
   }
@@ -63,13 +63,13 @@ export async function Fetcher<Input = any, Result = any>(
     mode: "cors",
   })
     .then((response) => {
-      return response.json() as IGeneralReturnFetch<Result>;
+      return response.json();
     })
     .catch((error) => {
       return {
         success: false,
         message: error,
-      } as IGeneralReturnFetch<undefined>;
+      };
     })
     .finally(() => {
       loading?.(false);
