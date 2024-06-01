@@ -30,29 +30,27 @@ export default function Home() {
     }
   };
 
-  const GetURL = (path: string) => {
-    return `https://${domain}/${path}`;
-  };
+ 
 
   useEffect(() => {
     checktofetch();
   }, []);
   const [f, setf] = useState<string>("");
-  const testFetcj = () => {
-    const url = GetURL(f);
-    fetch(url, { method: "GET" })
-      .then((data) => {})
-      .finally(() => {
-        console.log("URL F: ", f);
-        console.log(data);
-      });
-    fetch(`https://script.google.com/macros/s/${f}`, { method: "GET" })
-      .then((data) => {})
-      .finally(() => {
-        console.log("URL F: ", f);
-        console.log(data);
-      });
-  };
+  // const testFetcj = () => {
+  //   const url = GetURL(f);
+  //   fetch(url, { method: "GET" })
+  //     .then((data) => {})
+  //     .finally(() => {
+  //       console.log("URL F: ", f);
+  //       console.log(data);
+  //     });
+  //   fetch(`https://script.google.com/macros/s/${f}`, { method: "GET" })
+  //     .then((data) => {})
+  //     .finally(() => {
+  //       console.log("URL F: ", f);
+  //       console.log(data);
+  //     });
+  // };
 
   return (
     <div>
