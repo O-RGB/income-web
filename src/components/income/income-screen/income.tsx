@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DetailOfMonth from "@/components/pages/detail-of-month/detail-of-month";
 import FloatingButton from "@/components/form-data/floating-button/floating-button";
 import IncomeRender from "./render/main-list/income-list-render";
@@ -13,6 +13,7 @@ interface IncomeListInDayProps {
   ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
   stopFetch: boolean;
   IncomeTypesOptions: RadioOptions[];
+  showOnlyDay?: number;
 }
 
 const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
@@ -21,8 +22,36 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   deleteIncome,
   stopFetch,
   IncomeTypesOptions,
+  showOnlyDay = 1,
 }) => {
   const dateNow = new Date();
+
+  const [incomesData, setIncomes] = useState<IIncome[][] | undefined>([]);
+
+  const updateIndexSheetsOnMonth = (dayIndex: number, income: IIncome[]) => {
+    if (incomesData) {
+      var clone = incomesData;
+      // setIncomes([]);
+
+      if (clone[dayIndex - 1]) {
+        clone[dayIndex - 1] = income;
+
+        var count: number = 2;
+        const update = clone.map((income) => {
+          return income.map((data) => {
+            data.sheetsIndex = count;
+            count = count + 1;
+            return data;
+          });
+        });
+
+        setTimeout(() => {
+          console.log(update);
+          setIncomes(update);
+        }, 100);
+      }
+    }
+  };
 
   const onElementUpdate = async (
     action: "add" | "update" | "delete",
@@ -42,6 +71,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
             if (data) {
               if (data.success) {
                 element.fetching = false;
+                element.draft = false;
                 return element;
               } else {
                 return undefined;
@@ -56,6 +86,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
             if (data) {
               if (data.success) {
                 element.delete = true;
+                element.fetching = false;
+                element.draft = false;
                 return element;
               } else {
                 return undefined;
@@ -65,6 +97,12 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
             }
           });
 
+        // return new Promise<IIncome | undefined>((resolve) => {
+        //   setTimeout(() => {
+        //     return resolve(undefined);
+        //   }, 1000);
+        // });
+
         default:
           return undefined;
       }
@@ -72,6 +110,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       return undefined;
     }
   };
+
+  useEffect(() => {
+    setIncomes(incomes);
+  }, [incomes]);
 
   if (incomes === undefined) {
     return <>Google Sheets URL Error</>;
@@ -96,21 +138,23 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           });
         }}
       ></FloatingButton>
-      <DetailOfMonth incomes={incomes}></DetailOfMonth>
+      <DetailOfMonth incomes={incomesData}></DetailOfMonth>
       <div className="flex gap-10 flex-col-reverse">
-        {incomes?.map((income, dayIndex) => {
-          return (
-            <React.Fragment key={`incomes-day-${dayIndex}`}>
-              <IncomeRender
-                stopFetch={stopFetch}
-                onUpdate={onElementUpdate}
-                incomeOfday={income}
-                dayIndex={dayIndex + 1}
-                date={dateNow}
-                IncomeTypesOptions={IncomeTypesOptions}
-              ></IncomeRender>
-            </React.Fragment>
-          );
+        {incomesData?.map((income, dayIndex) => {
+          if (showOnlyDay ? showOnlyDay - 1 === dayIndex : true)
+            return (
+              <React.Fragment key={`incomes-day-${dayIndex}`}>
+                <IncomeRender
+                  stopFetch={stopFetch}
+                  updateIndexSheetsOnMonth={updateIndexSheetsOnMonth}
+                  onUpdate={onElementUpdate}
+                  incomeOfday={income}
+                  dayIndex={dayIndex + 1}
+                  date={dateNow}
+                  IncomeTypesOptions={IncomeTypesOptions}
+                ></IncomeRender>
+              </React.Fragment>
+            );
         })}
       </div>
     </>

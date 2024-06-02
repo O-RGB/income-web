@@ -106,7 +106,6 @@ export default function Home() {
           Update
         </button>
       </div>
-      {JSON.stringify(IncomeTypesOptions)}
 
       {loading ? (
         <>loading</>
@@ -117,9 +116,9 @@ export default function Home() {
           addIncome={onAddIncome}
           deleteIncome={onDeleteIncome}
           incomes={data}
+          showOnlyDay={new Date().getDate()}
         ></IncomeListInDay>
       )}
-      {JSON.stringify(stopFetch)}
     </div>
   );
 }

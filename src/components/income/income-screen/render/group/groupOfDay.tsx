@@ -5,21 +5,16 @@ interface IncomeGroupOfDayProps {
   incomeOfday: IIncome[] | "load" | null;
   dayIndex: number;
   date: Date;
-  onUpdate: (
-    action: "add" | "update" | "delete",
-    element: IIncome
-  ) => Promise<IIncome | undefined>;
-  setDelete: (indexOfDay: number) => IIncome | undefined;
   IncomeTypesOptions: RadioOptions[];
+  actionApi: IActionDayIncomesLists;
 }
 
 const IncomeGroupOfDay: React.FC<IncomeGroupOfDayProps> = ({
   incomeOfday = [],
   dayIndex,
   date,
-  onUpdate,
-  setDelete,
   IncomeTypesOptions,
+  actionApi,
 }) => {
   const [IncomeOfDayTemp, setIncomeOfDayTemp] = useState<IIncome[]>();
   useEffect(() => {
@@ -38,8 +33,7 @@ const IncomeGroupOfDay: React.FC<IncomeGroupOfDayProps> = ({
                 <IncomeElement
                   IncomeTypesOptions={IncomeTypesOptions}
                   indexOfDay={jindex}
-                  setDelete={setDelete}
-                  onUpdate={onUpdate}
+                  actionApi={actionApi}
                   income={im}
                 ></IncomeElement>
               ) : (

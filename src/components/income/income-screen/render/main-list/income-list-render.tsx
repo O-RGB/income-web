@@ -13,6 +13,7 @@ interface IncomeRenderProps {
   ) => Promise<IIncome | undefined>;
   stopFetch: boolean;
   IncomeTypesOptions: RadioOptions[];
+  updateIndexSheetsOnMonth: (dayIndex: number, income: IIncome[]) => void;
 }
 
 const IncomeRender: React.FC<IncomeRenderProps> = ({
@@ -22,35 +23,69 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   onUpdate,
   stopFetch,
   IncomeTypesOptions,
+  updateIndexSheetsOnMonth,
 }) => {
   const [IncomeOfDay, setIncomeOfDay] = useState<IIncome[] | "load" | null>(
-    incomeOfday
+    null
   );
 
-  const setDelete = (indexOfDay: number) => {
+  const setDelete = (indexDeleting: number) => {
     if (IncomeOfDay !== "load" && IncomeOfDay) {
       const clone = IncomeOfDay;
       setIncomeOfDay("load");
 
-      let countDelete: number = 0;
-      var newIncomeOfDay: IIncome[] = [];
-      clone.map((income, index) => {
-        if (income.delete) {
-          countDelete = countDelete + 1;
+      let deleted: number = 0;
+      var incomeUpdate: IIncome[] = [];
+      clone.map((income, i) => {
+        var im = income;
+        if (i === indexDeleting) {
+          im.delete = true;
+          im.fetching = true;
+          im.draft = true;
         }
 
-        newIncomeOfDay.push({
-          ...income,
-          sheetsIndex: index + 2 - countDelete,
-        });
+        if (im.delete) {
+          im.delete = true;
+          im.fetching = false;
+          im.draft = false;
+          deleted = deleted + 1;
+        } else {
+          im.delete = false;
+          im.fetching = false;
+          im.draft = false;
+        }
+
+        if (!im.delete) {
+          const sheetsIndex = i + 2;
+          incomeUpdate.push({
+            ...im,
+            sheetsIndex: sheetsIndex,
+          });
+        }
       });
 
       setTimeout(() => {
-        setIncomeOfDay(newIncomeOfDay);
+        setIncomeOfDay(incomeUpdate);
+        updateIndexSheetsOnMonth(dayIndex, incomeUpdate);
       }, 100);
 
-      return newIncomeOfDay[indexOfDay];
-      // }
+      return undefined;
+    }
+  };
+
+  const setAdd = (indexUpdated: number, income: IIncome) => {
+    if (IncomeOfDay !== "load" && IncomeOfDay) {
+      setIncomeOfDay("load");
+      var clone = IncomeOfDay;
+      var check = clone[indexUpdated];
+      if (check) {
+        clone[indexUpdated] = income;
+
+        setTimeout(() => {
+          setIncomeOfDay(clone);
+          updateIndexSheetsOnMonth(dayIndex, clone);
+        }, 100);
+      }
     }
   };
 
@@ -86,16 +121,16 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
         draft: true,
       };
 
-      //ส่งค่าไปทันที ถ้า Error แล้วค่อยตัด UI ออก
-      // onUpdate("add", newElement);
-
       clone?.push(newElement);
       setTimeout(() => {
         setIncomeOfDay(clone);
       }, 1);
     }
   };
-  useEffect(() => {}, [incomeOfday]);
+
+  useEffect(() => {
+    setIncomeOfDay(incomeOfday);
+  }, [incomeOfday]);
   return (
     <>
       <div className="flex flex-col" key={`incom-day-${dayIndex}`}>
@@ -109,10 +144,14 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
             </div>
           </div>
         )}
+
         <IncomeGroupOfDay
           IncomeTypesOptions={IncomeTypesOptions}
-          setDelete={setDelete}
-          onUpdate={onUpdate}
+          actionApi={{
+            onUpdate: onUpdate,
+            setAdd: setAdd,
+            setDelete: setDelete,
+          }}
           date={date}
           dayIndex={dayIndex}
           incomeOfday={IncomeOfDay}

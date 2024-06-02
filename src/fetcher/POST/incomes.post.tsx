@@ -9,11 +9,27 @@ export const AddIncome = (
     key,
     {
       method: "POST",
+      data: { ...input, query: "POST_insert_income_on_day" },
+    },
+    loading
+  );
+};
+
+export const AddIncomeByIndexSheets = (
+  key: string,
+  input: IIncome,
+  loading?: (load: boolean) => void
+) => {
+  return Fetcher<IIncome, IIncome>(
+    key,
+    {
+      method: "POST",
       data: { ...input, query: "POST_insert_income" },
     },
     loading
   );
 };
+
 export const DeleteIncome = (
   key: string,
   sheetsIndex: number,
