@@ -3,7 +3,7 @@ import { DateFormat } from "@/libs/date-lib";
 import React, { useEffect, useState } from "react";
 
 interface DetailOfMonthProps {
-  incomes?: IIncome[][];
+  incomes?: IIncome[];
   onDateChange?: (date: Date) => void;
 }
 
@@ -26,14 +26,20 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
     let ex: number = 0;
     let re: number = 0;
     incomes?.map((income) => {
-      income.map((onDay) => {
-        if (Number(onDay.expensesPrice)) {
-          ex = ex + Number(onDay.expensesPrice);
-        }
-        if (Number(onDay.revenuePrice)) {
-          re = re + Number(onDay.revenuePrice);
-        }
-      });
+      if (Number(income.expensesPrice)) {
+        ex = ex + Number(income.expensesPrice);
+      }
+      if (Number(income.revenuePrice)) {
+        re = re + Number(income.revenuePrice);
+      }
+      // income.map((onDay) => {
+      //   if (Number(onDay.expensesPrice)) {
+      //     ex = ex + Number(onDay.expensesPrice);
+      //   }
+      //   if (Number(onDay.revenuePrice)) {
+      //     re = re + Number(onDay.revenuePrice);
+      //   }
+      // });
     });
     setPriceSummary({
       Expenses: ex,

@@ -20,19 +20,21 @@ interface IncomeFormInput {
 }
 
 interface IncomeListProps {
-  indexOfDay: number;
+  // indexOfDay: number;
   income: IIncome;
   dayRender?: boolean;
   actionApi: IActionDayIncomesLists;
   IncomeTypesOptions: RadioOptions[];
+  itemIndex: number;
 }
 
 const IncomeElement: React.FC<IncomeListProps> = ({
   income,
-  dayRender = true,
+  // dayRender = true,
   actionApi,
-  indexOfDay,
+  // indexOfDay,
   IncomeTypesOptions,
+  itemIndex,
 }) => {
   const [onDetail, setDetail] = useState<boolean>(false);
   const [initIncome, setIncome] = useState<IIncome>(income);
@@ -112,7 +114,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 actionApi.onUpdate("add", incomeData).then((data) => {
                   if (data) {
                     setIncome(data);
-                    actionApi.setAdd(indexOfDay, data);
+                    actionApi.setAdd(itemIndex, data);
                   }
                 });
               }
@@ -194,14 +196,16 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               >
                 delete: {JSON.stringify(initIncome.delete)}
               </div>
-              <div>indexOfDay: {indexOfDay}</div>
+              <div>itemIndex: {itemIndex}</div>
               <div
                 className={`${onDetail ? "text-red-500" : "text-green-500"}`}
               >
                 onDetail: {JSON.stringify(onDetail)}
               </div>
               <div
-                className={`${initIncome.sheetsIndex ? "text-red-500" : "text-green-500"}`}
+                className={`${
+                  initIncome.sheetsIndex ? "text-red-500" : "text-green-500"
+                }`}
               >
                 sheetsIndex: {JSON.stringify(initIncome.sheetsIndex)}
               </div>
@@ -217,24 +221,24 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 <div className="pt-4"></div>
                 <div
                   onClick={() => {
-                    if (initIncome.fetching !== true) {
-                      setLoading();
-                      actionApi
-                        .onUpdate?.("delete", initIncome)
-                        .then((data) => {
-                          if (data) {
-                            // setDelete(indexOfDay);
-                            actionApi.setDelete(indexOfDay);
+                    // if (initIncome.fetching !== true) {
+                    //   setLoading();
+                    //   actionApi
+                    //     .onUpdate?.("delete", initIncome)
+                    //     .then((data) => {
+                    //       if (data) {
+                    //         // setDelete(itemIndex);
+                    //         actionApi.setDelete(itemIndex);
 
-                            // setIncome(data);
-                          } else {
-                            setLoading(false);
-                          }
-                        })
-                        .catch(() => {
-                          setLoading(false);
-                        });
-                    }
+                    //         // setIncome(data);
+                    //       } else {
+                    //         setLoading(false);
+                    //       }
+                    //     })
+                    //     .catch(() => {
+                    //       setLoading(false);
+                    //     });
+                    // }
                   }}
                   className="w-fit border p-1"
                 >
@@ -308,7 +312,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                     onClick={() => {
                       setLoading(false);
                       setTimeout(() => {
-                        const incomeDeleted = actionApi.setDelete(indexOfDay);
+                        const incomeDeleted = actionApi.setDelete(itemIndex);
                         if (incomeDeleted) {
                           setIncome(incomeDeleted);
                         } else {

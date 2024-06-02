@@ -3,7 +3,7 @@ import IncomeElement from "../../../income-element/element";
 
 interface IncomeGroupOfDayProps {
   incomeOfday: IIncome[] | "load" | null;
-  dayIndex: number;
+  // dayIndex: number;
   date: Date;
   IncomeTypesOptions: RadioOptions[];
   actionApi: IActionDayIncomesLists;
@@ -11,7 +11,7 @@ interface IncomeGroupOfDayProps {
 
 const IncomeGroupOfDay: React.FC<IncomeGroupOfDayProps> = ({
   incomeOfday = [],
-  dayIndex,
+  // dayIndex,
   date,
   IncomeTypesOptions,
   actionApi,
@@ -23,27 +23,27 @@ const IncomeGroupOfDay: React.FC<IncomeGroupOfDayProps> = ({
     }
   }, [incomeOfday]);
 
-  if (dayIndex - 1 < date.getDate())
-    return (
-      <div className="flex flex-col-reverse transition-all duration-300 p-4">
-        {IncomeOfDayTemp?.map((im, jindex) => {
-          return (
-            <div key={`incom-${dayIndex}-${jindex}`}>
-              {im ? (
-                <IncomeElement
-                  IncomeTypesOptions={IncomeTypesOptions}
-                  indexOfDay={jindex}
-                  actionApi={actionApi}
-                  income={im}
-                ></IncomeElement>
-              ) : (
-                <>No data</>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    );
+  // if (dayIndex - 1 < date.getDate())
+  return (
+    <div className="flex flex-col-reverse transition-all duration-300 p-4">
+      {IncomeOfDayTemp?.map((im, jindex) => {
+        return (
+          <div key={`incom-${date.getDate()}-${jindex}`}>
+            {im ? (
+              <IncomeElement
+                IncomeTypesOptions={IncomeTypesOptions}
+                itemIndex={jindex}
+                actionApi={actionApi}
+                income={im}
+              ></IncomeElement>
+            ) : (
+              <>No data</>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
 };
 
 export default IncomeGroupOfDay;

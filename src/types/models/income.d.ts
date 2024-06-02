@@ -7,7 +7,7 @@ interface UIMapingIncome {
 
 interface IIncome extends UIMapingIncome {
   sheetsIndex: number;
-  day: number;
+  day: Date;
   types: string;
   name: string;
   expensesCount: number | string;

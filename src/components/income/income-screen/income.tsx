@@ -4,7 +4,7 @@ import FloatingButton from "@/components/form-data/floating-button/floating-butt
 import IncomeRender from "./render/main-list/income-list-render";
 
 interface IncomeListInDayProps {
-  incomes?: IIncome[][];
+  incomes: IIncome[];
   addIncome?: (
     income: IIncome
   ) => Promise<IGeneralReturnFetch<IIncome | undefined>>;
@@ -13,7 +13,8 @@ interface IncomeListInDayProps {
   ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
   stopFetch: boolean;
   IncomeTypesOptions: RadioOptions[];
-  showOnlyDay?: number;
+  onSelectDate: (date: Date) => void;
+  dateSelect: Date;
 }
 
 const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
@@ -22,12 +23,12 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   deleteIncome,
   stopFetch,
   IncomeTypesOptions,
-  // showOnlyDay = 1,
+  onSelectDate,
+  dateSelect,
 }) => {
-  const dateNow = new Date();
+  // const dateNow = new Date();
 
-  const [incomesData, setIncomes] = useState<IIncome[][] | undefined>([]);
-  const [dateSelect, setDateSelect] = useState<Date | undefined>();
+  const [incomesData, setIncomes] = useState<IIncome[]>([]);
 
   const updateIndexSheetsOnMonth = (dayIndex: number, income: IIncome[]) => {
     if (incomesData) {
@@ -35,15 +36,17 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       // setIncomes([]);
 
       if (clone[dayIndex - 1]) {
-        clone[dayIndex - 1] = income;
+        // clone[dayIndex - 1] = income;
 
         var count: number = 2;
         const update = clone.map((income) => {
-          return income.map((data) => {
-            data.sheetsIndex = count;
-            count = count + 1;
-            return data;
-          });
+          // return income.map((data) => {
+          //   data.sheetsIndex = count;
+          //   return data;
+          // });
+          income.sheetsIndex = count;
+          count = count + 1;
+          return income;
         });
 
         setTimeout(() => {
@@ -112,10 +115,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     }
   };
 
-  const onSelectDate = (date: Date) => {
-    setDateSelect(date);
-  };
-
   useEffect(() => {
     setIncomes(incomes);
   }, [incomes]);
@@ -147,24 +146,33 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         onDateChange={onSelectDate}
         incomes={incomesData}
       ></DetailOfMonth>
-      <div className="flex gap-10 flex-col-reverse">
-        {incomesData?.map((income, dayIndex) => {
-          if (dateSelect ? dateSelect.getDate() - 1 === dayIndex : true)
-            return (
-              <React.Fragment key={`incomes-day-${dayIndex}`}>
-                <IncomeRender
-                  stopFetch={stopFetch}
-                  updateIndexSheetsOnMonth={updateIndexSheetsOnMonth}
-                  onUpdate={onElementUpdate}
-                  incomeOfday={income}
-                  dayIndex={dayIndex + 1}
-                  date={dateNow}
-                  IncomeTypesOptions={IncomeTypesOptions}
-                ></IncomeRender>
-              </React.Fragment>
-            );
+      <IncomeRender
+        stopFetch={stopFetch}
+        updateIndexSheetsOnMonth={updateIndexSheetsOnMonth}
+        onUpdate={onElementUpdate}
+        incomeOfday={incomesData}
+        // dayIndex={dayIndex + 1}
+        date={dateSelect}
+        IncomeTypesOptions={IncomeTypesOptions}
+      ></IncomeRender>
+      {/* <div className="flex gap-10 flex-col-reverse">
+        {incomesData?.map((income, groupDayIndex) => {
+          // if (dateSelect ? dateSelect.getDate() - 1 === groupDayIndex : true)
+          return (
+            <React.Fragment key={`incomes-day-${groupDayIndex}`}>
+              <IncomeRender
+                stopFetch={stopFetch}
+                updateIndexSheetsOnMonth={updateIndexSheetsOnMonth}
+                onUpdate={onElementUpdate}
+                incomeOfday={[income]}
+                // dayIndex={dayIndex + 1}
+                date={dateSelect}
+                IncomeTypesOptions={IncomeTypesOptions}
+              ></IncomeRender>
+            </React.Fragment>
+          );
         })}
-      </div>
+      </div> */}
     </>
   );
 };

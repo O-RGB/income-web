@@ -15,24 +15,24 @@ export const GenArrayToKey = () => {
   return incomeOfDay;
 };
 
-const SetIncomeToArrayIndex = (data: IncomeModel[]) => {
-  const arrayOfDay: Map<number, IIncome[]> = GenArrayToKey();
-  data.map((data) => {
-    const _im = arrayOfDay.get(data.day);
-    if (_im) {
-      arrayOfDay.set(data.day, [..._im, data.getIncome()]);
-    } else {
-      arrayOfDay.set(data.day, [data.getIncome()]);
-    }
-  });
-  return arrayOfDay;
-};
+// const SetIncomeToArrayIndex = (data: IncomeModel[]) => {
+//   const arrayOfDay: Map<number, IIncome[]> = GenArrayToKey();
+//   data.map((data) => {
+//     const _im = arrayOfDay.get(data.day);
+//     if (_im) {
+//       arrayOfDay.set(data.day, [..._im, data.getIncome()]);
+//     } else {
+//       arrayOfDay.set(data.day, [data.getIncome()]);
+//     }
+//   });
+//   return arrayOfDay;
+// };
 
-export const ConventIncomeSorting = (data: IncomeModel[]) => {
-  let incommeByDay: IIncome[][] = [];
-  const Maping = SetIncomeToArrayIndex(data);
-  Maping.forEach((data, index) => {
-    incommeByDay.push(data);
-  });
-  return incommeByDay;
-};
+// export const ConventIncomeSorting = (data: IncomeModel[]) => {
+//   let incommeByDay: IIncome[][] = [];
+//   const Maping = SetIncomeToArrayIndex(data);
+//   Maping.forEach((data, index) => {
+//     incommeByDay.push(data);
+//   });
+//   return incommeByDay;
+// };

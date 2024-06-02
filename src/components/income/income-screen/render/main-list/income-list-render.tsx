@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import IncomeGroupOfDay from "../group/groupOfDay";
 import DayHeader from "../header/dayHeader";
 import SummaryOfDay from "../summary/summaryOfDay";
+import { DateFormat } from "@/libs/date-lib";
 
 interface IncomeRenderProps {
   incomeOfday: IIncome[];
-  dayIndex: number;
+  // dayIndex: number;
   date: Date;
   onUpdate: (
     action: "add" | "update" | "delete",
@@ -13,12 +14,12 @@ interface IncomeRenderProps {
   ) => Promise<IIncome | undefined>;
   stopFetch: boolean;
   IncomeTypesOptions: RadioOptions[];
-  updateIndexSheetsOnMonth: (dayIndex: number, income: IIncome[]) => void;
+  updateIndexSheetsOnMonth: (day: number, income: IIncome[]) => void;
 }
 
 const IncomeRender: React.FC<IncomeRenderProps> = ({
   date,
-  dayIndex,
+  // dayIndex,
   incomeOfday = [],
   onUpdate,
   stopFetch,
@@ -66,7 +67,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
 
       setTimeout(() => {
         setIncomeOfDay(incomeUpdate);
-        updateIndexSheetsOnMonth(dayIndex, incomeUpdate);
+        updateIndexSheetsOnMonth(date.getDate(), incomeUpdate);
       }, 100);
 
       return undefined;
@@ -83,7 +84,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
 
         setTimeout(() => {
           setIncomeOfDay(clone);
-          updateIndexSheetsOnMonth(dayIndex, clone);
+          // updateIndexSheetsOnMonth(date.getDate(), clone);
         }, 100);
       }
     }
@@ -109,7 +110,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
       let newElement: IIncome = {
         sheetsIndex: findIndexNotDelete() + 2,
         _priceType: "Expenses",
-        day: dayIndex,
+        day: date,
         expensesCount: 0,
         expensesPrice: 0,
         name: "",
@@ -133,22 +134,22 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   }, [incomeOfday]);
   return (
     <>
-      <div className="flex flex-col" key={`incom-day-${dayIndex}`}>
+      <div className="flex flex-col" key={`incom-day-${date.getDate()}`}>
         <SummaryOfDay
           date={date}
-          dayIndex={dayIndex}
+          dayIndex={date.getDate()}
           incomeOfday={IncomeOfDay}
         ></SummaryOfDay>
-        <DayHeader date={date} dayIndex={dayIndex}></DayHeader>
-        {dayIndex <= date.getDate() && (
-          <div onClick={stopFetch == false ? cnageDate10 : () => {}}>
-            <div className="w-full flex justify-center items-center p-2">
-              <div className="p-2 border rounded-lg cursor-pointer bg-blue-500 select-none text-white">
-                เพิ่มข้อมูลวันที่ {dayIndex}
-              </div>
+        {/* <DayHeader date={date} dayIndex={dayIndex}></DayHeader> */}
+        {/* {dayIndex <= date.getDate() && ( */}
+        <div onClick={stopFetch == false ? cnageDate10 : () => {}}>
+          <div className="w-full flex justify-center items-center p-2">
+            <div className="p-2 border rounded-lg cursor-pointer bg-blue-500 select-none text-white">
+              เพิ่มข้อมูลวันที่ {date.getDate()}
             </div>
           </div>
-        )}
+        </div>
+        {/* )} */}
 
         <IncomeGroupOfDay
           IncomeTypesOptions={IncomeTypesOptions}
@@ -158,10 +159,11 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
             setDelete: setDelete,
           }}
           date={date}
-          dayIndex={dayIndex}
+          // dayIndex={dayIndex}
           incomeOfday={IncomeOfDay}
         ></IncomeGroupOfDay>
       </div>
+      {DateFormat(date)}
     </>
   );
 };

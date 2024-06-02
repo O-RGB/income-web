@@ -1,6 +1,6 @@
 export class IncomeModel implements IIncome {
   sheetsIndex: number;
-  day: number;
+  day: Date;
   types: string;
   name: string;
   expensesCount: number | string;
@@ -14,7 +14,7 @@ export class IncomeModel implements IIncome {
 
   public constructor(
     sheetsIndex: number,
-    day: number,
+    day: Date,
     types: string,
     name: string,
     expensesCount: number | string,

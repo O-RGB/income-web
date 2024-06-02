@@ -50,7 +50,7 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
     summary();
   }, [incomeOfday]);
 
-  if (dayIndex - 1 < date.getDate())
+  // if (dayIndex - 1 < date.getDate())
     return (
       <div className="flex flex-col py-4 px-3 gap-1 bg-white">
         <div className="flex flex-col sm:flex-row gap-1 w-full">

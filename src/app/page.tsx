@@ -4,17 +4,22 @@ import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
 import { FetchTypesIncome } from "@/fetcher/GET/types.fetch";
 import { AddIncome, DeleteIncome } from "@/fetcher/POST/incomes.post";
 import { GenOption } from "@/libs/gen-options";
-import { ConventIncomeSorting } from "@/libs/income-lib";
+// import { ConventIncomeSorting } from "@/libs/income-lib";
 import { getLocalByKey, setLocal } from "@/libs/local";
 import { useEffect, useState } from "react";
 export default function Home() {
-  const [data, setData] = useState<IIncome[][] | undefined>(undefined);
+  const [data, setData] = useState<IIncome[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
   const [stopFetch, setFetching] = useState<boolean>(false);
-  const [IncomeTypes, setIncomeTypes] = useState<IIncomeTypes[]>([]);
   const [IncomeTypesOptions, setIncomeTypesOptions] = useState<RadioOptions[]>(
     []
   );
+  const [dateSelect, setDateSelect] = useState<Date>(new Date());
+
+  const onSelectDate = (date: Date) => {
+    setDateSelect(date);
+    checktofetch(date);
+  };
 
   const onChangeInput = (value: string) => {
     setLocal("google_sheets", value);
@@ -25,22 +30,22 @@ export default function Home() {
     if (getUrl) {
       const data = await FetchTypesIncome(getUrl);
       if (data) {
-        setIncomeTypes(data);
         const options = GenOption("name", "typeId", data);
         setIncomeTypesOptions(options);
       }
     }
   };
 
-  const checktofetch = () => {
+  const checktofetch = (date?: Date) => {
     let getUrl = getLocalByKey("google_sheets");
     if (getUrl) {
       setFetching(true);
-      FetchGetOfDay(getUrl, setLoading)
+      FetchGetOfDay(getUrl, date ? date : new Date(), setLoading)
         .then((data) => {
           if (data) {
-            const dat = ConventIncomeSorting(data);
-            setData(dat);
+            console.log("new update", data);
+            // const dat = ConventIncomeSorting(data);
+            setData(data);
           }
         })
         .catch((e) => {
@@ -86,9 +91,15 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
+  const fetchData = () => {
     checktofetch();
     getTypes();
+  };
+
+  useEffect(() => {
+    if (!data) {
+      fetchData();
+    }
   }, []);
 
   return (
@@ -102,23 +113,20 @@ export default function Home() {
             onChangeInput(e.target.value);
           }}
         />
-        <button className="p-2 border" onClick={checktofetch}>
+        <button className="p-2 border" onClick={() => checktofetch()}>
           Update
         </button>
       </div>
 
-      {loading ? (
-        <>loading</>
-      ) : (
-        <IncomeListInDay
-          IncomeTypesOptions={IncomeTypesOptions}
-          stopFetch={stopFetch}
-          addIncome={onAddIncome}
-          deleteIncome={onDeleteIncome}
-          incomes={data}
-          showOnlyDay={new Date().getDate()}
-        ></IncomeListInDay>
-      )}
+      <IncomeListInDay
+        dateSelect={dateSelect}
+        IncomeTypesOptions={IncomeTypesOptions}
+        stopFetch={stopFetch}
+        addIncome={onAddIncome}
+        deleteIncome={onDeleteIncome}
+        onSelectDate={onSelectDate}
+        incomes={data ? data : []}
+      ></IncomeListInDay>
     </div>
   );
 }

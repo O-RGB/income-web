@@ -1,9 +1,10 @@
+import { DateFormat } from "@/libs/date-lib";
 import React from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { VscIssueDraft } from "react-icons/vsc";
 
 interface RenderDayProps {
-  day: number;
+  day: Date;
   _priceType?: priceType;
   state?: "loading" | "draft";
 }
@@ -31,7 +32,7 @@ const RenderDay: React.FC<RenderDayProps> = ({
         ) : state === "draft" ? (
           <VscIssueDraft className="text-2xl font-bold  ml-0.5"></VscIssueDraft>
         ) : (
-          day
+          DateFormat(day, "D")
         )}
       </div>
     </div>
