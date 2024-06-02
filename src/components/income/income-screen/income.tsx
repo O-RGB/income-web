@@ -22,11 +22,12 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   deleteIncome,
   stopFetch,
   IncomeTypesOptions,
-  showOnlyDay = 1,
+  // showOnlyDay = 1,
 }) => {
   const dateNow = new Date();
 
   const [incomesData, setIncomes] = useState<IIncome[][] | undefined>([]);
+  const [dateSelect, setDateSelect] = useState<Date | undefined>();
 
   const updateIndexSheetsOnMonth = (dayIndex: number, income: IIncome[]) => {
     if (incomesData) {
@@ -111,6 +112,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     }
   };
 
+  const onSelectDate = (date: Date) => {
+    setDateSelect(date);
+  };
+
   useEffect(() => {
     setIncomes(incomes);
   }, [incomes]);
@@ -121,7 +126,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
   return (
     <>
-      <FloatingButton
+      {/* <FloatingButton
         onClick={() => {
           onElementUpdate("add", {
             sheetsIndex: 1,
@@ -137,11 +142,14 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
             draft: false,
           });
         }}
-      ></FloatingButton>
-      <DetailOfMonth incomes={incomesData}></DetailOfMonth>
+      ></FloatingButton> */}
+      <DetailOfMonth
+        onDateChange={onSelectDate}
+        incomes={incomesData}
+      ></DetailOfMonth>
       <div className="flex gap-10 flex-col-reverse">
         {incomesData?.map((income, dayIndex) => {
-          if (showOnlyDay ? showOnlyDay - 1 === dayIndex : true)
+          if (dateSelect ? dateSelect.getDate() - 1 === dayIndex : true)
             return (
               <React.Fragment key={`incomes-day-${dayIndex}`}>
                 <IncomeRender

@@ -1,11 +1,16 @@
+import CalendarCommon from "@/components/common/calendar";
 import { DateFormat } from "@/libs/date-lib";
 import React, { useEffect, useState } from "react";
 
 interface DetailOfMonthProps {
   incomes?: IIncome[][];
+  onDateChange?: (date: Date) => void;
 }
 
-const DetailOfMonth: React.FC<DetailOfMonthProps> = ({ incomes }) => {
+const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
+  incomes,
+  onDateChange,
+}) => {
   const [test, setT] = useState<string>();
   const [priceSummary, setPriceSummary] = useState<{
     Expenses: number;
@@ -39,6 +44,7 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({ incomes }) => {
     <>
       <div className="p-2 flex flex-col gap-3">
         <div className="text-4xl">{test}</div>
+        <CalendarCommon onDateChange={onDateChange}></CalendarCommon>
         <div className="flex  gap-3">
           <div className="border p-4 bg-slate-200 rounded-md">
             <div>รายจ่ายเดือนนี้ </div>

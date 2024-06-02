@@ -134,6 +134,11 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   return (
     <>
       <div className="flex flex-col" key={`incom-day-${dayIndex}`}>
+        <SummaryOfDay
+          date={date}
+          dayIndex={dayIndex}
+          incomeOfday={IncomeOfDay}
+        ></SummaryOfDay>
         <DayHeader date={date} dayIndex={dayIndex}></DayHeader>
         {dayIndex <= date.getDate() && (
           <div onClick={stopFetch == false ? cnageDate10 : () => {}}>
@@ -156,11 +161,6 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
           dayIndex={dayIndex}
           incomeOfday={IncomeOfDay}
         ></IncomeGroupOfDay>
-        <SummaryOfDay
-          date={date}
-          dayIndex={dayIndex}
-          incomeOfday={IncomeOfDay}
-        ></SummaryOfDay>
       </div>
     </>
   );
