@@ -113,7 +113,8 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 setIncome({ ...incomeData });
                 actionApi.onUpdate("add", incomeData).then((data) => {
                   if (data) {
-                    setIncome(data);
+                    // setIncome(data);
+                    console.log("on add data ", data);
                     actionApi.setAdd(itemIndex, data);
                   }
                 });
@@ -221,24 +222,24 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 <div className="pt-4"></div>
                 <div
                   onClick={() => {
-                    // if (initIncome.fetching !== true) {
-                    //   setLoading();
-                    //   actionApi
-                    //     .onUpdate?.("delete", initIncome)
-                    //     .then((data) => {
-                    //       if (data) {
-                    //         // setDelete(itemIndex);
-                    //         actionApi.setDelete(itemIndex);
+                    if (initIncome.fetching !== true) {
+                      setLoading();
+                      actionApi
+                        .onUpdate?.("delete", initIncome)
+                        .then((data) => {
+                          if (data) {
+                            // setDelete(itemIndex);
+                            actionApi.setDelete(itemIndex);
 
-                    //         // setIncome(data);
-                    //       } else {
-                    //         setLoading(false);
-                    //       }
-                    //     })
-                    //     .catch(() => {
-                    //       setLoading(false);
-                    //     });
-                    // }
+                            // setIncome(data);
+                          } else {
+                            setLoading(false);
+                          }
+                        })
+                        .catch(() => {
+                          setLoading(false);
+                        });
+                    }
                   }}
                   className="w-fit border p-1"
                 >
@@ -313,11 +314,11 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                       setLoading(false);
                       setTimeout(() => {
                         const incomeDeleted = actionApi.setDelete(itemIndex);
-                        if (incomeDeleted) {
-                          setIncome(incomeDeleted);
-                        } else {
-                          setLoading(false);
-                        }
+                        // if (incomeDeleted) {
+                        //   setIncome(incomeDeleted);
+                        // } else {
+                        //   setLoading(false);
+                        // }
                       }, 100);
                     }}
                     disabled={initIncome.fetching}

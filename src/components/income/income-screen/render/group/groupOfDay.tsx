@@ -3,7 +3,6 @@ import IncomeElement from "../../../income-element/element";
 
 interface IncomeGroupOfDayProps {
   incomeOfday: IIncome[] | "load" | null;
-  // dayIndex: number;
   date: Date;
   IncomeTypesOptions: RadioOptions[];
   actionApi: IActionDayIncomesLists;
@@ -11,7 +10,6 @@ interface IncomeGroupOfDayProps {
 
 const IncomeGroupOfDay: React.FC<IncomeGroupOfDayProps> = ({
   incomeOfday = [],
-  // dayIndex,
   date,
   IncomeTypesOptions,
   actionApi,

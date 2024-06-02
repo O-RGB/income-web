@@ -34,6 +34,6 @@ interface IActionDayIncomesLists {
     action: "add" | "update" | "delete",
     element: IIncome
   ) => Promise<IIncome | undefined>;
-  setDelete: (indexOfDay: number) => IIncome | undefined;
+  setDelete: (indexOfDay: number) => void
   setAdd: (indexUpdated: number, income: IIncome) => void;
 }

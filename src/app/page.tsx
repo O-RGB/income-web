@@ -8,9 +8,9 @@ import { GenOption } from "@/libs/gen-options";
 import { getLocalByKey, setLocal } from "@/libs/local";
 import { useEffect, useState } from "react";
 export default function Home() {
-  const [data, setData] = useState<IIncome[] | undefined>(undefined);
+  const [data, setData] = useState<IIncome[] | "load" | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [stopFetch, setFetching] = useState<boolean>(false);
+  const [apiFetching, setFetching] = useState<boolean>(false);
   const [IncomeTypesOptions, setIncomeTypesOptions] = useState<RadioOptions[]>(
     []
   );
@@ -39,6 +39,7 @@ export default function Home() {
   const checktofetch = (date?: Date) => {
     let getUrl = getLocalByKey("google_sheets");
     if (getUrl) {
+      setData("load");
       setFetching(true);
       FetchGetOfDay(getUrl, date ? date : new Date(), setLoading)
         .then((data) => {
@@ -49,13 +50,13 @@ export default function Home() {
           }
         })
         .catch((e) => {
-          setData(undefined);
+          setData(null);
         })
         .finally(() => {
           setFetching(false);
         });
     } else {
-      setData(undefined);
+      setData(null);
       setFetching(false);
     }
   };
@@ -121,11 +122,12 @@ export default function Home() {
       <IncomeListInDay
         dateSelect={dateSelect}
         IncomeTypesOptions={IncomeTypesOptions}
-        stopFetch={stopFetch}
+        apiFetching={apiFetching}
         addIncome={onAddIncome}
         deleteIncome={onDeleteIncome}
         onSelectDate={onSelectDate}
         incomes={data ? data : []}
+        loading={loading}
       ></IncomeListInDay>
     </div>
   );

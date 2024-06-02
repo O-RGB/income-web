@@ -4,34 +4,37 @@ import FloatingButton from "@/components/form-data/floating-button/floating-butt
 import IncomeRender from "./render/main-list/income-list-render";
 
 interface IncomeListInDayProps {
-  incomes: IIncome[];
+  incomes: IIncome[] | "load";
   addIncome?: (
     income: IIncome
   ) => Promise<IGeneralReturnFetch<IIncome | undefined>>;
   deleteIncome?: (
     sheetsIndex: number
   ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
-  stopFetch: boolean;
+  apiFetching: boolean;
   IncomeTypesOptions: RadioOptions[];
   onSelectDate: (date: Date) => void;
   dateSelect: Date;
+  loading: boolean;
 }
 
 const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   incomes,
   addIncome,
   deleteIncome,
-  stopFetch,
+  apiFetching,
   IncomeTypesOptions,
   onSelectDate,
   dateSelect,
+  loading,
 }) => {
   // const dateNow = new Date();
 
-  const [incomesData, setIncomes] = useState<IIncome[]>([]);
+  const [incomesData, setIncomes] = useState<IIncome[] | "load">([]);
+  const [sheetsFirstIndexOfDate, setFirstIndex] = useState<number>();
 
   const updateIndexSheetsOnMonth = (dayIndex: number, income: IIncome[]) => {
-    if (incomesData) {
+    if (incomesData && typeof incomesData !== "string") {
       var clone = incomesData;
       // setIncomes([]);
 
@@ -61,7 +64,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     action: "add" | "update" | "delete",
     element: IIncome
   ) => {
-    if (stopFetch) {
+    if (apiFetching) {
       return undefined;
     }
     if (!deleteIncome || !addIncome) {
@@ -76,7 +79,9 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
               if (data.success) {
                 element.fetching = false;
                 element.draft = false;
-                return element;
+
+                const incomeConcat: IIncome = { ...element, ...data.data };
+                return incomeConcat;
               } else {
                 return undefined;
               }
@@ -117,6 +122,9 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
   useEffect(() => {
     setIncomes(incomes);
+    if (incomes !== "load" && incomes.length > 0) {
+      setFirstIndex(incomes[0].sheetsIndex);
+    }
   }, [incomes]);
 
   if (incomes === undefined) {
@@ -143,17 +151,20 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         }}
       ></FloatingButton> */}
       <DetailOfMonth
+        date={dateSelect}
         onDateChange={onSelectDate}
         incomes={incomesData}
       ></DetailOfMonth>
       <IncomeRender
-        stopFetch={stopFetch}
+        apiFetching={apiFetching}
+        sheetsFirstIndexOfDate={sheetsFirstIndexOfDate}
         updateIndexSheetsOnMonth={updateIndexSheetsOnMonth}
         onUpdate={onElementUpdate}
         incomeOfday={incomesData}
         // dayIndex={dayIndex + 1}
         date={dateSelect}
         IncomeTypesOptions={IncomeTypesOptions}
+        loading={loading}
       ></IncomeRender>
       {/* <div className="flex gap-10 flex-col-reverse">
         {incomesData?.map((income, groupDayIndex) => {
