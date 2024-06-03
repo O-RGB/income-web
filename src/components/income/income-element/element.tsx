@@ -272,20 +272,31 @@ const IncomeElement: React.FC<IncomeListProps> = ({
 
             {initIncome.draft === true ? (
               <div className="flex flex-col gap-2 pt-2">
-                <IncomeInputName
-                  name="name"
-                  lable="ชื่อรายการ"
-                ></IncomeInputName>
-                <IncomeInputPrice name="price" lable="ราคา"></IncomeInputPrice>
-                <IncomeInputTypes
-                  options={IncomeTypesOptions}
-                  name="types"
-                  lable="หมวดหมู่"
-                ></IncomeInputTypes>
-                <IncomeInputCountItem
-                  name="count"
-                  lable="จำนวน"
-                ></IncomeInputCountItem>
+                <div className="flex gap-2">
+                  <IncomeInputName
+                    name="name"
+                    lable="ชื่อรายการ"
+                  ></IncomeInputName>
+                  <div className="w-[30%]">
+                    <IncomeInputPrice
+                      name="price"
+                      lable="ราคา"
+                    ></IncomeInputPrice>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <IncomeInputTypes
+                    options={IncomeTypesOptions}
+                    name="types"
+                    lable="หมวดหมู่"
+                  ></IncomeInputTypes>
+                  <div className="w-[30%]">
+                    <IncomeInputCountItem
+                      name="count"
+                      lable="จำนวน"
+                    ></IncomeInputCountItem>{" "}
+                  </div>
+                </div>
                 <IncomePriceType
                   defaultValue={"Expenses"}
                   name="priceType"
@@ -323,7 +334,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                     }}
                     disabled={initIncome.fetching}
                     type="default"
-                    htmlType="submit"
+                    htmlType="button"
                     className="!bg-red-500 !text-white"
                   >
                     ยกเลิก

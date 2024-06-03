@@ -7,7 +7,7 @@ interface RadioCommonProps extends RadioGroupProps {
 
 const RadioCommon: React.FC<RadioCommonProps> = ({ options, ...props }) => {
   return (
-    <Radio.Group {...props}>
+    <Radio.Group size="small" {...props}>
       {options.map((data, index) => {
         return (
           <Radio key={`radio-data-${index}`} value={data.value}>

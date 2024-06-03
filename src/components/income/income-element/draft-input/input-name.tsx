@@ -14,7 +14,7 @@ const IncomeInputName: React.FC<IncomeInputNameProps> = ({ lable, name }) => {
         rules={[{ required: true }]}
         name={name}
         className="m-0 w-full"
-        label={lable}
+        // label={lable}
       >
         <InputCommon className={"w-full"} placeholder={lable} />
       </Form.Item>

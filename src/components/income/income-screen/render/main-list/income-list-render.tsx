@@ -4,6 +4,7 @@ import DayHeader from "../header/dayHeader";
 import SummaryOfDay from "../summary/summaryOfDay";
 import { DateFormat } from "@/libs/date-lib";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { Button } from "antd";
 
 interface IncomeRenderProps {
   incomeOfday: IIncome[] | "load";
@@ -112,7 +113,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
       var check = clone[indexUpdated];
       if (check) {
         clone[indexUpdated] = income;
-        console.log("income",income)
+        console.log("income", income);
 
         setTimeout(() => {
           setIncomeOfDay(clone);
@@ -181,11 +182,23 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
           <>
             {/* <DayHeader date={date} dayIndex={dayIndex}></DayHeader> */}
             {/* {dayIndex <= date.getDate() && ( */}
-            <div onClick={apiFetching == false ? cnageDate10 : () => {}}>
-              <div className="w-full flex justify-center items-center p-2">
-                <div className="p-2 border rounded-lg cursor-pointer bg-blue-500 select-none text-white">
-                  เพิ่มข้อมูลวันที่ {date.getDate()}
+            <div>
+              <div className="w-full flex justify-between items-center p-2">
+                <div>
+                  <Button
+                    onClick={apiFetching == false ? cnageDate10 : () => {}}
+                  >
+                    + เพิ่มข้อมูลวันที่ {date.getDate()}
+                  </Button>
                 </div>
+                <Button></Button>
+
+                {/* <div
+                  onClick={apiFetching == false ? cnageDate10 : () => {}}
+                  className="p-2 border rounded-lg cursor-pointer bg-blue-500 select-none text-white"
+                >
+                  เพิ่มข้อมูลวันที่ {date.getDate()}
+                </div> */}
               </div>
             </div>
             {/* )} */}

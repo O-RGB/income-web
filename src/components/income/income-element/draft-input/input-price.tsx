@@ -14,7 +14,7 @@ const IncomeInputPrice: React.FC<IncomeInputPriceProps> = ({ name, lable }) => {
         rules={[{ required: true }]}
         name={name}
         className="m-0 w-full"
-        label={lable}
+        // label={lable}
       >
         <InputNumberCommon placeholder={lable} min={0} />
       </Form.Item>

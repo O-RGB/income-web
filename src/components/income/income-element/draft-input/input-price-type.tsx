@@ -21,7 +21,7 @@ const IncomePriceType: React.FC<IncomePriceTypeProps> = ({
         rules={[{ required: true }]}
       name={name}
       className="m-0 w-full"
-      label={lable}
+    //   label={lable}
       initialValue={defaultValue}
     >
       <RadioCommon options={options}></RadioCommon>

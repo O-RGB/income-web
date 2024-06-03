@@ -12,6 +12,7 @@ const SelectCommon: React.FC<SelectCommonProps> = ({ ...props }) => {
 
   return (
     <Select
+      size="small"
       showSearch
       optionFilterProp="children"
       filterOption={filterOption as any}

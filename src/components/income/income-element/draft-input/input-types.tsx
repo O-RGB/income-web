@@ -20,7 +20,7 @@ const IncomeInputTypes: React.FC<IncomeInputTypesProps> = ({
         rules={[{ required: true }]}
         name={name}
         className="m-0 w-full"
-        label={lable}
+        // label={lable}
         initialValue={"T00"}
       >
         <SelectCommon options={options} placeholder={lable} />

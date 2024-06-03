@@ -17,7 +17,7 @@ const IncomeInputCountItem: React.FC<IncomeInputCountItemProps> = ({
         rules={[{ required: true }]}
         name={name}
         className="m-0 w-full"
-        label={lable}
+        // label={lable}
         initialValue={1}
       >
         <InputNumberCommon placeholder={lable} min={1} max={100} />

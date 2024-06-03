@@ -55,7 +55,7 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
   return (
     <>
       <div className="p-2 flex flex-col gap-3">
-        <div className=" flex justify-between">
+        <div className=" flex justify-between pt-5">
           <div className="text-4xl">{DateFormat(date)}</div>
           <div
             onClick={() => {
@@ -73,7 +73,7 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
         >
           <CalendarCommon onDateChange={onDateChange}></CalendarCommon>
         </div>
-        <div className="flex  gap-3">
+        {/* <div className="flex  gap-3">
           <div className="border p-4 bg-slate-200 rounded-md">
             <div>รายจ่ายเดือนนี้ </div>
             <div className="text-2xl">{priceSummary.Expenses}</div>
@@ -82,7 +82,7 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
             <div>รายรับเดือนนี้ </div>
             <div className="text-2xl">{priceSummary.Revenue}</div>
           </div>
-        </div>
+        </div> */}
         <div>
           <hr />
         </div>

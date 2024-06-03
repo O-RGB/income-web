@@ -24,6 +24,11 @@ const IncomeGroupOfDay: React.FC<IncomeGroupOfDayProps> = ({
   // if (dayIndex - 1 < date.getDate())
   return (
     <div className="flex flex-col-reverse transition-all duration-300 p-4">
+      {IncomeOfDayTemp?.length == 0 && (
+        <div className="h-20 flex justify-center items-center text-gray-300 text-sm">
+          ไม่มีข้อมูล
+        </div>
+      )}
       {IncomeOfDayTemp?.map((im, jindex) => {
         return (
           <div key={`incom-${date.getDate()}-${jindex}`}>
