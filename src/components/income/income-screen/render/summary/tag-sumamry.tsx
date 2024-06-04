@@ -22,7 +22,7 @@ const TagSummary: React.FC<TagSummaryProps> = ({
   return (
     <>
       <div
-        className={`p-2 text-xs  border-gray-500 rounded-md font-bold flex gap-1 items-center ${color}`}
+        className={`p-2 text-base  border-gray-500 rounded-md font-bold flex gap-2 items-center ${color}`}
       >
         <div
           className={`w-5 h-5 ${iconColor} rounded-full flex items-center justify-center`}
