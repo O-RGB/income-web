@@ -2,7 +2,7 @@ import RadioCommon from "@/components/common/radio";
 import { Form, Radio } from "antd";
 import { Option } from "antd/es/mentions";
 import React, { useEffect } from "react";
-
+import "./label.css"
 interface IncomePriceTypeProps {
   name: string;
   lable?: string;
@@ -21,6 +21,7 @@ const IncomePriceType: React.FC<IncomePriceTypeProps> = ({
         rules={[{ required: true }]}
       name={name}
       className="m-0 w-full"
+      // label={<div className="text-xs !mb-1">{lable}</div>}
     //   label={lable}
       initialValue={defaultValue}
     >

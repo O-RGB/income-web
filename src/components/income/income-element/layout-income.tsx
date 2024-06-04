@@ -22,7 +22,7 @@ const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
           initIncome.delete
             ? "max-h-0"
             : initIncome.draft
-            ? "max-h-[500px]"
+            ? "max-h-[500px] border border-blue-500 rounded-md p-1"
             : "max-h-[200px]"
         } duration-1000`}
       >
