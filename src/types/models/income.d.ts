@@ -3,6 +3,16 @@ interface UIMapingIncome {
   fetching: boolean;
   draft: boolean;
   _priceType?: priceType;
+  indexOfList: number;
+}
+
+interface IncomeFormInput {
+  name: string;
+  price: string;
+  types: string;
+  count: string;
+  priceType: "Expenses" | "Revenue"; // assuming priceType can be either 'Expenses' or 'Revenue'
+  indexOfList: number;
 }
 
 interface IIncome extends UIMapingIncome {
@@ -24,16 +34,23 @@ interface IncomeOfDay {
 }
 
 interface IIncomeAdd extends IIncome {}
+interface IIncomesListAdd {
+  incomes: IIncome[];
+}
 interface IIncomeDelete {
   sheetsIndex: number;
 }
 
-
 interface IActionDayIncomesLists {
-  onUpdate: (
-    action: "add" | "update" | "delete",
-    element: IIncome
-  ) => Promise<IIncome | undefined>;
-  setDelete: (indexOfDay: number) => void
-  setAdd: (indexUpdated: number, income: IIncome) => void;
+  setFetchingDraft: () => void;
+  setUpdate?: (indexUpdated: number, income: IIncome) => void;
+  setAdd: (incomesList: IIncome[]) => Promise<
+    {
+      index: number;
+      result: boolean;
+    }[]
+  >;
+  setDraft?: () => void;
+  setDelete?: (indexOfDay: number, listIndex: number) => void;
+  setDeleteOnClient?: (indexOfDay: number) => void;
 }

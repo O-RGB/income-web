@@ -1,3 +1,4 @@
+"use client"
 import { Fetcher } from "@/utils/fetch/fetch";
 
 export const AddIncome = (
@@ -10,6 +11,21 @@ export const AddIncome = (
     {
       method: "POST",
       data: { ...input, query: "POST_insert_income_on_day" },
+    },
+    loading
+  );
+};
+
+export const AddIncomesList = (
+  key: string,
+  input: IIncomesListAdd,
+  loading?: (load: boolean) => void
+) => {
+  return Fetcher<IIncomesListAdd, IIncome[]>(
+    key,
+    {
+      method: "POST",
+      data: { ...input, query: "POST_insert_incomes_list" },
     },
     loading
   );

@@ -1,10 +1,3 @@
-"use client";
-const domain = process.env.API_URL;
-
-const GetURL = (path: string) => {
-  return `https://${domain}/${path}`;
-};
-
 interface IFetcher<Input = any, query = any> {
   data?: Input | query;
   method?: "GET" | "POST";
@@ -24,9 +17,14 @@ function QueryPost(params: any): FormData {
   const formData = new FormData();
   Object.keys(params).map((key) => {
     if (params[key] !== undefined) {
-      formData.append(key, params[key]);
+      if (Array.isArray(params[key])) {
+        formData.append(key, JSON.stringify(params[key]));
+      } else {
+        formData.append(key, params[key]);
+      }
     }
   });
+
   return formData;
 }
 
@@ -53,14 +51,13 @@ export async function Fetcher<Input = any, Result = any>(
   var formParam: FormData | undefined =
     param?.method === "POST" ? QueryPost(param.data) : undefined;
 
-  console.log(url);
-
   //FETCH
   return await fetch(url, {
     method: param?.method ? param.method : "GET",
     body: formParam,
-    cache: "no-store",
-    mode: "cors",
+    // cache: "no-store",
+    // mode: "cors",
+    cache: "no-cache",
   })
     .then((response) => {
       return response.json();

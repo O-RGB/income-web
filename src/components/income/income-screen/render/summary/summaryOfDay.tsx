@@ -5,7 +5,7 @@ import { AiFillStar } from "react-icons/ai";
 import { setTimeout } from "timers";
 
 interface SummaryOfDayProps {
-  incomeOfday: IIncome[] | "load" | null;
+  incomeOfday?: IIncome[];
   dayIndex: number;
   date: Date; // dateNow
 }
@@ -29,7 +29,7 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
   const summary = () => {
     let ex: number = 0;
     let re: number = 0;
-    if (incomeOfday !== "load" && incomeOfday !== null) {
+    if (incomeOfday) {
       incomeOfday?.map((data) => {
         if (data.delete !== true) {
           if (data.expensesPrice !== "") {
@@ -47,8 +47,10 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
     });
   };
   useEffect(() => {
-    summary();
-  }, [incomeOfday]);
+    if (incomeOfday) {
+      summary();
+    }
+  }, []);
 
   // if (dayIndex - 1 < date.getDate())
   return (
@@ -56,33 +58,25 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
       <div className="flex flex-col sm:flex-row gap-3 w-full">
         <TagSummary
           color="bg-green-200"
-          loading={incomeOfday == "load"}
-          price={
-            incomeOfday !== "load" && incomeOfday !== null
-              ? summaryData.Revenue
-              : 0
-          }
+          // loading={incomeOfday}
+          price={incomeOfday !== null ? summaryData.Revenue : 0}
           title="รายรับ"
           icon={<TiArrowSortedDown className="text-white"></TiArrowSortedDown>}
           iconColor="bg-green-500"
         ></TagSummary>
         <TagSummary
-          loading={incomeOfday == "load"}
+          // loading={incomeOfday == "load"}
           color="bg-red-200"
-          price={
-            incomeOfday !== "load" && incomeOfday !== null
-              ? summaryData.Expenses
-              : 0
-          }
+          price={incomeOfday !== undefined ? summaryData.Expenses : 0}
           title="รายจ่าย"
           icon={<TiArrowSortedUp className="text-white"></TiArrowSortedUp>}
           iconColor="bg-red-500"
         ></TagSummary>
         <TagSummary
-          loading={incomeOfday == "load"}
+          // loading={incomeOfday == "load"}
           color="bg-blue-200"
           price={
-            incomeOfday !== "load" && incomeOfday !== null
+            incomeOfday !== undefined
               ? summaryData.Expenses - summaryData.Revenue
               : 0
           }

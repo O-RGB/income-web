@@ -1,24 +1,54 @@
 "use client";
+
 import IncomeListInDay from "@/components/income/income-screen/income";
 import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
 import { FetchTypesIncome } from "@/fetcher/GET/types.fetch";
-import { AddIncome, DeleteIncome } from "@/fetcher/POST/incomes.post";
+import {
+  AddIncome,
+  AddIncomesList,
+  DeleteIncome,
+} from "@/fetcher/POST/incomes.post";
 import { GenOption } from "@/libs/gen-options";
 // import { ConventIncomeSorting } from "@/libs/income-lib";
 import { getLocalByKey, setLocal } from "@/libs/local";
 import { useEffect, useState } from "react";
+
 export default function Home() {
-  const [data, setData] = useState<IIncome[] | "load" | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [apiFetching, setFetching] = useState<boolean>(false);
+  const [incomes, setIncomes] = useState<IIncome[]>();
+  const [loading, setLoading] = useState<ILoading>({
+    pageLoad: false,
+    waitActioning: false,
+  });
+  // const [apiFetching, setFetching] = useState<boolean>(false);
   const [IncomeTypesOptions, setIncomeTypesOptions] = useState<RadioOptions[]>(
     []
   );
   const [dateSelect, setDateSelect] = useState<Date>(new Date());
 
+  const initLoad = ({
+    fetch,
+    waitAction,
+  }: {
+    fetch?: boolean;
+    waitAction?: boolean;
+  }) => {
+    if (fetch && !loading.pageLoad) {
+      return;
+    }
+
+    if (waitAction && !loading.waitActioning) {
+      return;
+    }
+
+    setLoading({
+      pageLoad: fetch ? true : false,
+      waitActioning: waitAction ? true : false,
+    });
+  };
+
   const onSelectDate = (date: Date) => {
     setDateSelect(date);
-    checktofetch(date);
+    getIncomeSheets(date);
   };
 
   const onChangeInput = (value: string) => {
@@ -28,78 +58,78 @@ export default function Home() {
   const getTypes = async () => {
     let getUrl = getLocalByKey("google_sheets");
     if (getUrl) {
-      const data = await FetchTypesIncome(getUrl);
-      if (data) {
-        const options = GenOption("name", "typeId", data);
+      const incomes = await FetchTypesIncome(getUrl);
+      if (incomes) {
+        const options = GenOption("name", "typeId", incomes);
         setIncomeTypesOptions(options);
       }
     }
   };
 
-  const checktofetch = (date?: Date) => {
+  const getIncomeSheets = (date?: Date) => {
     let getUrl = getLocalByKey("google_sheets");
     if (getUrl) {
-      setData("load");
-      setFetching(true);
-      FetchGetOfDay(getUrl, date ? date : new Date(), setLoading)
-        .then((data) => {
-          if (data) {
-            console.log("new update", data);
-            // const dat = ConventIncomeSorting(data);
-            setData(data);
+      setIncomes(undefined);
+      initLoad({ fetch: true });
+      FetchGetOfDay(getUrl, date ? date : new Date())
+        .then((incomes) => {
+          if (incomes) {
+            console.log("new update", incomes);
+            // const dat = ConventIncomeSorting(incomes);
+            setIncomes(incomes);
           }
         })
         .catch((e) => {
-          setData(null);
+          setIncomes(undefined);
         })
         .finally(() => {
-          setFetching(false);
+          initLoad({ fetch: false, waitAction: false });
         });
     } else {
-      setData(null);
-      setFetching(false);
+      setIncomes(undefined);
+      initLoad({ fetch: false, waitAction: false });
     }
   };
 
-  const onAddIncome = async (income: IIncome) => {
+  const onAddIncome = async (income: IIncome[]) => {
     let getUrl = getLocalByKey("google_sheets");
     if (getUrl) {
-      setFetching(true);
-      return AddIncome(getUrl, income).finally(() => {
-        setFetching(false);
+      initLoad({ waitAction: true });
+      return AddIncomesList(getUrl, { incomes: income }).finally(() => {
+        initLoad({ waitAction: false });
       });
     } else {
       return {
-        data: undefined,
+        incomes: undefined,
         message: undefined,
         success: false,
-      };
+      } as IGeneralReturnFetch<undefined>;
     }
   };
   const onDeleteIncome = async (sheetsIndex: number) => {
     let getUrl = getLocalByKey("google_sheets");
     if (getUrl) {
-      setFetching(true);
+      initLoad({ waitAction: true });
       return DeleteIncome(getUrl, sheetsIndex).finally(() => {
-        setFetching(false);
+        initLoad({ waitAction: false });
       });
     } else {
       return {
-        data: undefined,
+        incomes: undefined,
         message: undefined,
         success: false,
-      };
+      } as IGeneralReturnFetch<undefined>;
     }
   };
 
-  const fetchData = () => {
-    checktofetch();
+  const getData = () => {
+    getIncomeSheets();
     getTypes();
   };
 
   useEffect(() => {
-    if (!data) {
-      fetchData();
+    if (!incomes) {
+      getData();
     }
   }, []);
 
@@ -114,7 +144,7 @@ export default function Home() {
             onChangeInput(e.target.value);
           }}
         />
-        <button className="p-2 border" onClick={() => checktofetch()}>
+        <button className="p-2 border" onClick={() => getIncomeSheets()}>
           Update
         </button>
       </div>
@@ -122,11 +152,10 @@ export default function Home() {
       <IncomeListInDay
         dateSelect={dateSelect}
         IncomeTypesOptions={IncomeTypesOptions}
-        apiFetching={apiFetching}
-        addIncome={onAddIncome}
+        onAddIncome={onAddIncome}
         deleteIncome={onDeleteIncome}
         onSelectDate={onSelectDate}
-        incomes={data ? data : []}
+        incomes={incomes}
         loading={loading}
       ></IncomeListInDay>
     </div>

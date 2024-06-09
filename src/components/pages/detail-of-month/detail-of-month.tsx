@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { MdCalendarMonth } from "react-icons/md";
 
 interface DetailOfMonthProps {
-  incomes?: IIncome[] | "load";
+  incomes?: IIncome[];
   onDateChange?: (date: Date) => void;
   date: Date;
 }
@@ -24,10 +24,10 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
     Revenue: 0,
   });
   useEffect(() => {
-    const date = DateFormat();
-    setT(date);
-
-    if (typeof incomes !== "string") {
+    if (incomes) {
+      console.log("incomes = ", incomes);
+      const date = DateFormat();
+      setT(date);
       let ex: number = 0;
       let re: number = 0;
       incomes?.map((income) => {

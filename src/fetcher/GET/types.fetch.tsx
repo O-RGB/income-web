@@ -1,3 +1,4 @@
+"use client"
 import { Fetcher } from "@/utils/fetch/fetch";
 import { IncomeTypesModel } from "@/utils/models/types";
 

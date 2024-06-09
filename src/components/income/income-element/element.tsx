@@ -10,145 +10,98 @@ import IncomeInputTypes from "./draft-input/input-types";
 import IncomeInputCountItem from "./draft-input/input-count-item";
 import LayoutIncomeItem from "./layout-income";
 import { Button, Form } from "antd";
-import { FaPlus } from "react-icons/fa6";
-import { IoRemoveCircleOutline } from "react-icons/io5";
 import { IoMdRemove } from "react-icons/io";
 
-interface IncomeFormInput {
-  name: string;
-  price: string;
-  types: string;
-  count: string;
-  priceType: priceType;
-}
-
 interface IncomeListProps {
-  // indexOfDay: number;
   income: IIncome;
   dayRender?: boolean;
-  actionApi: IActionDayIncomesLists;
+  // actionApi: IActionDayIncomesLists;
   IncomeTypesOptions: RadioOptions[];
   itemIndex: number;
+  multipleLoading: boolean;
+  deleteOnClient?: (index: number) => void;
+  deleteOnServer?: (sheetsIndex: number, listIndex: number) => void;
 }
 
 const IncomeElement: React.FC<IncomeListProps> = ({
   income,
-  // dayRender = true,
-  actionApi,
-  // indexOfDay,
+  // actionApi,
   IncomeTypesOptions,
   itemIndex,
+  multipleLoading = false,
+  deleteOnClient,
+  deleteOnServer,
 }) => {
   const [onDetail, setDetail] = useState<boolean>(false);
-  const [initIncome, setIncome] = useState<IIncome>(income);
-  const [form] = Form.useForm();
+  // const [income, setIncome] = useState<IIncome>(income);
   const onClickIncomeHandel = () => {
     setDetail(!onDetail);
   };
 
-  const hanndelInputIncome = (input: IncomeFormInput) => {
-    const expenses = {
-      expensesCount: 0,
-      expensesPrice: 0,
-    };
-
-    const revenue = {
-      revenueCount: 0,
-      revenuePrice: 0,
-    };
-
-    if (input.priceType == "Expenses") {
-      expenses.expensesCount = Number(input.count);
-      expenses.expensesPrice = Number(input.price);
-    } else {
-      revenue.revenueCount = Number(input.count);
-      revenue.revenuePrice = Number(input.price);
-    }
-
-    var types: string = "";
-    const nameType: RadioOptions | undefined = IncomeTypesOptions.find(
-      (x) => x.value === input.types
-    );
-
-    if (nameType) {
-      if (nameType.value == "T00") {
-        types = "";
-      } else {
-        types = nameType.label ?? "";
-      }
-    }
-
-    const incomeData: IIncome = {
-      day: income.day,
-      delete: false,
-      draft: false,
-      name: input.name,
-      fetching: true,
-      sheetsIndex: income.sheetsIndex,
-      ...expenses,
-      ...revenue,
-      types: types,
-      _priceType: input.priceType,
-    };
-
-    return incomeData;
-  };
-
-  const setLoading = (load: boolean = true) => {
-    setIncome({ ...initIncome, fetching: load });
-  };
+  // const setLoading = (load: boolean = true) => {
+  //   setIncome({ ...income, fetching: load });
+  // };
 
   useEffect(() => {
-    setIncome(income);
+    // setIncome(income);
   }, [income]);
 
+  const [deleteAll, setDeleteAll] = useState<boolean>(false);
+  useEffect(() => {
+    // setIncome(income);
+
+    if (income.delete) {
+      setTimeout(() => {
+        setDeleteAll(true);
+      }, 1000);
+    }
+  }, [income.delete]);
+
+  if (deleteAll) {
+    return <></>;
+  }
   // if(income.types === "ของใช้ร่วมกัน")
   return (
     <>
-      {/* {JSON.stringify(initIncome)} */}
-      <div className="relative">
-        {initIncome.draft === true && (
-          <div className="absolute -top-2 right-2 flex gap-1">
-            <Button
-              size="small"
-              onClick={() => {
-                form.submit();
-              }}
-              className=" !bg-blue-500 !text-white  "
-              disabled={initIncome.fetching}
-              // type="primary"
-              icon={<FaPlus></FaPlus>}
-              // htmlType="submit"
-            ></Button>
-            <Button
-              size="small"
-              onClick={() => {
-                setLoading(false);
-                setTimeout(() => {
-                  const incomeDeleted = actionApi.setDelete(itemIndex);
-                  // if (incomeDeleted) {
-                  //   setIncome(incomeDeleted);
-                  // } else {
-                  //   setLoading(false);
-                  // }
-                }, 100);
-              }}
-              disabled={initIncome.fetching}
-              icon={<IoMdRemove className="text-lg"></IoMdRemove>}
-              // type="default"
-              // htmlType="button"
-              className="!bg-red-500 !text-white "
-            ></Button>
-          </div>
-        )}
-        <div className="w-full overflow-hidden">
-          <LayoutIncomeItem initIncome={initIncome}>
-            <Form
-              form={form}
+      <div
+        className={`w-full overflow-hidden ${
+          income.delete ? "py-0" : income.draft ? "py-1" : ""
+        } duration-300`}
+      >
+        {/* {JSON.stringify(multipleDraft)} */}
+        <LayoutIncomeItem
+          actionTop={
+            income.draft === true && (
+              <Button
+                size="small"
+                onClick={() => {
+                  // setLoading(false);
+                  setTimeout(() => {
+                    deleteOnClient?.(itemIndex);
+                    // const incomeDeleted = actionApi.setDelete(itemIndex);
+                    // if (incomeDeleted) {
+                    //   setIncome(incomeDeleted);
+                    // } else {
+                    //   setLoading(false);
+                    // }
+                  }, 100);
+                }}
+                disabled={income.fetching || multipleLoading}
+                icon={<IoMdRemove className="text-lg"></IoMdRemove>}
+                // type="default"
+                // htmlType="button"
+                className="!bg-red-500 !text-white "
+              ></Button>
+            )
+          }
+          initIncome={income}
+        >
+          {/* <Form
+              form={multipleDraft ? headForm : form}
               layout="vertical"
               onFinish={(input: IncomeFormInput) => {
-                if (initIncome.fetching !== true) {
-                  // setIncome({ ...initIncome, fetching: true, draft: false });
+                if (income.fetching !== true) {
+                  // setIncome({ ...income, fetching: true, draft: false });
                   const incomeData = hanndelInputIncome(input);
                   setIncome({ ...incomeData });
                   actionApi.onUpdate("add", incomeData).then((data) => {
@@ -160,82 +113,76 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                   });
                 }
               }}
-            >
+            > */}
+          <div
+            onClick={income.draft == true ? () => {} : onClickIncomeHandel}
+            className={`flex cursor-pointer ${
+              income._priceType == "Expenses" ? "flex-row" : "flex-row-reverse"
+            } justify-between items-center `}
+          >
+            <div className="w-full">
               <div
-                onClick={
-                  initIncome.draft == true ? () => {} : onClickIncomeHandel
-                }
-                className={`flex cursor-pointer ${
-                  initIncome._priceType == "Expenses"
+                className={`flex ${
+                  income._priceType == "Expenses"
                     ? "flex-row"
                     : "flex-row-reverse"
-                } justify-between items-center `}
+                } gap-3 items-center w-full`}
               >
-                <div className="w-full">
-                  <div
-                    className={`flex ${
-                      initIncome._priceType == "Expenses"
-                        ? "flex-row"
-                        : "flex-row-reverse"
-                    } gap-3 items-center w-full`}
-                  >
-                    <RenderDay
-                      state={
-                        initIncome.draft == true
-                          ? "draft"
-                          : initIncome.fetching
-                          ? "loading"
-                          : undefined
-                      }
-                      _priceType={initIncome._priceType}
-                      day={initIncome.day}
-                    ></RenderDay>
+                {income.draft === false && (
+                  <RenderDay
+                    state={
+                      income.fetching || multipleLoading ? "loading" : undefined
+                    }
+                    _priceType={income._priceType}
+                    day={income.day}
+                  ></RenderDay>
+                )}
 
-                    {initIncome.draft === false ? (
-                      <RenderName
-                        _priceType={initIncome._priceType}
-                        name={initIncome.name}
-                      ></RenderName>
-                    ) : (
-                      <>สร้างรายการใหม่</>
-                    )}
-                  </div>
-                  <RenderType
-                    _priceType={initIncome._priceType}
-                    types={initIncome.types}
-                  ></RenderType>
-                </div>
-                <div className={`flex gap-2 justify-center items-center`}>
-                  {initIncome.draft == false && (
-                    <RenderPrice
-                      _priceType={initIncome._priceType}
-                      expensesPrice={initIncome.expensesPrice}
-                      revenuePrice={initIncome.revenuePrice}
-                    ></RenderPrice>
-                  )}
-                </div>
+                {income.draft === false ? (
+                  <RenderName
+                    _priceType={income._priceType}
+                    name={income.name}
+                  ></RenderName>
+                ) : (
+                  <></>
+                )}
               </div>
-              {/* <div className="flex gap-3 divide-y  border font-bold">
+              <RenderType
+                _priceType={income._priceType}
+                types={income.types}
+              ></RenderType>
+            </div>
+            <div className={`flex gap-2 justify-center items-center`}>
+              {income.draft == false && (
+                <RenderPrice
+                  _priceType={income._priceType}
+                  expensesPrice={income.expensesPrice}
+                  revenuePrice={income.revenuePrice}
+                ></RenderPrice>
+              )}
+            </div>
+          </div>
+          {/* <div className="flex gap-3 divide-y  border font-bold">
               <div
                 className={`${
-                  initIncome.fetching ? "text-red-500" : "text-green-500"
+                  income.fetching ? "text-red-500" : "text-green-500"
                 }`}
               >
-                fetching: {JSON.stringify(initIncome.fetching)}
-              </div>
-              <div
-                className={`${
-                  initIncome.draft ? "text-red-500" : "text-green-500"
-                }`}
-              >
-                draft: {JSON.stringify(initIncome.draft)}
+                fetching: {JSON.stringify(income.fetching)}
               </div>
               <div
                 className={`${
-                  initIncome.delete ? "text-red-500" : "text-green-500"
+                  income.draft ? "text-red-500" : "text-green-500"
                 }`}
               >
-                delete: {JSON.stringify(initIncome.delete)}
+                draft: {JSON.stringify(income.draft)}
+              </div>
+              <div
+                className={`${
+                  income.delete ? "text-red-500" : "text-green-500"
+                }`}
+              >
+                delete: {JSON.stringify(income.delete)}
               </div>
               <div>itemIndex: {itemIndex}</div>
               <div
@@ -245,123 +192,124 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               </div>
               <div
                 className={`${
-                  initIncome.sheetsIndex ? "text-red-500" : "text-green-500"
+                  income.sheetsIndex ? "text-red-500" : "text-green-500"
                 }`}
               >
-                sheetsIndex: {JSON.stringify(initIncome.sheetsIndex)}
+                sheetsIndex: {JSON.stringify(income.sheetsIndex)}
               </div>
             </div> */}
-              {initIncome.draft == false && initIncome.fetching == false && (
+          {income.draft == false &&
+            income.fetching == false &&
+            multipleLoading === false && (
+              <div
+                className={`transition-all ${
+                  !onDetail
+                    ? "max-h-0 duration-500"
+                    : "max-h-[100px] duration-500"
+                } `}
+              >
+                <div className="pt-4"></div>
                 <div
-                  className={`transition-all ${
-                    !onDetail
-                      ? "max-h-0 duration-500"
-                      : "max-h-[100px] duration-500"
-                  } `}
+                  onClick={() => {
+                    if (income.fetching !== true) {
+                      deleteOnServer?.(income.sheetsIndex, itemIndex);
+                      // setLoading();
+                      // actionApi
+                      //   .onUpdate?.("delete", income)
+                      //   .then((data) => {
+                      //     if (data) {
+                      //       // setDelete(itemIndex);
+                      //       actionApi.setDelete(itemIndex);
+                      //       // setIncome(data);
+                      //     } else {
+                      //       setLoading(false);
+                      //     }
+                      //   })
+                      //   .catch(() => {
+                      //     setLoading(false);
+                      //   });
+                    }
+                  }}
+                  className="w-fit border p-1"
                 >
-                  <div className="pt-4"></div>
-                  <div
-                    onClick={() => {
-                      if (initIncome.fetching !== true) {
-                        setLoading();
-                        actionApi
-                          .onUpdate?.("delete", initIncome)
-                          .then((data) => {
-                            if (data) {
-                              // setDelete(itemIndex);
-                              actionApi.setDelete(itemIndex);
-
-                              // setIncome(data);
-                            } else {
-                              setLoading(false);
-                            }
-                          })
-                          .catch(() => {
-                            setLoading(false);
-                          });
-                      }
-                    }}
-                    className="w-fit border p-1"
-                  >
-                    delete
-                  </div>
-                  <div
-                    onClick={() => {
-                      if (initIncome.fetching !== true) {
-                        setIncome({ ...initIncome, fetching: true });
-                        actionApi
-                          .onUpdate?.("update", initIncome)
-                          .then((data) => {
-                            if (data) {
-                              setIncome(data);
-                            } else {
-                              setLoading(false);
-                            }
-                          })
-                          .catch(() => {
-                            setLoading(false);
-                          });
-                      }
-                    }}
-                    className="w-fit border p-1"
-                  >
-                    Edit
-                  </div>
+                  delete
                 </div>
-              )}
-
-              {initIncome.draft === true ? (
-                <div className="flex flex-col gap-2 pt-2">
-                  <div className="flex gap-2">
-                    <div className="w-[80px]">
-                      <IncomeInputCountItem
-                        name="count"
-                        lable="จำนวน"
-                      ></IncomeInputCountItem>
-                    </div>
-                    <IncomeInputName
-                      name="name"
-                      lable="ชื่อรายการ"
-                    ></IncomeInputName>
-                    <div className="w-[30%]">
-                      <IncomeInputPrice
-                        name="price"
-                        lable="ราคา"
-                      ></IncomeInputPrice>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="w-[150px]">
-                      <IncomeInputTypes
-                        options={IncomeTypesOptions}
-                        name="types"
-                        lable="หมวดหมู่"
-                      ></IncomeInputTypes>
-                    </div>
-                    <div className="  w-full">
-                      <IncomePriceType
-                        defaultValue={"Expenses"}
-                        name="priceType"
-                        options={[
-                          {
-                            label: "จ่าย",
-                            value: "Expenses",
-                          },
-                          {
-                            label: "รับ",
-                            value: "Revenue",
-                          },
-                        ]}
-                      ></IncomePriceType>
-                    </div>
-                  </div>
+                <div
+                  onClick={() => {
+                    if (income.fetching !== true) {
+                      // setIncome({ ...income, fetching: true });
+                      // actionApi
+                      //   .onUpdate?.("update", income)
+                      //   .then((data) => {
+                      //     if (data) {
+                      //       setIncome(data);
+                      //     } else {
+                      //       setLoading(false);
+                      //     }
+                      //   })
+                      //   .catch(() => {
+                      //     setLoading(false);
+                      //   });
+                    }
+                  }}
+                  className="w-fit border p-1"
+                >
+                  Edit
                 </div>
-              ) : (
-                <></>
-              )}
-            </Form>
-          </LayoutIncomeItem>
-        </div>
+              </div>
+            )}
+
+          {income.draft === true ? (
+            <div className="flex flex-col gap-2 pt-2">
+              <div className="flex gap-2">
+                <div className="w-[80px]">
+                  <IncomeInputCountItem
+                    name={"count_" + itemIndex}
+                    lable="จำนวน"
+                  ></IncomeInputCountItem>
+                </div>
+                <IncomeInputName
+                  name={"name_" + itemIndex}
+                  lable="ชื่อรายการ"
+                ></IncomeInputName>
+                <div className="w-[30%]">
+                  <IncomeInputPrice
+                    name={"price_" + itemIndex}
+                    lable="ราคา"
+                  ></IncomeInputPrice>
+                </div>
+              </div>
+              <div className="flex gap-2 justify-between">
+                <div className="w-[150px]">
+                  <IncomeInputTypes
+                    options={IncomeTypesOptions}
+                    name={"types_" + itemIndex}
+                    lable="หมวดหมู่"
+                  ></IncomeInputTypes>
+                </div>
+                <div className="">
+                  <IncomePriceType
+                    defaultValue={"Expenses"}
+                    name={"priceType_" + itemIndex}
+                    options={[
+                      {
+                        label: "จ่าย",
+                        value: "Expenses",
+                      },
+                      {
+                        label: "รับ",
+                        value: "Revenue",
+                      },
+                    ]}
+                  ></IncomePriceType>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+          {/* </Form> */}
+        </LayoutIncomeItem>
       </div>
     </>
   );

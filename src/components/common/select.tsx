@@ -12,12 +12,12 @@ const SelectCommon: React.FC<SelectCommonProps> = ({ ...props }) => {
 
   return (
     <Select
+      {...props}
       size="small"
       showSearch
       optionFilterProp="children"
       filterOption={filterOption as any}
-      className="w-full"
-      {...props}
+      className="w-full text-xs"
     ></Select>
   );
 };

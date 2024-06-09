@@ -11,9 +11,11 @@ export class IncomeModel implements IIncome {
   delete: boolean = false;
   fetching: boolean = false;
   draft: boolean = false;
+  indexOfList: number = 0;
 
   public constructor(
     sheetsIndex: number,
+    indexOfList: number,
     day: Date,
     types: string,
     name: string,
@@ -23,6 +25,7 @@ export class IncomeModel implements IIncome {
     revenuePrice: number | string
   ) {
     this.sheetsIndex = sheetsIndex;
+    this.indexOfList = indexOfList;
     this.day = day;
     this.types = types;
     this.name = name;
@@ -52,6 +55,7 @@ export class IncomeModel implements IIncome {
       revenuePrice: this.revenuePrice,
       _priceType: this._priceType,
       delete: this.delete,
+      indexOfList: this.indexOfList,
     };
   }
 }

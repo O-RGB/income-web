@@ -1,4 +1,4 @@
-// import { GETQueryName } from "@/types/utils/api/general-fetch/query";
+"use client";
 import { DateFormat } from "@/libs/date-lib";
 import { Fetcher } from "@/utils/fetch/fetch";
 import { IncomeModel } from "@/utils/models/income";
@@ -22,11 +22,11 @@ export const FetchGetOfDay = async (
 
   if (res.success === true) {
     var income: IncomeModel[] = [];
-    res.data?.map((list) => {
-
+    res.data?.map((list, index) => {
       income.push(
         new IncomeModel(
           list[0],
+          index,
           new Date(list[1]),
           list[2],
           list[3],
@@ -57,10 +57,11 @@ export const FetchGetOfMonth = async (
 
   if (res.success === true) {
     var income: IncomeModel[] = [];
-    res.data?.map((list) => {
+    res.data?.map((list, index) => {
       income.push(
         new IncomeModel(
           list[0],
+          index,
           list[1],
           list[2],
           list[3],
