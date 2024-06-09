@@ -30,43 +30,22 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   const [firstIndexSheets, setFirstIndex] = useState<number>();
   const [countDraft, setCountDraft] = useState<number>(0);
 
-  const updateIndexSheetsOnMonth = (dayIndex: number, income: IIncome[]) => {
-    if (incomesData && typeof incomesData !== "string") {
-      var clone = incomesData;
-      // setIncomes([]);
+  const updateSheetsIndex = (incomes: IIncome[]) => {
+    if (firstIndexSheets) {
+      var _clone: IIncome[] = [];
+      _clone = incomes;
+      let startIndex = firstIndexSheets;
+      _clone = _clone.map((data) => {
+        let obj = { ...data, sheetsIndex: startIndex };
+        if (!obj.delete) {
+          startIndex = startIndex + 1;
+        }
+        return obj;
+      });
 
-      if (clone[dayIndex - 1]) {
-        // clone[dayIndex - 1] = income;
-
-        var count: number = 2;
-        const update = clone.map((income) => {
-          // return income.map((data) => {
-          //   data.sheetsIndex = count;
-          //   return data;
-          // });
-          income.sheetsIndex = count;
-          count = count + 1;
-          return income;
-        });
-
-        setTimeout(() => {
-          console.log(update);
-          setIncomes(update);
-        }, 100);
-      }
-    }
-  };
-
-  const findIndexNotDelete = () => {
-    if (incomesData) {
-      if (incomesData) {
-        const notDelete = incomesData?.filter((data) => data.delete !== true);
-        return notDelete.length;
-      } else {
-        return 0;
-      }
-    } else {
-      return 0;
+      setTimeout(() => {
+        setIncomes(_clone);
+      }, 100);
     }
   };
 
@@ -86,9 +65,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         return data;
       });
 
-      setTimeout(() => {
-        setIncomes(fetch);
-      }, 100);
+      updateSheetsIndex(fetch);
+      // setTimeout(() => {
+      //   setIncomes(fetch);
+      // }, 100);
     }
   };
 
@@ -103,9 +83,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         _clone[index].fetching = true;
       }
 
-      setTimeout(() => {
-        setIncomes(_clone);
-      }, 100);
+      updateSheetsIndex(_clone);
+      // setTimeout(() => {
+      //   setIncomes(_clone);
+      // }, 100);
     }
   };
 
@@ -134,9 +115,12 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           }
         });
 
-        setTimeout(() => {
-          setIncomes(clone);
-        }, 100);
+        updateSheetsIndex(clone);
+        // setTimeout(() => {
+        //   setIncomes(clone);
+        //   // const sheetsIndex = getSheetsIndex(clone);
+        //   // setFirstIndex(sheetsIndex);
+        // }, 100);
       }
     }
 
@@ -166,9 +150,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       };
 
       clone?.push(newElement);
-      setTimeout(() => {
-        setIncomes(clone);
-      }, 100);
+      updateSheetsIndex(clone);
+      // setTimeout(() => {
+      //   setIncomes(clone);
+      // }, 100);
     }
   };
 
@@ -195,18 +180,23 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           if (i === listIndex) {
             _.delete = true;
           }
+
           return _;
         });
         if (data.draft) {
         }
-        setTimeout(() => {
-          setCountDraft((value) => (value > 0 ? value - 1 : 0));
-          setIncomes(incomeUpdate);
-        }, 100);
+        // setTimeout(() => {
+        //   setCountDraft((value) => (value > 0 ? value - 1 : 0));
+        //   // const sheetsIndex = getSheetsIndex(incomeUpdate);
+        //   // setFirstIndex(sheetsIndex);
+        //   setIncomes(incomeUpdate);
+        // }, 100);
+        updateSheetsIndex(incomeUpdate);
       } else {
-        setTimeout(() => {
-          setIncomes(clone);
-        }, 100);
+        // setTimeout(() => {
+        //   setIncomes(clone);
+        // }, 100);
+        updateSheetsIndex(clone);
       }
     }
   };
@@ -227,6 +217,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
   return (
     <>
+
       {/* <FloatingButton
         onClick={() => {
           onElementUpdate("add", {

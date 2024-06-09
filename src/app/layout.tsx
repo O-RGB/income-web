@@ -1,9 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, K2D } from "next/font/google";
 import "./globals.css";
-import Head from "next/head";
 
 const inter = K2D({ subsets: ["thai"], weight: "300" });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  // Also supported by less commonly used
+  // interactiveWidget: 'resizes-visual',
+};
 
 export const metadata: Metadata = {
   title: "รายรับรายจ่าย",
@@ -16,16 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-        />
-      </Head>
-      <html lang="en">
-        <body className={inter.className}>{children}</body>
-      </html>
-    </>
+    <html lang="en">
+      <body className={inter.className}>{children}</body>
+    </html>
   );
 }
