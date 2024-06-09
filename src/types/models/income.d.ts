@@ -42,7 +42,7 @@ interface IIncomeDelete {
 }
 
 interface IActionDayIncomesLists {
-  setFetchingDraft: () => void;
+  setFetchingDraft: () => Promise<void>;
   setUpdate?: (indexUpdated: number, income: IIncome) => void;
   setAdd: (incomesList: IIncome[]) => Promise<
     {

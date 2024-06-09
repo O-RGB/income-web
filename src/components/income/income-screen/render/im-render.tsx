@@ -30,23 +30,6 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   //not re render
   const [_incomes, setIncomesTemp] = useState<IIncome[]>();
 
-  const actionByIndex = (index: number[]) => {
-    if (_incomes) {
-      // var _clone: IIncome[] = _incomes;
-      // setIncomesTemp(undefined);
-      // index.map((data) => {
-      //   let income: IIncome = _clone[data];
-      //   income = {
-      //     ...income,
-      //     fetching: true,
-      //   };
-      // });
-      // setTimeout(() => {
-      //   setIncomesTemp(_clone);
-      // }, 100);
-    }
-  };
-
   useEffect(() => {
     if (incomes) {
       setIncomesTemp(incomes);
@@ -99,9 +82,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
 
                 if (action) {
                   action.setFetchingDraft();
-                  action.setAdd?.(yt).then((data) => {
-                    console.log("on add to sheets", data);
-                  });
+                  action.setAdd?.(yt);
                 }
                 // onSaveIncomes?.(yt);
               }}

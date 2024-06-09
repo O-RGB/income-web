@@ -30,7 +30,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   const [firstIndexSheets, setFirstIndex] = useState<number>();
   const [countDraft, setCountDraft] = useState<number>(0);
 
-  const updateSheetsIndex = (incomes: IIncome[]) => {
+  const updateSheetsIndex = async (incomes: IIncome[]) => {
     if (firstIndexSheets) {
       var _clone: IIncome[] = [];
       _clone = incomes;
@@ -46,29 +46,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       setTimeout(() => {
         setIncomes(_clone);
       }, 100);
-    }
-  };
-
-  const fetchingIncomesDraft = () => {
-    if (incomesData) {
-      var _clone: IIncome[] = incomesData;
-      setIncomes(undefined);
-      setCountDraft(0);
-
-      let fetch = _clone.map((data) => {
-        if (data.draft && !data.delete) {
-          data.fetching = true;
-          data.draft = false;
-          data.name = "กำลังส่ง";
-        }
-
-        return data;
-      });
-
-      updateSheetsIndex(fetch);
-      // setTimeout(() => {
-      //   setIncomes(fetch);
-      // }, 100);
     }
   };
 
@@ -89,10 +66,26 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       // }, 100);
     }
   };
+  const updateSheetsAndFetch = async () => {
+    if (incomesData) {
+      var _clone: IIncome[] = incomesData;
+      setCountDraft(0);
 
+      let fetch = _clone.map((data) => {
+        if (data.draft && !data.delete) {
+          data.fetching = true;
+          data.draft = false;
+          data.name = "กำลังส่ง";
+        }
+        return data;
+      });
+      await updateSheetsIndex(fetch);
+    }
+  };
   const addIncomes = async (incomesList: IIncome[]) => {
     let addReslut: { index: number; result: boolean }[] = [];
-    if (incomesData) {
+    console.log("incomesData on addinceomc", incomesData);
+    if (incomesData !== undefined) {
       let clone = incomesData;
       setIncomes(undefined);
       const data = await onAddIncome(incomesList);
@@ -116,11 +109,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         });
 
         updateSheetsIndex(clone);
-        // setTimeout(() => {
-        //   setIncomes(clone);
-        //   // const sheetsIndex = getSheetsIndex(clone);
-        //   // setFirstIndex(sheetsIndex);
-        // }, 100);
+        // updateSheetsAndFetch(clone);
       }
     }
 
@@ -134,7 +123,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       setCountDraft((value) => value + 1);
       let newElement: IIncome = {
         sheetsIndex: 0,
-        // sheetsIndex: findIndexNotDelete() + 2,
         _priceType: "Expenses",
         day: dateSelect,
         expensesCount: 0,
@@ -149,11 +137,18 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         draft: true,
       };
 
-      clone?.push(newElement);
-      updateSheetsIndex(clone);
-      // setTimeout(() => {
-      //   setIncomes(clone);
-      // }, 100);
+      console.log("on draft add = ", clone.length);
+      // if (clone.length === 0) {
+      //   clone = [newElement];
+      // } else {
+      //   clone.push(newElement);
+      // }
+      clone = [...clone, newElement];
+      console.log("cone= ", clone);
+      // updateSheetsIndex(clone);
+      setTimeout(() => {
+        setIncomes(clone);
+      }, 100);
     }
   };
 
@@ -180,22 +175,11 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           if (i === listIndex) {
             _.delete = true;
           }
-
           return _;
         });
-        if (data.draft) {
-        }
-        // setTimeout(() => {
-        //   setCountDraft((value) => (value > 0 ? value - 1 : 0));
-        //   // const sheetsIndex = getSheetsIndex(incomeUpdate);
-        //   // setFirstIndex(sheetsIndex);
-        //   setIncomes(incomeUpdate);
-        // }, 100);
+
         updateSheetsIndex(incomeUpdate);
       } else {
-        // setTimeout(() => {
-        //   setIncomes(clone);
-        // }, 100);
         updateSheetsIndex(clone);
       }
     }
@@ -205,19 +189,25 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     if (incomes) {
       if (incomes.length > 0) {
         setFirstIndex(incomes[0].sheetsIndex);
-        setIncomes(incomes);
+      } else {
+        setFirstIndex(0);
       }
     }
+    setIncomes(incomes ? incomes : []);
 
-    if (loading.pageLoad === false && !incomes) {
-      setFirstIndex(0);
-      setIncomes([]);
-    }
+    console.log("invomes = ", incomesData);
+
+    // console.log(loading.pageLoad === false && incomes === undefined);
+    // if (loading.pageLoad === false && incomes === undefined) {
+    //   setFirstIndex(0);
+    //   setIncomes([]);
+    // }
   }, [incomes]);
 
   return (
     <>
-
+      {/* incomesData: {JSON.stringify(incomesData)}
+      firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
       {/* <FloatingButton
         onClick={() => {
           onElementUpdate("add", {
@@ -247,7 +237,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           setDeleteOnClient: deleteOnClient,
           setDelete: deleteOnServer,
           setAdd: addIncomes,
-          setFetchingDraft: fetchingIncomesDraft,
+          setFetchingDraft: updateSheetsAndFetch,
         }}
         incomes={incomesData}
         dateSelect={dateSelect}

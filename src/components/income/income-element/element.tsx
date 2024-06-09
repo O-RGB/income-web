@@ -210,6 +210,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               >
                 <div className="pt-4"></div>
                 <div
+                
                   onClick={() => {
                     if (income.fetching !== true) {
                       deleteOnServer?.(income.sheetsIndex, itemIndex);
@@ -230,31 +231,9 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                       //   });
                     }
                   }}
-                  className="w-fit border p-1"
+                  className="w-fit border p-1 cursor-pointer bg-red-500 text-white rounded-lg"
                 >
                   delete
-                </div>
-                <div
-                  onClick={() => {
-                    if (income.fetching !== true) {
-                      // setIncome({ ...income, fetching: true });
-                      // actionApi
-                      //   .onUpdate?.("update", income)
-                      //   .then((data) => {
-                      //     if (data) {
-                      //       setIncome(data);
-                      //     } else {
-                      //       setLoading(false);
-                      //     }
-                      //   })
-                      //   .catch(() => {
-                      //     setLoading(false);
-                      //   });
-                    }
-                  }}
-                  className="w-fit border p-1"
-                >
-                  Edit
                 </div>
               </div>
             )}
