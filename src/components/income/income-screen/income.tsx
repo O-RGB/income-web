@@ -5,23 +5,23 @@ import IncomeRender from "./render/im-render";
 
 interface IncomeListInDayProps {
   incomes?: IIncome[];
+  master: IMasterDataImcomes;
   onAddIncome: (
     income: IIncome[]
   ) => Promise<IGeneralReturnFetch<IIncome[] | undefined>>;
   deleteIncome?: (
     sheetsIndex: number
   ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
-  IncomeTypesOptions: RadioOptions[];
   onSelectDate: (date: Date) => void;
   dateSelect: Date;
   loading: ILoading;
 }
 
 const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
+  master,
   incomes,
   onAddIncome,
   deleteIncome,
-  IncomeTypesOptions,
   onSelectDate,
   dateSelect,
   loading,
@@ -242,8 +242,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         incomes={incomesData}
         dateSelect={dateSelect}
         loading={loading}
-        types={IncomeTypesOptions}
         draftCount={countDraft}
+        master={master}
       ></IncomeRender>
     </>
   );

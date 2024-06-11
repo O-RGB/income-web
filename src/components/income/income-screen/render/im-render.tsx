@@ -9,20 +9,22 @@ import { DynamicKeysToArray, hanndelInputIncome } from "./im-lib";
 import SummaryOfDay from "./summary/summaryOfDay";
 
 interface IncomeRenderProps {
+  master: IMasterDataImcomes;
   dateSelect: Date;
   incomes?: IIncome[];
   loading: ILoading;
   action?: IActionDayIncomesLists;
-  types: RadioOptions[];
+
   draftCount: number;
 }
 
 const IncomeRender: React.FC<IncomeRenderProps> = ({
+  master,
   dateSelect,
   incomes,
   loading,
   action,
-  types,
+
   draftCount,
 }) => {
   const [headForm] = Form.useForm();
@@ -76,7 +78,11 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                 const d = DynamicKeysToArray(e);
                 var yt: IIncome[] = [];
                 d.map((data) => {
-                  const dat = hanndelInputIncome(data, types, dateSelect);
+                  const dat = hanndelInputIncome(
+                    data,
+                    master.typesOfItems,
+                    dateSelect
+                  );
                   yt.push(dat);
                 });
 
@@ -114,7 +120,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                               ? loading.waitActioning
                               : false
                           }
-                          IncomeTypesOptions={types}
+                          master={master}
                           itemIndex={jindex}
                           income={im}
                         ></IncomeElement>

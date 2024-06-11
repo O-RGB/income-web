@@ -1,7 +1,7 @@
 "use client";
 
 import IncomeListInDay from "@/components/income/income-screen/income";
-import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
+import { FetchGetDupOfMonth, FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
 import { FetchTypesIncome } from "@/fetcher/GET/types.fetch";
 import {
   AddIncome,
@@ -19,7 +19,7 @@ export default function Home() {
     pageLoad: false,
     waitActioning: false,
   });
-  // const [apiFetching, setFetching] = useState<boolean>(false);
+  const [duplicateItems, setDuplicate] = useState<RadioOptions[]>([]);
   const [IncomeTypesOptions, setIncomeTypesOptions] = useState<RadioOptions[]>(
     []
   );
@@ -62,6 +62,20 @@ export default function Home() {
       if (incomes) {
         const options = GenOption("name", "typeId", incomes);
         setIncomeTypesOptions(options);
+      }
+    }
+  };
+
+  const getDuplecate = async () => {
+    let getUrl = getLocalByKey("google_sheets");
+    if (getUrl) {
+      const incomes = await FetchGetDupOfMonth(getUrl);
+      if (incomes) {
+        const convent = incomes.map((data) => {
+          return { name: data, value: data };
+        });
+        const options = GenOption("name", "value", convent);
+        setDuplicate(options);
       }
     }
   };
@@ -124,7 +138,10 @@ export default function Home() {
 
   const getData = () => {
     getIncomeSheets();
+
     getTypes();
+
+    getDuplecate();
   };
 
   useEffect(() => {
@@ -150,8 +167,11 @@ export default function Home() {
       </div>
 
       <IncomeListInDay
+        master={{
+          dupOfMonth: duplicateItems,
+          typesOfItems: IncomeTypesOptions,
+        }}
         dateSelect={dateSelect}
-        IncomeTypesOptions={IncomeTypesOptions}
         onAddIncome={onAddIncome}
         deleteIncome={onDeleteIncome}
         onSelectDate={onSelectDate}

@@ -4,7 +4,7 @@ type POSTQueryName =
   | "POST_delete_income"
   | "POST_insert_income_on_day"
   | "POST_insert_incomes_list";
-type GETQueryName = "day" | "month" | "types";
+type GETQueryName = "day" | "month" | "types" | "dup";
 
 interface IInitQuery {
   query?: POSTQueryName | GETQueryName;

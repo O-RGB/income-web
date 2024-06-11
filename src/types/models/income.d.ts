@@ -40,17 +40,3 @@ interface IIncomesListAdd {
 interface IIncomeDelete {
   sheetsIndex: number;
 }
-
-interface IActionDayIncomesLists {
-  setFetchingDraft: () => Promise<void>;
-  setUpdate?: (indexUpdated: number, income: IIncome) => void;
-  setAdd: (incomesList: IIncome[]) => Promise<
-    {
-      index: number;
-      result: boolean;
-    }[]
-  >;
-  setDraft?: () => void;
-  setDelete?: (indexOfDay: number, listIndex: number) => void;
-  setDeleteOnClient?: (indexOfDay: number) => void;
-}

@@ -76,3 +76,23 @@ export const FetchGetOfMonth = async (
   }
   return undefined;
 };
+
+export const FetchGetDupOfMonth = async (
+  url: string,
+  loading?: (load: boolean) => void
+) => {
+  const res = await Fetcher<undefined, string[]>(
+    url,
+    {
+      data: {
+        query: "dup",
+      },
+    },
+    loading
+  );
+
+  if (res.success === true) {
+    return res.data;
+  }
+  return undefined;
+};

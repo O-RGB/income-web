@@ -16,7 +16,7 @@ interface IncomeListProps {
   income: IIncome;
   dayRender?: boolean;
   // actionApi: IActionDayIncomesLists;
-  IncomeTypesOptions: RadioOptions[];
+  master: IMasterDataImcomes;
   itemIndex: number;
   multipleLoading: boolean;
   deleteOnClient?: (index: number) => void;
@@ -26,7 +26,7 @@ interface IncomeListProps {
 const IncomeElement: React.FC<IncomeListProps> = ({
   income,
   // actionApi,
-  IncomeTypesOptions,
+  master,
   itemIndex,
   multipleLoading = false,
   deleteOnClient,
@@ -210,7 +210,6 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               >
                 <div className="pt-4"></div>
                 <div
-                
                   onClick={() => {
                     if (income.fetching !== true) {
                       deleteOnServer?.(income.sheetsIndex, itemIndex);
@@ -250,6 +249,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 <IncomeInputName
                   name={"name_" + itemIndex}
                   lable="ชื่อรายการ"
+                  option={master.dupOfMonth}
                 ></IncomeInputName>
                 <div className="w-[30%]">
                   <IncomeInputPrice
@@ -261,7 +261,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               <div className="flex gap-2 justify-between">
                 <div className="w-[150px]">
                   <IncomeInputTypes
-                    options={IncomeTypesOptions}
+                    options={master.typesOfItems}
                     name={"types_" + itemIndex}
                     lable="หมวดหมู่"
                   ></IncomeInputTypes>
