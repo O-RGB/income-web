@@ -5,6 +5,7 @@ import IncomeRender from "./render/im-render";
 import { Form } from "antd";
 import LineChart from "@/components/charts/test";
 import { GetColor } from "@/libs/color";
+import BarChart from "@/components/charts/bar-chart";
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
@@ -183,38 +184,24 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       datasets: [],
       labels: [],
     };
-    let label: string[] = [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-      "11",
-      "12",
-      "13",
-      "14",
-      "15",
-      "16",
-    ];
+    let label: string[] = [];
     let datasets: ILineChartDatasets[] = [];
+    let sumBar: number[] = [];
     IGetDisplayCal.types.map((type) => {
-      // label.push(type.type);
-      if (type.type !== "รายจ่ายประจำ" && type.type !== "ไม่มีหมวดหมู่") {
-        let data = type.plot.map((plt) => plt.expenses);
-        let color = GetColor();
-        datasets.push({
-          label: type.type,
-          backgroundColor: color,
-          borderColor: color,
-          data: data,
-          yAxisID: "y",
-        });
+      if (type.type !== "ไม่มีหมวดหมู่") {
+        label.push(type.type);
+        let count = type.plot.map((r) => r.expenses);
+        let sum = count.reduce((partialSum, a) => partialSum + a, 0);
+        sumBar.push(sum);
       }
+    });
+    let color = GetColor();
+    datasets.push({
+      label: "label",
+      backgroundColor: color,
+      borderColor: color,
+      data: sumBar,
+      yAxisID: "y",
     });
     data = {
       datasets: datasets,
@@ -234,12 +221,14 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       setFirstIndex(0);
     }
     setIncomes(incomes ? incomes : []);
+  }, [incomes]);
 
+  useEffect(() => {
     if (master.IGetDisplayCal) {
       const data = calLineChart(master.IGetDisplayCal);
       setChartData(data);
     }
-  }, [incomes]);
+  }, [master.IGetDisplayCal]);
 
   return (
     <>
@@ -263,7 +252,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         }}
       ></FloatingButton> */}
 
-      {chartData && <LineChart data={chartData}></LineChart>}
+      {/* {chartData && <LineChart data={chartData}></LineChart>} */}
+      {chartData && <BarChart data={chartData}></BarChart>}
 
       <DetailOfMonth
         master={master}
