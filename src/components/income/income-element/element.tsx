@@ -76,6 +76,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 size="small"
                 onClick={() => {
                   // setLoading(false);
+                  console.log("on click delete on ui")
                   setTimeout(() => {
                     deleteOnClient?.(itemIndex);
                     // const incomeDeleted = actionApi.setDelete(itemIndex);

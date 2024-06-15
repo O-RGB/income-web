@@ -1,5 +1,5 @@
 import { Calendar, ConfigProvider, theme } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 
 import locale from "antd/locale/th_TH";
 import dayjs from "dayjs";
@@ -13,11 +13,13 @@ dayjs.locale("th");
 interface CalendarCommonProps {
   onDateChange?: (date: Date) => void;
   datelist?: Date[];
+  sumLists?: ICalenderList[];
 }
 
 const CalendarCommon: React.FC<CalendarCommonProps> = ({
   onDateChange,
   datelist = [new Date("May 19, 2024")],
+  sumLists,
 }) => {
   const { token } = theme.useToken();
 
@@ -27,9 +29,7 @@ const CalendarCommon: React.FC<CalendarCommonProps> = ({
     borderRadius: token.borderRadiusLG,
   };
 
-  const calPriceByDate = () => {
-
-  }
+  const calPriceByDate = () => {};
 
   const disabledDate = (current: any) => {
     const today = new Date(); // Get today's date
@@ -49,20 +49,30 @@ const CalendarCommon: React.FC<CalendarCommonProps> = ({
     return current && current.toDate() > today;
   };
 
+  useEffect(() => {}, [sumLists]);
+
   return (
     <>
       <ConfigProvider locale={locale}>
         <div style={wrapperStyle}>
           <Calendar
             // cellRender={(date) => {
-            //   const time = disabledDate(date);
-            //   if (!time) {
-            //     return (
-            //       <div className="px-2 rounded-md text-xs border bg-green-400 text-white">
-            //         234
-            //       </div>
-            //     );
-            //   }
+            //   const dateSeelct = date.date();
+            //   const sum = sumLists?.find((x) => x.day === dateSeelct);
+
+            //   // if (sum) {
+            //   //   return (
+            //   //     <>
+            //   //       {sum.value.expenses > 0 && (
+            //   //         <div className="px-1 -my-1 rounded-md text-[10px] border bg-red-400 text-white">
+            //   //           {sum.value.expenses}
+            //   //         </div>
+            //   //       )}
+            //   //     </>
+            //   //   );
+            //   // }
+            //   // if (!time) {
+            //   // }
             // }}
             disabledDate={disabledDate}
             fullscreen={false}

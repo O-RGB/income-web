@@ -96,3 +96,26 @@ export const FetchGetDupOfMonth = async (
   }
   return undefined;
 };
+
+export const FetchGetDisplayCal = async (
+  url: string,
+  date: Date,
+  loading?: (load: boolean) => void
+) => {
+  const initDate = DateFormat(date, "MM-DD-YYYY");
+  const res = await Fetcher<any, IGetDisplayCal>(
+    url,
+    {
+      data: {
+        query: "display",
+        date: initDate,
+      },
+    },
+    loading
+  );
+
+  if (res.success === true) {
+    return res.data;
+  }
+  return undefined;
+};

@@ -7,6 +7,7 @@ interface IIncomeTypes {
 interface IMasterDataImcomes {
   typesOfItems: RadioOptions[];
   dupOfMonth: RadioOptions[];
+  IGetDisplayCal?: IGetDisplayCal;
 }
 
 interface IActionDayIncomesLists {
@@ -21,4 +22,28 @@ interface IActionDayIncomesLists {
   setDraft?: () => void;
   setDelete?: (indexOfDay: number, listIndex: number) => void;
   setDeleteOnClient?: (indexOfDay: number) => void;
+}
+
+interface IGetDisplayCal {
+  calendar: ICalenderList[];
+  types: ITypesList[];
+}
+
+interface IPrice {
+  revenue: number;
+  expenses: number;
+}
+
+interface ICalenderList {
+  day: number;
+  value: IPrice;
+}
+
+interface ITypesList {
+  type: string;
+  plot: IDisplayPlotType[];
+}
+
+interface IDisplayPlotType extends IPrice {
+  day: number;
 }

@@ -7,51 +7,46 @@ interface DetailOfMonthProps {
   incomes?: IIncome[];
   onDateChange?: (date: Date) => void;
   date: Date;
+  master: IMasterDataImcomes;
 }
 
 const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
   incomes,
   onDateChange,
   date,
+  master,
 }) => {
-  const [test, setT] = useState<string>();
   const [openDate, setOpenDate] = useState<boolean>(false);
-  const [priceSummary, setPriceSummary] = useState<{
-    Expenses: number;
-    Revenue: number;
-  }>({
-    Expenses: 0,
-    Revenue: 0,
-  });
-  useEffect(() => {
-    if (incomes) {
-      console.log("incomes = ", incomes);
-      const date = DateFormat();
-      setT(date);
-      let ex: number = 0;
-      let re: number = 0;
-      incomes?.map((income) => {
-        if (Number(income.expensesPrice)) {
-          ex = ex + Number(income.expensesPrice);
-        }
-        if (Number(income.revenuePrice)) {
-          re = re + Number(income.revenuePrice);
-        }
-        // income.map((onDay) => {
-        //   if (Number(onDay.expensesPrice)) {
-        //     ex = ex + Number(onDay.expensesPrice);
-        //   }
-        //   if (Number(onDay.revenuePrice)) {
-        //     re = re + Number(onDay.revenuePrice);
-        //   }
-        // });
-      });
-      setPriceSummary({
-        Expenses: ex,
-        Revenue: re,
-      });
-    }
-  }, [incomes]);
+
+  // useEffect(() => {
+  //   if (incomes) {
+  //     console.log("incomes = ", incomes);
+  //     const date = DateFormat();
+  //     setT(date);
+  //     let ex: number = 0;
+  //     let re: number = 0;
+  //     incomes?.map((income) => {
+  //       if (Number(income.expensesPrice)) {
+  //         ex = ex + Number(income.expensesPrice);
+  //       }
+  //       if (Number(income.revenuePrice)) {
+  //         re = re + Number(income.revenuePrice);
+  //       }
+  //       // income.map((onDay) => {
+  //       //   if (Number(onDay.expensesPrice)) {
+  //       //     ex = ex + Number(onDay.expensesPrice);
+  //       //   }
+  //       //   if (Number(onDay.revenuePrice)) {
+  //       //     re = re + Number(onDay.revenuePrice);
+  //       //   }
+  //       // });
+  //     });
+  //     setPriceSummary({
+  //       Expenses: ex,
+  //       Revenue: re,
+  //     });
+  //   }
+  // }, [incomes]);
   return (
     <>
       <div className="p-2 flex flex-col gap-3">
@@ -71,7 +66,10 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
             openDate ? "max-h-[400px]" : "max-h-0 overflow-hidden"
           } transition-all duration-300`}
         >
-          <CalendarCommon onDateChange={onDateChange}></CalendarCommon>
+          <CalendarCommon
+            sumLists={master.IGetDisplayCal?.calendar}
+            onDateChange={onDateChange}
+          ></CalendarCommon>
         </div>
         {/* <div className="flex  gap-3">
           <div className="border p-4 bg-slate-200 rounded-md">

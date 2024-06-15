@@ -2,9 +2,12 @@
 import React, { useEffect, useState } from "react";
 import DetailOfMonth from "@/components/pages/detail-of-month/detail-of-month";
 import IncomeRender from "./render/im-render";
+import { Form } from "antd";
+import LineChart from "@/components/charts/test";
+import { GetColor } from "@/libs/color";
 
 interface IncomeListInDayProps {
-  incomes?: IIncome[];
+  incomes: IIncome[];
   master: IMasterDataImcomes;
   onAddIncome: (
     income: IIncome[]
@@ -26,130 +29,121 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   dateSelect,
   loading,
 }) => {
-  const [incomesData, setIncomes] = useState<IIncome[]>();
-  const [firstIndexSheets, setFirstIndex] = useState<number>();
+  const [incomesData, setIncomes] = useState<IIncome[]>([]);
+  const [firstIndexSheets, setFirstIndex] = useState<number>(0);
   const [countDraft, setCountDraft] = useState<number>(0);
+  const [headForm] = Form.useForm();
 
   const updateSheetsIndex = async (incomes: IIncome[]) => {
-    if (firstIndexSheets) {
-      var _clone: IIncome[] = [];
-      _clone = incomes;
-      let startIndex = firstIndexSheets;
-      _clone = _clone.map((data) => {
-        let obj = { ...data, sheetsIndex: startIndex };
-        if (!obj.delete) {
-          startIndex = startIndex + 1;
-        }
-        return obj;
-      });
+    var _clone: IIncome[] = [];
+    _clone = incomes;
+    let startIndex = firstIndexSheets;
+    _clone = _clone.map((data) => {
+      let obj = { ...data, sheetsIndex: startIndex };
+      if (!obj.delete) {
+        startIndex = startIndex + 1;
+      }
+      return obj;
+    });
 
-      setTimeout(() => {
-        setIncomes(_clone);
-      }, 100);
-    }
+    // setTimeout(() => {
+    setIncomes(_clone);
+    // }, 100);
   };
 
   const fetchingByIndex = (index: number) => {
-    if (incomesData) {
-      var _clone: IIncome[] = incomesData;
-      setIncomes(undefined);
-      setCountDraft(0);
+    var _clone: IIncome[] = incomesData;
+    setIncomes([]);
+    setCountDraft(0);
 
-      const _check = _clone[index];
-      if (_check) {
-        _clone[index].fetching = true;
-      }
-
-      updateSheetsIndex(_clone);
-      // setTimeout(() => {
-      //   setIncomes(_clone);
-      // }, 100);
+    const _check = _clone[index];
+    if (_check) {
+      _clone[index].fetching = true;
     }
+
+    updateSheetsIndex(_clone);
+    // setTimeout(() => {
+    //   setIncomes(_clone);
+    // }, 100);
   };
   const updateSheetsAndFetch = async () => {
-    if (incomesData) {
-      var _clone: IIncome[] = incomesData;
-      setCountDraft(0);
+    var _clone: IIncome[] = incomesData;
+    setCountDraft(0);
 
-      let fetch = _clone.map((data) => {
-        if (data.draft && !data.delete) {
-          data.fetching = true;
-          data.draft = false;
-          data.name = "กำลังส่ง";
-        }
-        return data;
-      });
-      await updateSheetsIndex(fetch);
-    }
+    let fetch = _clone.map((data) => {
+      if (data.draft && !data.delete) {
+        data.fetching = true;
+        data.draft = false;
+        data.name = "กำลังส่ง";
+      }
+      return data;
+    });
+    await updateSheetsIndex(fetch);
   };
   const addIncomes = async (incomesList: IIncome[]) => {
     let addReslut: { index: number; result: boolean }[] = [];
-    console.log("incomesData on addinceomc", incomesData);
-    if (incomesData !== undefined) {
-      let clone = incomesData;
-      setIncomes(undefined);
-      const data = await onAddIncome(incomesList);
-      if (data && data.success) {
-        data.data?.map((inSheets) => {
-          const index = inSheets.indexOfList;
-          const _check = clone[index];
-          if (_check) {
-            clone[index] = {
-              ...clone[index],
-              ...inSheets,
-              draft: false,
-              delete: false,
-              fetching: false,
-            };
-            addReslut.push({
-              index: index,
-              result: true,
-            });
-          }
-        });
 
-        updateSheetsIndex(clone);
-        // updateSheetsAndFetch(clone);
-      }
+    let clone = incomesData;
+    setIncomes([]);
+    const data = await onAddIncome(incomesList);
+    if (data && data.success) {
+      data.data?.map((inSheets) => {
+        const index = inSheets.indexOfList;
+        const _check = clone[index];
+        if (_check) {
+          clone[index] = {
+            ...clone[index],
+            ...inSheets,
+            draft: false,
+            delete: false,
+            fetching: false,
+          };
+          addReslut.push({
+            index: index,
+            result: true,
+          });
+        }
+      });
+
+      updateSheetsIndex(clone);
+      // updateSheetsAndFetch(clone);
     }
 
     return addReslut;
   };
 
   const addDraft = () => {
-    if (incomesData) {
-      let clone = incomesData;
-      setIncomes(undefined);
-      setCountDraft((value) => value + 1);
-      let newElement: IIncome = {
-        sheetsIndex: 0,
-        _priceType: "Expenses",
-        day: dateSelect,
-        expensesCount: 0,
-        expensesPrice: 0,
-        name: "",
-        revenueCount: 0,
-        revenuePrice: 0,
-        types: "",
-        indexOfList: clone.length,
-        delete: false,
-        fetching: false,
-        draft: true,
-      };
+    let clone = incomesData;
+    setIncomes([]);
+    setCountDraft((value) => value + 1);
+    let newElement: IIncome = {
+      sheetsIndex: 0,
+      _priceType: "Expenses",
+      day: dateSelect,
+      expensesCount: 0,
+      expensesPrice: 0,
+      name: "",
+      revenueCount: 0,
+      revenuePrice: 0,
+      types: "",
+      indexOfList: clone.length,
+      delete: false,
+      fetching: false,
+      draft: true,
+    };
 
-      console.log("on draft add = ", clone.length);
-      // if (clone.length === 0) {
-      //   clone = [newElement];
-      // } else {
-      //   clone.push(newElement);
-      // }
-      clone = [...clone, newElement];
-      console.log("cone= ", clone);
-      // updateSheetsIndex(clone);
-      setTimeout(() => {
-        setIncomes(clone);
-      }, 100);
-    }
+    console.log("on draft add = ", clone.length);
+    // if (clone.length === 0) {
+    //   clone = [newElement];
+    // } else {
+    //   clone.push(newElement);
+    // }
+    clone = [...clone, newElement];
+    console.log("cone= ", clone);
+    // updateSheetsIndex(clone);
+    setTimeout(() => {
+      setIncomes(clone);
+    }, 100);
   };
 
   const deleteOnServer = async (sheetsIndex: number, listIndex: number) => {
@@ -163,45 +157,88 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   };
 
   const deleteOnClient = async (listIndex: number) => {
-    if (incomesData) {
-      let clone = incomesData;
-      setIncomes(undefined);
-      var incomeUpdate: IIncome[] = [];
-      var data = clone[listIndex];
+    let clone = incomesData;
+    setIncomes([]);
+    var incomeUpdate: IIncome[] = [];
+    var data = clone[listIndex];
 
-      if (data) {
-        //Animation
-        incomeUpdate = clone.map((_, i) => {
-          if (i === listIndex) {
-            _.delete = true;
-          }
-          return _;
-        });
-
-        updateSheetsIndex(incomeUpdate);
-      } else {
-        updateSheetsIndex(clone);
-      }
+    if (data) {
+      //Animation
+      incomeUpdate = clone.map((_, i) => {
+        if (i === listIndex) {
+          _.delete = true;
+        }
+        return _;
+      });
+      setCountDraft((value) => value - 1);
+      updateSheetsIndex(incomeUpdate);
+    } else {
+      updateSheetsIndex(clone);
     }
   };
 
-  useEffect(() => {
-    if (incomes) {
-      if (incomes.length > 0) {
-        setFirstIndex(incomes[0].sheetsIndex);
-      } else {
-        setFirstIndex(0);
+  const [chartData, setChartData] = useState<ILineChart>();
+  const calLineChart = (IGetDisplayCal: IGetDisplayCal) => {
+    let data: ILineChart = {
+      datasets: [],
+      labels: [],
+    };
+    let label: string[] = [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+    ];
+    let datasets: ILineChartDatasets[] = [];
+    IGetDisplayCal.types.map((type) => {
+      // label.push(type.type);
+      if (type.type !== "รายจ่ายประจำ" && type.type !== "ไม่มีหมวดหมู่") {
+        let data = type.plot.map((plt) => plt.expenses);
+        let color = GetColor();
+        datasets.push({
+          label: type.type,
+          backgroundColor: color,
+          borderColor: color,
+          data: data,
+          yAxisID: "y",
+        });
       }
+    });
+    data = {
+      datasets: datasets,
+      labels: label,
+    };
+
+    console.log(data);
+
+    return data;
+  };
+
+  useEffect(() => {
+    if (incomes.length > 0) {
+      setFirstIndex(incomes[0].sheetsIndex);
+      setCountDraft(0);
+    } else {
+      setFirstIndex(0);
     }
     setIncomes(incomes ? incomes : []);
 
-    console.log("invomes = ", incomesData);
-
-    // console.log(loading.pageLoad === false && incomes === undefined);
-    // if (loading.pageLoad === false && incomes === undefined) {
-    //   setFirstIndex(0);
-    //   setIncomes([]);
-    // }
+    if (master.IGetDisplayCal) {
+      const data = calLineChart(master.IGetDisplayCal);
+      setChartData(data);
+    }
   }, [incomes]);
 
   return (
@@ -225,12 +262,21 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           });
         }}
       ></FloatingButton> */}
+
+      {chartData && <LineChart data={chartData}></LineChart>}
+
       <DetailOfMonth
+        master={master}
         date={dateSelect}
-        onDateChange={onSelectDate}
+        onDateChange={(date) => {
+          onSelectDate(date);
+          setIncomes([]);
+        }}
         incomes={incomes}
       ></DetailOfMonth>
+      {countDraft}
       <IncomeRender
+        headForm={headForm}
         action={{
           setDraft: addDraft,
           // setDelete: deleteIncomes,

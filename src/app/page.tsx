@@ -1,7 +1,13 @@
 "use client";
 
+import LineChart from "@/components/charts/test";
+import Test from "@/components/charts/test";
 import IncomeListInDay from "@/components/income/income-screen/income";
-import { FetchGetDupOfMonth, FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
+import {
+  FetchGetDisplayCal,
+  FetchGetDupOfMonth,
+  FetchGetOfDay,
+} from "@/fetcher/GET/incomes.fetch";
 import { FetchTypesIncome } from "@/fetcher/GET/types.fetch";
 import {
   AddIncome,
@@ -14,12 +20,13 @@ import { getLocalByKey, setLocal } from "@/libs/local";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [incomes, setIncomes] = useState<IIncome[]>();
+  const [incomes, setIncomes] = useState<IIncome[]>([]);
   const [loading, setLoading] = useState<ILoading>({
     pageLoad: false,
     waitActioning: false,
   });
   const [duplicateItems, setDuplicate] = useState<RadioOptions[]>([]);
+  const [displayCal, setDisplayCal] = useState<IGetDisplayCal>();
   const [IncomeTypesOptions, setIncomeTypesOptions] = useState<RadioOptions[]>(
     []
   );
@@ -28,27 +35,42 @@ export default function Home() {
   const initLoad = ({
     fetch,
     waitAction,
+    dateChange,
   }: {
     fetch?: boolean;
     waitAction?: boolean;
+    dateChange?: boolean;
   }) => {
-    if (fetch && !loading.pageLoad) {
-      return;
-    }
+    // if (fetch && !loading.pageLoad) {
+    //   return;
+    // }
 
-    if (waitAction && !loading.waitActioning) {
-      return;
-    }
+    // if (waitAction && !loading.waitActioning) {
+    //   return;
+    // }
+
+    // if (dateChange && !loading.dateChange) {
+    //   return;
+    // }
 
     setLoading({
       pageLoad: fetch ? true : false,
       waitActioning: waitAction ? true : false,
+      dateChange: dateChange ? true : false,
+    });
+
+    console.log({
+      pageLoad: fetch ? true : false,
+      waitActioning: waitAction ? true : false,
+      dateChange: dateChange ? true : false,
     });
   };
 
   const onSelectDate = (date: Date) => {
+    initLoad({ dateChange: true });
     setDateSelect(date);
     getIncomeSheets(date);
+    getDisplay(date);
   };
 
   const onChangeInput = (value: string) => {
@@ -80,27 +102,35 @@ export default function Home() {
     }
   };
 
+  const getDisplay = async (date: Date = new Date()) => {
+    let getUrl = getLocalByKey("google_sheets");
+    if (getUrl) {
+      const cal = await FetchGetDisplayCal(getUrl, date);
+      if (cal) {
+        setDisplayCal(cal);
+      }
+    }
+  };
+
   const getIncomeSheets = (date?: Date) => {
     let getUrl = getLocalByKey("google_sheets");
     if (getUrl) {
-      setIncomes(undefined);
+      setIncomes([]);
       initLoad({ fetch: true });
       FetchGetOfDay(getUrl, date ? date : new Date())
         .then((incomes) => {
           if (incomes) {
-            console.log("new update", incomes);
-            // const dat = ConventIncomeSorting(incomes);
             setIncomes(incomes);
           }
         })
         .catch((e) => {
-          setIncomes(undefined);
+          setIncomes([]);
         })
         .finally(() => {
           initLoad({ fetch: false, waitAction: false });
         });
     } else {
-      setIncomes(undefined);
+      setIncomes([]);
       initLoad({ fetch: false, waitAction: false });
     }
   };
@@ -138,14 +168,13 @@ export default function Home() {
 
   const getData = () => {
     getIncomeSheets();
-
     getTypes();
-
     getDuplecate();
+    getDisplay();
   };
 
   useEffect(() => {
-    if (!incomes) {
+    if (incomes.length === 0) {
       getData();
     }
   }, []);
@@ -170,6 +199,7 @@ export default function Home() {
         master={{
           dupOfMonth: duplicateItems,
           typesOfItems: IncomeTypesOptions,
+          IGetDisplayCal: displayCal,
         }}
         dateSelect={dateSelect}
         onAddIncome={onAddIncome}
