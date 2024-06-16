@@ -4,7 +4,7 @@ interface ILineChart {
 }
 
 interface ILineChartDatasets {
-  label: string;
+  label?: string;
   data: number[];
   borderColor: string | string[];
   backgroundColor: string | string[];

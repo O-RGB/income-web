@@ -22,11 +22,17 @@ ChartJS.register(
 
 interface BarChartProps {
   data: ILineChart;
+  indexAxis?: string;
+  height?: string | number | undefined;
 }
 
-const BarChart: React.FC<BarChartProps> = ({ data }) => {
+const BarChart: React.FC<BarChartProps> = ({
+  data,
+  indexAxis,
+  height = 100,
+}) => {
   const options = {
-    indexAxis: "y" as const,
+    indexAxis: indexAxis as any,
     responsive: true,
     plugins: {
       legend: {
@@ -51,7 +57,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
     },
   };
 
-  return <Bar height={100} data={data} options={options} />;
+  return <Bar height={height} data={data} options={options} />;
 };
 
 export default BarChart;

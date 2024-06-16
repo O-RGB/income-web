@@ -1,7 +1,4 @@
 "use client";
-
-import LineChart from "@/components/charts/test";
-import Test from "@/components/charts/test";
 import IncomeListInDay from "@/components/income/income-screen/income";
 import {
   FetchGetDisplayCal,
@@ -9,13 +6,8 @@ import {
   FetchGetOfDay,
 } from "@/fetcher/GET/incomes.fetch";
 import { FetchTypesIncome } from "@/fetcher/GET/types.fetch";
-import {
-  AddIncome,
-  AddIncomesList,
-  DeleteIncome,
-} from "@/fetcher/POST/incomes.post";
+import { AddIncomesList, DeleteIncome } from "@/fetcher/POST/incomes.post";
 import { GenOption } from "@/libs/gen-options";
-// import { ConventIncomeSorting } from "@/libs/income-lib";
 import { getLocalByKey, setLocal } from "@/libs/local";
 import { useEffect, useState } from "react";
 

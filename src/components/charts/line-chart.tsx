@@ -31,11 +31,10 @@ export const options = {
   plugins: {
     title: {
       display: true,
-      text: "Chart.js Line Chart - Multi Axis",
     },
   },
   scales: {
-    y: {
+    y1: {
       type: "linear" as const,
       display: true,
       position: "left" as const,
@@ -43,17 +42,17 @@ export const options = {
         maxTicksLimit: 6, // กำหนดให้แสดงตัวเลขสูงสุด 6 อัน
       },
     },
-    y1: {
-      type: "linear" as const,
-      display: true,
-      position: "right" as const,
-      grid: {
-        drawOnChartArea: false,
-      },
-      ticks: {
-        maxTicksLimit: 6, // กำหนดให้แสดงตัวเลขสูงสุด 6 อัน
-      },
-    },
+    // y1: {
+    //   type: "linear" as const,
+    //   display: true,
+    //   position: "right" as const,
+    //   grid: {
+    //     drawOnChartArea: false,
+    //   },
+    //   ticks: {
+    //     maxTicksLimit: 6, // กำหนดให้แสดงตัวเลขสูงสุด 6 อัน
+    //   },
+    // },
   },
 };
 

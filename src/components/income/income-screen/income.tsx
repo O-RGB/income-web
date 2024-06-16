@@ -3,13 +3,12 @@ import React, { useEffect, useState } from "react";
 import DetailOfMonth from "@/components/pages/detail-of-month/detail-of-month";
 import IncomeRender from "./render/im-render";
 import { Button, Form } from "antd";
-import LineChart from "@/components/charts/test";
-import { GetColor, getColorPair } from "@/libs/color";
 import BarChart from "@/components/charts/bar-chart";
 import SummaryOfDay from "./render/summary/summaryOfDay";
 import { FaChartPie } from "react-icons/fa6";
 import Analytics from "./analytics/analytics";
 import { GrSettingsOption } from "react-icons/gr";
+import { CalLineChart, CalSumOfMonth } from "./analytics/lib";
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
@@ -181,44 +180,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   };
 
   const [chartData, setChartData] = useState<ILineChart>();
-  const calLineChart = (IGetDisplayCal: IGetDisplayCal) => {
-    let data: ILineChart = {
-      datasets: [],
-      labels: [],
-    };
-    let label: string[] = [];
-    let datasets: ILineChartDatasets[] = [];
-    let sumBar: number[] = [];
-    let colorBar: string[] = [];
-    let colorBarBorder: string[] = [];
-    IGetDisplayCal.types.map((type) => {
-      if (type.type !== "ไม่มีหมวดหมู่" && type.type !== "รายจ่ายประจำ") {
-        let { color, border } = getColorPair();
-        colorBar.push(color);
-        colorBarBorder.push(border);
-        label.push(type.type);
-        let count = type.plot.map((r) => r.expenses);
-        let sum = count.reduce((partialSum, a) => partialSum + a, 0);
-        sumBar.push(sum);
-      }
-    });
-    datasets = [
-      {
-        label: "label",
-        backgroundColor: colorBar,
-        borderColor: colorBarBorder,
-        borderWidth: 2,
-        data: sumBar,
-        yAxisID: "y",
-      },
-    ];
-    data = {
-      datasets: datasets,
-      labels: label,
-    };
-
-    return data;
-  };
 
   useEffect(() => {
     if (incomes.length > 0) {
@@ -233,14 +194,18 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
   useEffect(() => {
     if (master.IGetDisplayCal) {
-      const data = calLineChart(master.IGetDisplayCal);
+      const data = CalSumOfMonth(master.IGetDisplayCal);
       setChartData(data);
     }
   }, [master.IGetDisplayCal]);
 
   return (
     <div className="px-2 flex flex-col gap-2">
-      <Analytics open={analytics} close={() => setAnalytics(false)}></Analytics>
+      <Analytics
+        IGetDisplayCal={master.IGetDisplayCal}
+        open={analytics}
+        close={() => setAnalytics(false)}
+      ></Analytics>
       {/* incomesData: {JSON.stringify(incomesData)}
       firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
       {/* <FloatingButton
@@ -276,7 +241,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           <Button
             onClick={() => setAnalytics(!analytics)}
             className="w-full shadow-sm"
-            
           >
             <div className="flex gap-2   justify-center items-center">
               <div>
@@ -288,7 +252,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           <Button
             onClick={() => setAnalytics(!analytics)}
             className="w-fit shadow-sm"
-            
           >
             <div className="flex gap-2   justify-center items-center">
               <div>
@@ -301,7 +264,9 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       </div>
 
       <div className="p-2 border rounded-md">
-        {chartData && <BarChart data={chartData}></BarChart>}
+        {chartData && (
+          <BarChart indexAxis="y" height={100} data={chartData}></BarChart>
+        )}
       </div>
 
       <SummaryOfDay
