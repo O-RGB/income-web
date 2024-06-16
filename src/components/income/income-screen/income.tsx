@@ -9,6 +9,7 @@ import BarChart from "@/components/charts/bar-chart";
 import SummaryOfDay from "./render/summary/summaryOfDay";
 import { FaChartPie } from "react-icons/fa6";
 import Analytics from "./analytics/analytics";
+import { GrSettingsOption } from "react-icons/gr";
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
@@ -271,18 +272,32 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           incomes={incomes}
         ></DetailOfMonth>
         {/* <hr /> */}
-        <Button
-          onClick={() => setAnalytics(!analytics)}
-          className="w-fit shadow-sm"
-          type="primary"
-        >
-          <div className="flex gap-2   justify-center items-center">
-            <div>
-              <FaChartPie></FaChartPie>
+        <div className="flex justify-between gap-2">
+          <Button
+            onClick={() => setAnalytics(!analytics)}
+            className="w-full shadow-sm"
+            
+          >
+            <div className="flex gap-2   justify-center items-center">
+              <div>
+                <FaChartPie></FaChartPie>
+              </div>
+              <div className="">สรุปข้อมูลเดือนนี้</div>
             </div>
-            <div className="">สรุปข้อมูลเดือนนี้</div>
-          </div>
-        </Button>
+          </Button>
+          <Button
+            onClick={() => setAnalytics(!analytics)}
+            className="w-fit shadow-sm"
+            
+          >
+            <div className="flex gap-2   justify-center items-center">
+              <div>
+                <GrSettingsOption></GrSettingsOption>
+              </div>
+              <div className="">ตั้งค่า</div>
+            </div>
+          </Button>
+        </div>
       </div>
 
       <div className="p-2 border rounded-md">
