@@ -3,7 +3,7 @@ import loading from "@/components/loading/loading";
 import { Button, Form, FormInstance } from "antd";
 import React, { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { FaPlus } from "react-icons/fa6";
+import { FaPen, FaPlus } from "react-icons/fa6";
 import IncomeElement from "../../income-element/element";
 import { DynamicKeysToArray, hanndelInputIncome } from "./im-lib";
 import SummaryOfDay from "./summary/summaryOfDay";
@@ -29,38 +29,39 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
 }) => {
   //not re render
   const [_incomes, setIncomesTemp] = useState<IIncome[]>([]);
+  const [_date, setDate] = useState(new Date());
+  const [onClickEdit, setClickEdit] = useState<boolean>(false);
 
   useEffect(() => {
-    if (incomes.length > 0) {
+    if (incomes.length > 0 || dateSelect !== _date) {
       setIncomesTemp(incomes);
+      setDate(dateSelect);
     }
   }, [incomes]);
 
-  useEffect(() => {
-    console.log("im-render on date change");
-    if (loading.dateChange) {
-      setIncomesTemp([]);
-    }
-  }, [loading.dateChange]);
-
   return (
     <>
-      <div className="flex flex-col" key={`incom-day-${dateSelect.getDate()}`}>
-        <SummaryOfDay
-          date={dateSelect}
-          dayIndex={dateSelect.getDate()}
-          incomeOfday={_incomes}
-        ></SummaryOfDay>
-
+      <div className="flex flex-col " key={`incom-day-${dateSelect.getDate()}`}>
         {loading.pageLoad ? (
           <div className="h-56 flex justify-center items-center">
             <AiOutlineLoading3Quarters className="animate-spin text-2xl" />
           </div>
         ) : (
-          <div className="">
+          <div className="flex flex-col gap-2">
             <div>
-              <div className="w-full flex justify-between items-center p-2">
-                <Button></Button>
+              <div className="w-full flex justify-between items-center ">
+                {/* {draftCount <= 0 && (
+                  <Button
+                    onClick={() => {
+                      setClickEdit(!onClickEdit);
+                    }}
+                  >
+                    <div className="flex gap-2 justify-center items-center">
+                      <FaPen className="text-xs"></FaPen> <div>เลือก</div>
+                    </div>
+                  </Button>
+                )} */}
+                <div></div>
                 <div className="flex gap-2">
                   {draftCount > 0 && (
                     <Button
@@ -73,18 +74,36 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                       บันทึก
                     </Button>
                   )}
-                  <Button
-                    onClick={
-                      loading.waitActioning == false
-                        ? action?.setDraft
-                        : () => {}
-                    }
-                  >
-                    + เพิ่มข้อมูลวันที่ {dateSelect.getDate()}
-                  </Button>
+                  {!onClickEdit ? (
+                    <Button
+                      onClick={
+                        loading.waitActioning == false
+                          ? action?.setDraft
+                          : () => {}
+                      }
+                    >
+                      + เพิ่มข้อมูลวันที่ {dateSelect.getDate()}
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={
+                        loading.waitActioning == false
+                          ? action?.setDraft
+                          : () => {}
+                      }
+                    >
+                      ลบทั้งหมด
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
+
+            {_incomes.length === 0 && (
+              <div className="text-xs text-gray-300 flex w-full justify-center items-center h-40">
+                ไม่มีข้อมูล
+              </div>
+            )}
 
             <Form
               form={headForm}
@@ -109,12 +128,12 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                 // onSaveIncomes?.(yt);
               }}
             >
-              <div className="flex flex-col-reverse px-2 ">
+              <div className="flex flex-col-reverse  ">
                 {_incomes.map((im, jindex) => {
                   return (
                     <div key={`incom-${dateSelect.getDate()}-${jindex}`}>
-                      {/* sheetsIndex:{JSON.stringify(im.sheetsIndex)} */}
                       <IncomeElement
+                        edit={onClickEdit}
                         deleteOnClient={action?.setDeleteOnClient}
                         deleteOnServer={action?.setDelete}
                         multipleLoading={

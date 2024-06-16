@@ -9,7 +9,7 @@ import IncomePriceType from "./draft-input/input-price-type";
 import IncomeInputTypes from "./draft-input/input-types";
 import IncomeInputCountItem from "./draft-input/input-count-item";
 import LayoutIncomeItem from "./layout-income";
-import { Button, Form } from "antd";
+import { Button, Checkbox, Form } from "antd";
 import { IoMdRemove } from "react-icons/io";
 
 interface IncomeListProps {
@@ -21,35 +21,30 @@ interface IncomeListProps {
   multipleLoading: boolean;
   deleteOnClient?: (index: number) => void;
   deleteOnServer?: (sheetsIndex: number, listIndex: number) => void;
+  edit: boolean;
+  onSelectEdit?: (index: number) => void;
 }
 
 const IncomeElement: React.FC<IncomeListProps> = ({
   income,
   // actionApi,
+  edit = false,
   master,
   itemIndex,
   multipleLoading = false,
   deleteOnClient,
   deleteOnServer,
+  onSelectEdit,
 }) => {
   const [onDetail, setDetail] = useState<boolean>(false);
-  // const [income, setIncome] = useState<IIncome>(income);
   const onClickIncomeHandel = () => {
     setDetail(!onDetail);
   };
 
-  // const setLoading = (load: boolean = true) => {
-  //   setIncome({ ...income, fetching: load });
-  // };
-
-  useEffect(() => {
-    // setIncome(income);
-  }, [income]);
+  useEffect(() => {}, [income, edit]);
 
   const [deleteAll, setDeleteAll] = useState<boolean>(false);
   useEffect(() => {
-    // setIncome(income);
-
     if (income.delete) {
       setTimeout(() => {
         setDeleteAll(true);
@@ -60,61 +55,35 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   if (deleteAll) {
     return <></>;
   }
-  // if(income.types === "ของใช้ร่วมกัน")
   return (
     <>
       <div
-        className={`w-full overflow-hidden ${
+        className={`w-full overflow-hidden flex items-center gap-1 ${
           income.delete ? "py-0" : income.draft ? "py-1" : ""
         } duration-300`}
       >
-        {/* {JSON.stringify(multipleDraft)} */}
         <LayoutIncomeItem
+          edit={edit}
+          onClickCheck={() => {
+            onSelectEdit?.(itemIndex);
+          }}
           actionTop={
             income.draft === true && (
               <Button
                 size="small"
                 onClick={() => {
-                  // setLoading(false);
-                  console.log("on click delete on ui")
                   setTimeout(() => {
                     deleteOnClient?.(itemIndex);
-                    // const incomeDeleted = actionApi.setDelete(itemIndex);
-                    // if (incomeDeleted) {
-                    //   setIncome(incomeDeleted);
-                    // } else {
-                    //   setLoading(false);
-                    // }
                   }, 100);
                 }}
                 disabled={income.fetching || multipleLoading}
                 icon={<IoMdRemove className="text-lg"></IoMdRemove>}
-                // type="default"
-                // htmlType="button"
                 className="!bg-red-500 !text-white "
               ></Button>
             )
           }
           initIncome={income}
         >
-          {/* <Form
-              form={multipleDraft ? headForm : form}
-              layout="vertical"
-              onFinish={(input: IncomeFormInput) => {
-                if (income.fetching !== true) {
-                  // setIncome({ ...income, fetching: true, draft: false });
-                  const incomeData = hanndelInputIncome(input);
-                  setIncome({ ...incomeData });
-                  actionApi.onUpdate("add", incomeData).then((data) => {
-                    if (data) {
-                      // setIncome(data);
-                      console.log("on add data ", data);
-                      actionApi.setAdd(itemIndex, data);
-                    }
-                  });
-                }
-              }}
-            > */}
           <div
             onClick={income.draft == true ? () => {} : onClickIncomeHandel}
             className={`flex cursor-pointer ${
@@ -199,6 +168,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 sheetsIndex: {JSON.stringify(income.sheetsIndex)}
               </div>
             </div> */}
+          {/* sheetsIndex: {JSON.stringify(income.sheetsIndex)} */}
           {income.draft == false &&
             income.fetching == false &&
             multipleLoading === false && (
@@ -237,7 +207,6 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 </div>
               </div>
             )}
-
           {income.draft === true ? (
             <div className="flex flex-col gap-2 pt-2">
               <div className="flex gap-2">

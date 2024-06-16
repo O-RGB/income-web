@@ -18,38 +18,38 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
 }) => {
   const [openDate, setOpenDate] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   if (incomes) {
-  //     console.log("incomes = ", incomes);
-  //     const date = DateFormat();
-  //     setT(date);
-  //     let ex: number = 0;
-  //     let re: number = 0;
-  //     incomes?.map((income) => {
-  //       if (Number(income.expensesPrice)) {
-  //         ex = ex + Number(income.expensesPrice);
-  //       }
-  //       if (Number(income.revenuePrice)) {
-  //         re = re + Number(income.revenuePrice);
-  //       }
-  //       // income.map((onDay) => {
-  //       //   if (Number(onDay.expensesPrice)) {
-  //       //     ex = ex + Number(onDay.expensesPrice);
-  //       //   }
-  //       //   if (Number(onDay.revenuePrice)) {
-  //       //     re = re + Number(onDay.revenuePrice);
-  //       //   }
-  //       // });
-  //     });
-  //     setPriceSummary({
-  //       Expenses: ex,
-  //       Revenue: re,
-  //     });
-  //   }
-  // }, [incomes]);
+  useEffect(() => {
+    //   if (incomes) {
+    //     console.log("incomes = ", incomes);
+    //     const date = DateFormat();
+    //     setT(date);
+    //     let ex: number = 0;
+    //     let re: number = 0;
+    //     incomes?.map((income) => {
+    //       if (Number(income.expensesPrice)) {
+    //         ex = ex + Number(income.expensesPrice);
+    //       }
+    //       if (Number(income.revenuePrice)) {
+    //         re = re + Number(income.revenuePrice);
+    //       }
+    //       // income.map((onDay) => {
+    //       //   if (Number(onDay.expensesPrice)) {
+    //       //     ex = ex + Number(onDay.expensesPrice);
+    //       //   }
+    //       //   if (Number(onDay.revenuePrice)) {
+    //       //     re = re + Number(onDay.revenuePrice);
+    //       //   }
+    //       // });
+    //     });
+    //     setPriceSummary({
+    //       Expenses: ex,
+    //       Revenue: re,
+    //     });
+    //   }
+  }, [incomes]);
   return (
     <>
-      <div className="p-2 flex flex-col gap-3">
+      <div className="flex flex-col gap-3">
         <div className=" flex justify-between pt-5">
           <div className="text-4xl">{DateFormat(date)}</div>
           <div
@@ -70,19 +70,6 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
             sumLists={master.IGetDisplayCal?.calendar}
             onDateChange={onDateChange}
           ></CalendarCommon>
-        </div>
-        {/* <div className="flex  gap-3">
-          <div className="border p-4 bg-slate-200 rounded-md">
-            <div>รายจ่ายเดือนนี้ </div>
-            <div className="text-2xl">{priceSummary.Expenses}</div>
-          </div>
-          <div className="border p-4 bg-slate-200 rounded-md">
-            <div>รายรับเดือนนี้ </div>
-            <div className="text-2xl">{priceSummary.Revenue}</div>
-          </div>
-        </div> */}
-        <div>
-          <hr />
         </div>
       </div>
     </>

@@ -22,7 +22,7 @@ const TagSummary: React.FC<TagSummaryProps> = ({
   return (
     <>
       <div
-        className={`p-2 text-base  border-gray-500 rounded-md font-bold flex gap-2 items-center ${color}`}
+        className={`p-2 text-sm  border-gray-500 rounded-md font-bold flex gap-2 items-center ${color}`}
       >
         <div
           className={`w-5 h-5 ${iconColor} rounded-full flex items-center justify-center`}
@@ -34,7 +34,7 @@ const TagSummary: React.FC<TagSummaryProps> = ({
           )}
         </div>
 
-        <div className="flex gap-1">
+        <div className="flex gap-1 ">
           {title}:{" "}
           <div
             className={`${

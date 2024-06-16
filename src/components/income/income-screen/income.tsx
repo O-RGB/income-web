@@ -2,10 +2,13 @@
 import React, { useEffect, useState } from "react";
 import DetailOfMonth from "@/components/pages/detail-of-month/detail-of-month";
 import IncomeRender from "./render/im-render";
-import { Form } from "antd";
+import { Button, Form } from "antd";
 import LineChart from "@/components/charts/test";
-import { GetColor } from "@/libs/color";
+import { GetColor, getColorPair } from "@/libs/color";
 import BarChart from "@/components/charts/bar-chart";
+import SummaryOfDay from "./render/summary/summaryOfDay";
+import { FaChartPie } from "react-icons/fa6";
+import Analytics from "./analytics/analytics";
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
@@ -32,24 +35,29 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 }) => {
   const [incomesData, setIncomes] = useState<IIncome[]>([]);
   const [firstIndexSheets, setFirstIndex] = useState<number>(0);
+  const [analytics, setAnalytics] = useState<boolean>(false);
   const [countDraft, setCountDraft] = useState<number>(0);
   const [headForm] = Form.useForm();
 
-  const updateSheetsIndex = async (incomes: IIncome[]) => {
+  const updateSheetsIndex = async (
+    incomes: IIncome[],
+    on: "AUTO" | "CLOSE" = "AUTO"
+  ) => {
     var _clone: IIncome[] = [];
     _clone = incomes;
-    let startIndex = firstIndexSheets;
-    _clone = _clone.map((data) => {
-      let obj = { ...data, sheetsIndex: startIndex };
-      if (!obj.delete) {
-        startIndex = startIndex + 1;
-      }
-      return obj;
-    });
 
-    // setTimeout(() => {
+    if (on === "AUTO" && firstIndexSheets >= 0) {
+      let startIndex = firstIndexSheets;
+      _clone = _clone.map((data) => {
+        let obj = { ...data, sheetsIndex: startIndex };
+        if (!obj.delete) {
+          startIndex = startIndex + 1;
+        }
+        return obj;
+      });
+    }
+
     setIncomes(_clone);
-    // }, 100);
   };
 
   const fetchingByIndex = (index: number) => {
@@ -106,8 +114,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         }
       });
 
-      updateSheetsIndex(clone);
-      // updateSheetsAndFetch(clone);
+      updateSheetsIndex(clone, "CLOSE");
+      setCountDraft(0);
     }
 
     return addReslut;
@@ -133,15 +141,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       draft: true,
     };
 
-    console.log("on draft add = ", clone.length);
-    // if (clone.length === 0) {
-    //   clone = [newElement];
-    // } else {
-    //   clone.push(newElement);
-    // }
     clone = [...clone, newElement];
-    console.log("cone= ", clone);
-    // updateSheetsIndex(clone);
+
     setTimeout(() => {
       setIncomes(clone);
     }, 100);
@@ -187,28 +188,33 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     let label: string[] = [];
     let datasets: ILineChartDatasets[] = [];
     let sumBar: number[] = [];
+    let colorBar: string[] = [];
+    let colorBarBorder: string[] = [];
     IGetDisplayCal.types.map((type) => {
-      if (type.type !== "ไม่มีหมวดหมู่") {
+      if (type.type !== "ไม่มีหมวดหมู่" && type.type !== "รายจ่ายประจำ") {
+        let { color, border } = getColorPair();
+        colorBar.push(color);
+        colorBarBorder.push(border);
         label.push(type.type);
         let count = type.plot.map((r) => r.expenses);
         let sum = count.reduce((partialSum, a) => partialSum + a, 0);
         sumBar.push(sum);
       }
     });
-    let color = GetColor();
-    datasets.push({
-      label: "label",
-      backgroundColor: color,
-      borderColor: color,
-      data: sumBar,
-      yAxisID: "y",
-    });
+    datasets = [
+      {
+        label: "label",
+        backgroundColor: colorBar,
+        borderColor: colorBarBorder,
+        borderWidth: 2,
+        data: sumBar,
+        yAxisID: "y",
+      },
+    ];
     data = {
       datasets: datasets,
       labels: label,
     };
-
-    console.log(data);
 
     return data;
   };
@@ -217,10 +223,11 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     if (incomes.length > 0) {
       setFirstIndex(incomes[0].sheetsIndex);
       setCountDraft(0);
+      setIncomes(incomes);
     } else {
-      setFirstIndex(0);
+      setIncomes([]);
+      setFirstIndex(-1);
     }
-    setIncomes(incomes ? incomes : []);
   }, [incomes]);
 
   useEffect(() => {
@@ -231,7 +238,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   }, [master.IGetDisplayCal]);
 
   return (
-    <>
+    <div className="px-2 flex flex-col gap-2">
+      <Analytics open={analytics} close={() => setAnalytics(false)}></Analytics>
       {/* incomesData: {JSON.stringify(incomesData)}
       firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
       {/* <FloatingButton
@@ -252,19 +260,42 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         }}
       ></FloatingButton> */}
 
-      {/* {chartData && <LineChart data={chartData}></LineChart>} */}
-      {chartData && <BarChart data={chartData}></BarChart>}
+      <div className="flex flex-col gap-1">
+        <DetailOfMonth
+          master={master}
+          date={dateSelect}
+          onDateChange={(date) => {
+            onSelectDate(date);
+            setIncomes([]);
+          }}
+          incomes={incomes}
+        ></DetailOfMonth>
+        {/* <hr /> */}
+        <Button
+          onClick={() => setAnalytics(!analytics)}
+          className="w-fit shadow-sm"
+          type="primary"
+        >
+          <div className="flex gap-2   justify-center items-center">
+            <div>
+              <FaChartPie></FaChartPie>
+            </div>
+            <div className="">สรุปข้อมูลเดือนนี้</div>
+          </div>
+        </Button>
+      </div>
 
-      <DetailOfMonth
-        master={master}
+      <div className="p-2 border rounded-md">
+        {chartData && <BarChart data={chartData}></BarChart>}
+      </div>
+
+      <SummaryOfDay
         date={dateSelect}
-        onDateChange={(date) => {
-          onSelectDate(date);
-          setIncomes([]);
-        }}
-        incomes={incomes}
-      ></DetailOfMonth>
-      {countDraft}
+        dayIndex={dateSelect.getDate()}
+        incomeOfday={incomes}
+      ></SummaryOfDay>
+
+      {/* {countDraft} */}
       <IncomeRender
         headForm={headForm}
         action={{
@@ -281,7 +312,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         draftCount={countDraft}
         master={master}
       ></IncomeRender>
-    </>
+    </div>
   );
 };
 

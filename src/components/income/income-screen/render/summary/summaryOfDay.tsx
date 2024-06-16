@@ -5,7 +5,7 @@ import { AiFillStar } from "react-icons/ai";
 import { setTimeout } from "timers";
 
 interface SummaryOfDayProps {
-  incomeOfday?: IIncome[];
+  incomeOfday: IIncome[];
   dayIndex: number;
   date: Date; // dateNow
 }
@@ -15,10 +15,7 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
   dayIndex,
   date,
 }) => {
-  // if (incomeOfday.length === 0) {
-  //   return <></>;
-  // }
-
+  const [_date, setDate] = useState(new Date());
   const [summaryData, setSummary] = useState<{
     Expenses: number;
     Revenue: number;
@@ -47,30 +44,30 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
     });
   };
   useEffect(() => {
-    if (incomeOfday) {
+    if (incomeOfday.length > 0 || date !== _date) {
       summary();
+      setDate(date);
     }
-  }, []);
+  }, [incomeOfday]);
 
-  // if (dayIndex - 1 < date.getDate())
   return (
-    <div className="flex flex-col py-4 px-3 gap-1 bg-white">
-      <div className="flex flex-col sm:flex-row gap-3 ">
+    <div className="flex flex-col   gap-1 bg-white">
+      <div className="flex flex-col sm:flex-row gap-1 ">
+        <TagSummary
+          // loading={incomeOfday == "load"}
+          color="bg-red-200"
+          price={incomeOfday !== undefined ? summaryData.Expenses : 0}
+          icon={<TiArrowSortedDown className="text-white"></TiArrowSortedDown>}
+          title="รายจ่าย"
+          iconColor="bg-red-500"
+        ></TagSummary>
         <TagSummary
           color="bg-green-200"
           // loading={incomeOfday}
           price={incomeOfday !== null ? summaryData.Revenue : 0}
           title="รายรับ"
-          icon={<TiArrowSortedDown className="text-white"></TiArrowSortedDown>}
-          iconColor="bg-green-500"
-        ></TagSummary>
-        <TagSummary
-          // loading={incomeOfday == "load"}
-          color="bg-red-200"
-          price={incomeOfday !== undefined ? summaryData.Expenses : 0}
-          title="รายจ่าย"
           icon={<TiArrowSortedUp className="text-white"></TiArrowSortedUp>}
-          iconColor="bg-red-500"
+          iconColor="bg-green-500"
         ></TagSummary>
         <TagSummary
           // loading={incomeOfday == "load"}

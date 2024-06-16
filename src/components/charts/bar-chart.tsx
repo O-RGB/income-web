@@ -26,10 +26,19 @@ interface BarChartProps {
 
 const BarChart: React.FC<BarChartProps> = ({ data }) => {
   const options = {
+    indexAxis: "y" as const,
     responsive: true,
     plugins: {
       legend: {
-        position: "top" as const,
+        display: false,
+      },
+      datalabels: {
+        display: true,
+        color: "black",
+        anchor: "end",
+        align: "center",
+        formatter: (value: any, context: any) =>
+          context.chart.data.labels[context.dataIndex],
       },
     },
     scales: {
@@ -42,7 +51,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
     },
   };
 
-  return <Bar data={data} options={options} />;
+  return <Bar height={100} data={data} options={options} />;
 };
 
 export default BarChart;

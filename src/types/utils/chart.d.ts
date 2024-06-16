@@ -6,7 +6,8 @@ interface ILineChart {
 interface ILineChartDatasets {
   label: string;
   data: number[];
-  borderColor: string;
-  backgroundColor: string;
+  borderColor: string | string[];
+  backgroundColor: string | string[];
   yAxisID: string;
+  borderWidth: number;
 }
