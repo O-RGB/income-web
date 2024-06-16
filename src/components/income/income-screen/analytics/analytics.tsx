@@ -1,7 +1,13 @@
 import BarChart from "@/components/charts/bar-chart";
 import { Modal } from "antd";
 import React, { useEffect, useState } from "react";
-import { CalCalendarDay, CalLineChart, CalSumOfMonth, meanOfDay } from "./lib";
+import {
+  CalCalendarDay,
+  CalLineChart,
+  CalSumOfMonth,
+  CalTypeOfDay,
+  meanOfDay,
+} from "./lib";
 import LineChart from "@/components/charts/line-chart";
 import { NumberFormat } from "@/libs/number";
 
@@ -23,6 +29,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
   const [chartData, setChartData] = useState<ILineChart>();
   const [chartSumData, setChartSumData] = useState<ILineChart>();
   const [chartDayData, setChartDayData] = useState<ILineChart>();
+  const [typeOfDay, setTypeOfDay] = useState<ILineChart[]>([]);
   const [mendOfDay, setMendOfDay] = useState<{
     expenses: number;
     revenue: number;
@@ -41,6 +48,8 @@ const Analytics: React.FC<AnalyticsProps> = ({
       setChartDayData(day);
       const { expenses, revenue } = meanOfDay(IGetDisplayCal);
       setMendOfDay({ expenses, revenue });
+      const typeOfDay = CalTypeOfDay(IGetDisplayCal);
+      setTypeOfDay(typeOfDay);
     }
   }, [IGetDisplayCal, open]);
 
@@ -85,9 +94,21 @@ const Analytics: React.FC<AnalyticsProps> = ({
               ></BarChart>
             )}
           </div>
+
           <div className="flex flex-col gap-2">
             <div className="text-lg font-bold">สรุปรายรับจ่ายเดือนนี้</div>
             {chartDayData && <LineChart data={chartDayData}></LineChart>}
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="text-lg font-bold">สรุปรายรับจ่ายแต่ละหมวดหมู่</div>
+            {typeOfDay &&
+              typeOfDay.map((data, index) => {
+                return (
+                  <div key={`type-of-day-${index}`}>
+                    <LineChart data={data}></LineChart>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </Modal>

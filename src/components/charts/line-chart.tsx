@@ -34,7 +34,7 @@ export const options = {
     },
   },
   scales: {
-    y1: {
+    y: {
       type: "linear" as const,
       display: true,
       position: "left" as const,

@@ -1,5 +1,38 @@
 import { getColorPair } from "@/libs/color";
 
+export const CalTypeOfDay = (IGetDisplayCal: IGetDisplayCal) => {
+  let chartData: ILineChart[] = [
+    {
+      datasets: [],
+      labels: [],
+    },
+  ];
+  let label: string[] = new Array(31).fill(null).map((_, i) => `${i + 1}`);
+
+  IGetDisplayCal.types.map((data, index) => {
+    let { color, border } = getColorPair();
+
+    chartData.push({
+      labels: label,
+      datasets: [
+        {
+          backgroundColor: color,
+          borderColor: border,
+          borderWidth: 1,
+          data: label.map((l) => {
+            const plot = data.plot.find((d) => d.day === +l);
+            return plot ? plot.expenses : 0;
+          }),
+          yAxisID: "y",
+          label: data.type,
+        },
+      ],
+    });
+  });
+
+  return chartData;
+};
+
 export const CalLineChart = (
   IGetDisplayCal: IGetDisplayCal,
   removeType: boolean = true
@@ -103,7 +136,7 @@ export const CalCalendarDay = (IGetDisplayCal: IGetDisplayCal) => {
       borderColor: border,
       borderWidth: 2,
       data: ex,
-      yAxisID: "y1",
+      yAxisID: "y",
     },
     {
       label: "รายรับ",
@@ -111,7 +144,7 @@ export const CalCalendarDay = (IGetDisplayCal: IGetDisplayCal) => {
       borderColor: border2,
       borderWidth: 2,
       data: re,
-      yAxisID: "y1",
+      yAxisID: "y",
     },
   ];
   data = {
