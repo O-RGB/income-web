@@ -3,6 +3,7 @@ import { Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { CalCalendarDay, CalLineChart, CalSumOfMonth, meanOfDay } from "./lib";
 import LineChart from "@/components/charts/line-chart";
+import { NumberFormat } from "@/libs/number";
 
 interface AnalyticsProps {
   open: boolean;
@@ -56,14 +57,14 @@ const Analytics: React.FC<AnalyticsProps> = ({
                 <div className="p-2 border rounded-md shadow-sm w-full">
                   <div className="font-bold text-md">รายจ่าย</div>
                   <div className="flex justify-center items-center text-lg font-bold gap-2">
-                    <div>{mendOfDay.expenses}</div>{" "}
+                    <div>{NumberFormat(mendOfDay.expenses)}</div>{" "}
                     <div className="text-sm text-gray-400">บาท / วัน</div>
                   </div>
                 </div>
                 <div className="p-2 border rounded-md shadow-sm w-full">
                   <div className="font-bold text-md">รายรับ</div>
                   <div className="flex justify-center items-center text-lg font-bold gap-2">
-                    <div>{mendOfDay.revenue}</div>{" "}
+                    <div>{NumberFormat(mendOfDay.revenue)}</div>{" "}
                     <div className="text-sm text-gray-400">บาท / วัน</div>
                   </div>
                 </div>
