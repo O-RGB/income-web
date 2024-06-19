@@ -33,7 +33,8 @@ export const FetchGetOfDay = async (
           list[4],
           list[5],
           list[6],
-          list[7]
+          list[7],
+          list[8]
         )
       );
     });
@@ -68,7 +69,8 @@ export const FetchGetOfMonth = async (
           list[4],
           list[5],
           list[6],
-          list[7]
+          list[7],
+          list[8]
         )
       );
     });

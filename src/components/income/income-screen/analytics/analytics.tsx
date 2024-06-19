@@ -14,16 +14,12 @@ import { NumberFormat } from "@/libs/number";
 interface AnalyticsProps {
   open: boolean;
   close?: () => void;
-  IGetDisplayCal?: IGetDisplayCal;
+  master: IMasterDataImcomes;
 }
 
-const Analytics: React.FC<AnalyticsProps> = ({
-  open,
-  close,
-  IGetDisplayCal,
-}) => {
+const Analytics: React.FC<AnalyticsProps> = ({ open, close, master }) => {
   // const BarChart = () => {
-  //   IGetDisplayCal?.types
+  //  ?.types
   // }
 
   const [chartData, setChartData] = useState<ILineChart>();
@@ -39,19 +35,19 @@ const Analytics: React.FC<AnalyticsProps> = ({
   });
 
   useEffect(() => {
-    if (IGetDisplayCal) {
-      const data = CalLineChart(IGetDisplayCal, false);
+    if (master) {
+      const data = CalLineChart(master, false);
       setChartData(data);
-      const sum = CalSumOfMonth(IGetDisplayCal);
+      const sum = CalSumOfMonth(master);
       setChartSumData(sum);
-      const day = CalCalendarDay(IGetDisplayCal);
+      const day = CalCalendarDay(master);
       setChartDayData(day);
-      const { expenses, revenue } = meanOfDay(IGetDisplayCal);
+      const { expenses, revenue } = meanOfDay(master);
       setMendOfDay({ expenses, revenue });
-      const typeOfDay = CalTypeOfDay(IGetDisplayCal);
+      const typeOfDay = CalTypeOfDay(master);
       setTypeOfDay(typeOfDay);
     }
-  }, [IGetDisplayCal, open]);
+  }, [master, open]);
 
   return (
     <>

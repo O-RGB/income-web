@@ -13,6 +13,7 @@ interface IncomeFormInput {
   count: string;
   priceType: "Expenses" | "Revenue"; // assuming priceType can be either 'Expenses' or 'Revenue'
   indexOfList: number;
+  comment: string;
 }
 
 interface IIncome extends UIMapingIncome {
@@ -24,6 +25,7 @@ interface IIncome extends UIMapingIncome {
   expensesPrice: number | string;
   revenueCount: number | string;
   revenuePrice: number | string;
+  comment: string;
 }
 
 type priceType = "Expenses" | "Revenue";

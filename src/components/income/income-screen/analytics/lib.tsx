@@ -1,6 +1,7 @@
 import { getColorPair } from "@/libs/color";
+import { MapingTypeToLabel } from "@/libs/income-lib";
 
-export const CalTypeOfDay = (IGetDisplayCal: IGetDisplayCal) => {
+export const CalTypeOfDay = (master: IMasterDataImcomes) => {
   let chartData: ILineChart[] = [
     {
       datasets: [],
@@ -9,7 +10,7 @@ export const CalTypeOfDay = (IGetDisplayCal: IGetDisplayCal) => {
   ];
   let label: string[] = new Array(31).fill(null).map((_, i) => `${i + 1}`);
 
-  IGetDisplayCal.types.map((data, index) => {
+  master.IGetDisplayCal?.types.map((data, index) => {
     let { color, border } = getColorPair();
 
     chartData.push({
@@ -24,7 +25,7 @@ export const CalTypeOfDay = (IGetDisplayCal: IGetDisplayCal) => {
             return plot ? plot.expenses : 0;
           }),
           yAxisID: "y",
-          label: data.type,
+          label: MapingTypeToLabel(master.typesOfItems, data.type) ?? "ไม่มีหมวดหมู่",
         },
       ],
     });
@@ -34,7 +35,7 @@ export const CalTypeOfDay = (IGetDisplayCal: IGetDisplayCal) => {
 };
 
 export const CalLineChart = (
-  IGetDisplayCal: IGetDisplayCal,
+  master: IMasterDataImcomes,
   removeType: boolean = true
 ) => {
   let data: ILineChart = {
@@ -46,16 +47,16 @@ export const CalLineChart = (
   let sumBar: number[] = [];
   let colorBar: string[] = [];
   let colorBarBorder: string[] = [];
-  IGetDisplayCal.types.map((type) => {
+  master.IGetDisplayCal?.types.map((type) => {
     if (
       removeType
-        ? type.type !== "ไม่มีหมวดหมู่" && type.type !== "รายจ่ายประจำ"
-        : type.type !== "ไม่มีหมวดหมู่"
+        ? type.type !== "T00" && type.type !== "รายจ่ายประจำ"
+        : type.type !== "T00"
     ) {
       let { color, border } = getColorPair();
       colorBar.push(color);
       colorBarBorder.push(border);
-      label.push(type.type);
+      label.push(MapingTypeToLabel(master.typesOfItems, type.type) ?? "");
       let count = type.plot.map((r) => r.expenses);
       let sum = count.reduce((partialSum, a) => partialSum + a, 0);
       sumBar.push(sum);
@@ -79,10 +80,10 @@ export const CalLineChart = (
   return data;
 };
 
-export const CalSumOfMonth = (IGetDisplayCal: IGetDisplayCal) => {
+export const CalSumOfMonth = (master: IMasterDataImcomes) => {
   let ex: number = 0;
   let re: number = 0;
-  IGetDisplayCal.calendar.map((data) => {
+  master.IGetDisplayCal?.calendar.map((data) => {
     ex += data.value.expenses;
     re += data.value.revenue;
   });
@@ -111,7 +112,7 @@ export const CalSumOfMonth = (IGetDisplayCal: IGetDisplayCal) => {
   return data;
 };
 
-export const CalCalendarDay = (IGetDisplayCal: IGetDisplayCal) => {
+export const CalCalendarDay = (master: IMasterDataImcomes) => {
   let data: ILineChart = {
     datasets: [],
     labels: [],
@@ -121,7 +122,7 @@ export const CalCalendarDay = (IGetDisplayCal: IGetDisplayCal) => {
 
   let ex: number[] = [];
   let re: number[] = [];
-  IGetDisplayCal.calendar.map((data) => {
+  master.IGetDisplayCal?.calendar.map((data) => {
     data.day;
     label.push(`${data.day}`);
     ex.push(data.value.expenses);
@@ -155,17 +156,23 @@ export const CalCalendarDay = (IGetDisplayCal: IGetDisplayCal) => {
   return data;
 };
 
-export const meanOfDay = (IGetDisplayCal: IGetDisplayCal) => {
+export const meanOfDay = (master: IMasterDataImcomes) => {
   let exMean: number = 0;
   let reMean: number = 0;
+  if (!master.IGetDisplayCal?.calendar) {
+    return {
+      expenses: 0,
+      revenue: 0,
+    };
+  }
 
-  IGetDisplayCal.calendar.map((data) => {
+  master.IGetDisplayCal?.calendar.map((data) => {
     exMean += data.value.expenses;
     reMean += data.value.revenue;
   });
 
   return {
-    expenses: exMean / IGetDisplayCal.calendar.length,
-    revenue: reMean / IGetDisplayCal.calendar.length,
+    expenses: exMean / master.IGetDisplayCal.calendar.length,
+    revenue: reMean / master.IGetDisplayCal.calendar.length,
   };
 };

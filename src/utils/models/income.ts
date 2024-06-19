@@ -12,6 +12,7 @@ export class IncomeModel implements IIncome {
   fetching: boolean = false;
   draft: boolean = false;
   indexOfList: number = 0;
+  comment: string;
 
   public constructor(
     sheetsIndex: number,
@@ -22,7 +23,8 @@ export class IncomeModel implements IIncome {
     expensesCount: number | string,
     expensesPrice: number | string,
     revenueCount: number | string,
-    revenuePrice: number | string
+    revenuePrice: number | string,
+    comment: string
   ) {
     this.sheetsIndex = sheetsIndex;
     this.indexOfList = indexOfList;
@@ -33,6 +35,7 @@ export class IncomeModel implements IIncome {
     this.expensesPrice = expensesPrice;
     this.revenueCount = revenueCount;
     this.revenuePrice = revenuePrice;
+    this.comment = comment;
 
     if (expensesCount) {
       this._priceType = "Expenses";
@@ -56,6 +59,7 @@ export class IncomeModel implements IIncome {
       _priceType: this._priceType,
       delete: this.delete,
       indexOfList: this.indexOfList,
+      comment: this.comment,
     };
   }
 }

@@ -95,6 +95,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     let clone = incomesData;
     setIncomes([]);
     const data = await onAddIncome(incomesList);
+    console.log(data);
     if (data && data.success) {
       data.data?.map((inSheets) => {
         const index = inSheets.indexOfList;
@@ -113,6 +114,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           });
         }
       });
+      console.log("add clone", clone);
 
       updateSheetsIndex(clone, "CLOSE");
       setCountDraft(0);
@@ -139,6 +141,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       delete: false,
       fetching: false,
       draft: true,
+      comment: "",
     };
 
     clone = [...clone, newElement];
@@ -194,7 +197,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
   useEffect(() => {
     if (master.IGetDisplayCal) {
-      const data = CalSumOfMonth(master.IGetDisplayCal);
+      const data = CalSumOfMonth(master);
       setChartData(data);
     }
   }, [master.IGetDisplayCal]);
@@ -202,7 +205,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   return (
     <div className="px-2 flex flex-col gap-2">
       <Analytics
-        IGetDisplayCal={master.IGetDisplayCal}
+        master={master}
         open={analytics}
         close={() => setAnalytics(false)}
       ></Analytics>

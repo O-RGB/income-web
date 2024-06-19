@@ -11,6 +11,7 @@ import IncomeInputCountItem from "./draft-input/input-count-item";
 import LayoutIncomeItem from "./layout-income";
 import { Button, Checkbox, Form } from "antd";
 import { IoMdRemove } from "react-icons/io";
+import IncomeComment from "./draft-input/input-comment";
 
 interface IncomeListProps {
   income: IIncome;
@@ -88,7 +89,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
             onClick={income.draft == true ? () => {} : onClickIncomeHandel}
             className={`flex cursor-pointer ${
               income._priceType == "Expenses" ? "flex-row" : "flex-row-reverse"
-            } justify-between items-center `}
+            } justify-between items-start `}
           >
             <div className="w-full">
               <div
@@ -117,12 +118,21 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                   <></>
                 )}
               </div>
+              {/* <div className="flex gap-2"> */}
               <RenderType
+                typesOfItems={master.typesOfItems}
+                comment={
+                  <div className="line-clamp-1 opacity-50">
+                    {income.comment}
+                  </div>
+                }
                 _priceType={income._priceType}
                 types={income.types}
               ></RenderType>
+
+              {/* </div> */}
             </div>
-            <div className={`flex gap-2 justify-center items-center`}>
+            <div className={`flex gap-2 items-start `}>
               {income.draft == false && (
                 <RenderPrice
                   _priceType={income._priceType}
@@ -252,6 +262,12 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                     ]}
                   ></IncomePriceType>
                 </div>
+              </div>
+              <div className="flex gap-2">
+                <IncomeComment
+                  name={"comment_" + itemIndex}
+                  lable={"คอมเม้นต์"}
+                ></IncomeComment>
               </div>
             </div>
           ) : (

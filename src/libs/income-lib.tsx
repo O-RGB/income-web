@@ -15,6 +15,25 @@ export const GenArrayToKey = () => {
   return incomeOfDay;
 };
 
+export const MapingTypeToLabel = (
+  typesOfItems?: RadioOptions[],
+  typeId?: string
+) => {
+  if (typeId) {
+    if (typeId.length > 0) {
+      if (typeId === "T00") {
+        return undefined;
+      }
+      const findType: RadioOptions | undefined = typesOfItems?.find(
+        (data) => data.value === typeId
+      );
+      if (findType) {
+        return findType.label;
+      }
+    }
+  }
+};
+
 // const SetIncomeToArrayIndex = (data: IncomeModel[]) => {
 //   const arrayOfDay: Map<number, IIncome[]> = GenArrayToKey();
 //   data.map((data) => {

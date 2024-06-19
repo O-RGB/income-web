@@ -33,6 +33,7 @@ export const DynamicKeysToArray = (obj: PathName): IncomeFormInput[] => {
       count: entry.count ?? "",
       priceType: entry.priceType ?? "Expenses",
       indexOfList: Number(key),
+      comment: entry.comment ?? "",
     });
   });
 
@@ -63,18 +64,18 @@ export const hanndelInputIncome = (
     revenue.revenuePrice = Number(input.price);
   }
 
-  var types: string = "";
-  const nameType: RadioOptions | undefined = IncomeTypesOptions.find(
-    (x) => x.value === input.types
-  );
+  // var types: string = "";
+  // // const nameType: RadioOptions | undefined = IncomeTypesOptions.find(
+  // //   (x) => x.value === input.types
+  // // );
 
-  if (nameType) {
-    if (nameType.value == "T00") {
-      types = "";
-    } else {
-      types = nameType.label ?? "";
-    }
-  }
+  // if (nameType) {
+  //   if (nameType.value == "T00") {
+  //     types = "";
+  //   } else {
+  //     types = nameType.label ?? "";
+  //   }
+  // }
 
   const incomeData: IIncome = {
     day: day,
@@ -86,8 +87,9 @@ export const hanndelInputIncome = (
     indexOfList: input.indexOfList,
     ...expenses,
     ...revenue,
-    types: types,
+    types: input.types,
     _priceType: input.priceType,
+    comment: input.comment,
   };
 
   return incomeData;
