@@ -23,13 +23,11 @@ const ButtomSheets: React.FC<ButtomSheetsProps> = ({
           onClose?.();
         }}
         initialSnap={1}
-        onSnap={(snapIndex) =>
-          console.log("> Current snap point index:", snapIndex)
-        }
+       
       >
-        <Sheet.Container>
+        <Sheet.Container layoutScroll>
           <Sheet.Header />
-          <Sheet.Content>{/* Your sheet content goes here */}</Sheet.Content>
+          <Sheet.Content>{children}</Sheet.Content>
         </Sheet.Container>
         <Sheet.Backdrop onTap={onClose} />
       </Sheet>

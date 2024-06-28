@@ -26,6 +26,7 @@ const IncomeInputCountItem: React.FC<IncomeInputCountItemProps> = ({
           placeholder={lable}
           min={1}
           max={100}
+          maxLength={2}
         />
       </Form.Item>
     </>

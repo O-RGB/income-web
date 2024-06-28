@@ -214,7 +214,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
           {income.draft === true ? (
             <div className="flex flex-col gap-2 pt-2">
               <div className="flex gap-2">
-                <div className="w-[80px]">
+                <div className="w-[46px]">
                   <IncomeInputCountItem
                     name={"count_" + itemIndex}
                     lable="จำนวน"
@@ -235,11 +235,24 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               <div className="flex gap-2 justify-between">
                 <div className="flex gap-1">
                   <div className="w-fit" onClick={() => {}}>
-                    <IncomeInputTypes
-                      options={master.typesOfItems}
-                      name={"types_" + itemIndex}
-                      lable="หมวดหมู่"
-                    ></IncomeInputTypes>
+                    <div className="flex gap-3 items-center ">
+                      <div className="text-nowrap text-xs !mb-1">
+                        {"หมวดหมู่"}
+                      </div>
+                      <Form.Item
+                        rules={[{ required: true }]}
+                        name={"types_" + itemIndex}
+                        className="m-0 w-full remove-lable"
+                        // label={<div className="text-xs !mb-1">{lable}</div>}
+                        initialValue={"T00"}
+                      >
+                        <IncomeInputTypes
+                          options={master.typesOfItems}
+                          // name={"types_" + itemIndex}
+                          // lable="หมวดหมู่"
+                        ></IncomeInputTypes>
+                      </Form.Item>
+                    </div>
                   </div>
                   <div className="pt-1">
                     <Button

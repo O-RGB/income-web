@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, K2D } from "next/font/google";
+import { Inter, K2D, Sarabun } from "next/font/google";
 import "./globals.css";
 
-const inter = K2D({ subsets: ["thai"], weight: "300" });
+const inter = Sarabun({ subsets: ["thai"], weight: "300" });
 
 export const viewport: Viewport = {
   width: "device-width",
