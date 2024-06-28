@@ -3,10 +3,10 @@ export class IncomeModel implements IIncome {
   day: Date;
   types: string;
   name: string;
-  expensesCount: number | string;
-  expensesPrice: number | string;
-  revenueCount: number | string;
-  revenuePrice: number | string;
+  expensesCount: number;
+  expensesPrice: number;
+  revenueCount: number;
+  revenuePrice: number;
   _priceType: priceType = "Expenses";
   delete: boolean = false;
   fetching: boolean = false;
@@ -20,10 +20,10 @@ export class IncomeModel implements IIncome {
     day: Date,
     types: string,
     name: string,
-    expensesCount: number | string,
-    expensesPrice: number | string,
-    revenueCount: number | string,
-    revenuePrice: number | string,
+    expensesCount: number,
+    expensesPrice: number,
+    revenueCount: number,
+    revenuePrice: number,
     comment: string
   ) {
     this.sheetsIndex = sheetsIndex;
