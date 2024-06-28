@@ -15,6 +15,7 @@ interface IncomeRenderProps {
   loading: ILoading;
   action?: IActionDayIncomesLists;
   headForm: FormInstance<any>;
+
   draftCount: number;
 }
 
@@ -134,6 +135,9 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                     <div key={`incom-${dateSelect.getDate()}-${jindex}`}>
                       <IncomeElement
                         edit={onClickEdit}
+                        removeCommnet={(income, index) => {
+                          headForm.setFieldValue("comment_" + index, undefined);
+                        }}
                         deleteOnClient={action?.setDeleteOnClient}
                         deleteOnServer={action?.setDelete}
                         multipleLoading={

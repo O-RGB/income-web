@@ -1,13 +1,15 @@
 import RadioCommon from "@/components/common/radio";
-import { Form, Radio } from "antd";
+import { Form, Radio, RadioChangeEvent } from "antd";
 import { Option } from "antd/es/mentions";
 import React, { useEffect } from "react";
-import "./label.css"
+import "./label.css";
 interface IncomePriceTypeProps {
   name: string;
   lable?: string;
   options: { label: string; value: string }[];
   defaultValue: string;
+  onChange?: ((e: RadioChangeEvent) => void) | undefined;
+  color?: string;
 }
 
 const IncomePriceType: React.FC<IncomePriceTypeProps> = ({
@@ -15,17 +17,23 @@ const IncomePriceType: React.FC<IncomePriceTypeProps> = ({
   lable,
   options,
   defaultValue,
+  onChange,
+  color,
 }) => {
   return (
     <Form.Item
-        rules={[{ required: true }]}
+      rules={[{ required: true }]}
       name={name}
       className="m-0 w-full"
       // label={<div className="text-xs !mb-1">{lable}</div>}
-    //   label={lable}
+      //   label={lable}
       initialValue={defaultValue}
     >
-      <RadioCommon options={options}></RadioCommon>
+      <RadioCommon
+        color={"#b5b5b5"}
+        onChange={onChange}
+        options={options}
+      ></RadioCommon>
     </Form.Item>
   );
 };

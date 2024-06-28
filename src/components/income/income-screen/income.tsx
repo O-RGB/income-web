@@ -39,6 +39,20 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   const [countDraft, setCountDraft] = useState<number>(0);
   const [headForm] = Form.useForm();
 
+  const countDraftIndex = (mode: "-" | "+") => {
+    setCountDraft((value) => {
+      if (mode === "+") {
+        return value + 1;
+      } else {
+        if (value > 0) {
+          return value - 1;
+        } else {
+          return 0;
+        }
+      }
+    });
+  };
+
   const updateSheetsIndex = async (
     incomes: IIncome[],
     on: "AUTO" | "CLOSE" = "AUTO"
@@ -126,7 +140,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   const addDraft = () => {
     let clone = incomesData;
     setIncomes([]);
-    setCountDraft((value) => value + 1);
+    countDraftIndex("+");
+
     let newElement: IIncome = {
       sheetsIndex: 0,
       _priceType: "Expenses",
@@ -175,7 +190,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         }
         return _;
       });
-      setCountDraft((value) => value - 1);
+      countDraftIndex("-");
+      // setCountDraft((value) => value - 1);
       updateSheetsIndex(incomeUpdate);
     } else {
       updateSheetsIndex(clone);
@@ -266,11 +282,11 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         </div>
       </div>
 
-      <div className="p-2 border rounded-md">
+      {/* <div className="p-2 border rounded-md">
         {chartData && (
           <BarChart indexAxis="y" height={100} data={chartData}></BarChart>
         )}
-      </div>
+      </div> */}
 
       <SummaryOfDay
         date={dateSelect}

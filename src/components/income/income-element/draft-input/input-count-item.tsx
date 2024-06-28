@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import "./label.css";
 interface IncomeInputCountItemProps {
   name: string;
-  lable: string;
+  lable?: string;
 }
 
 const IncomeInputCountItem: React.FC<IncomeInputCountItemProps> = ({
@@ -19,7 +19,7 @@ const IncomeInputCountItem: React.FC<IncomeInputCountItemProps> = ({
         className="m-0 w-full"
         // label={lable}
         initialValue={1}
-        label={<div className="text-xs !mb-1">{lable}</div>}
+        // label={<div className="text-xs !mb-1">{lable}</div>}
       >
         <InputNumberCommon
           inputMode="numeric"

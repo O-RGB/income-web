@@ -21,10 +21,10 @@ interface IIncome extends UIMapingIncome {
   day: Date;
   types: string;
   name: string;
-  expensesCount: number | string;
-  expensesPrice: number | string;
-  revenueCount: number | string;
-  revenuePrice: number | string;
+  expensesCount: number  
+  expensesPrice: number  
+  revenueCount: number 
+  revenuePrice: number  
   comment: string;
 }
 

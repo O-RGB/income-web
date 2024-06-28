@@ -12,37 +12,73 @@ import LayoutIncomeItem from "./layout-income";
 import { Button, Checkbox, Form } from "antd";
 import { IoMdRemove } from "react-icons/io";
 import IncomeComment from "./draft-input/input-comment";
+import ButtomSheets from "@/components/common/buttomSheets";
+import { MdOutlineEditNote } from "react-icons/md";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 interface IncomeListProps {
   income: IIncome;
   dayRender?: boolean;
-  // actionApi: IActionDayIncomesLists;
   master: IMasterDataImcomes;
   itemIndex: number;
   multipleLoading: boolean;
   deleteOnClient?: (index: number) => void;
   deleteOnServer?: (sheetsIndex: number, listIndex: number) => void;
+  removeCommnet?: (income: IIncome, index: number) => void;
   edit: boolean;
   onSelectEdit?: (index: number) => void;
 }
 
 const IncomeElement: React.FC<IncomeListProps> = ({
   income,
-  // actionApi,
   edit = false,
   master,
+  removeCommnet,
   itemIndex,
   multipleLoading = false,
   deleteOnClient,
   deleteOnServer,
   onSelectEdit,
 }) => {
+  const [comment, setCommnet] = useState<boolean>(false);
+  const [priceMode, setPriceMode] = useState<"Expenses" | "Revenue">(
+    "Expenses"
+  );
   const [onDetail, setDetail] = useState<boolean>(false);
   const onClickIncomeHandel = () => {
     setDetail(!onDetail);
   };
 
   useEffect(() => {}, [income, edit]);
+
+  const debug = (
+    <>
+      <div className="flex gap-3 divide-y  border font-bold">
+        <div
+          className={`${income.fetching ? "text-red-500" : "text-green-500"}`}
+        >
+          fetching: {JSON.stringify(income.fetching)}
+        </div>
+        <div className={`${income.draft ? "text-red-500" : "text-green-500"}`}>
+          draft: {JSON.stringify(income.draft)}
+        </div>
+        <div className={`${income.delete ? "text-red-500" : "text-green-500"}`}>
+          delete: {JSON.stringify(income.delete)}
+        </div>
+        <div>itemIndex: {itemIndex}</div>
+        <div className={`${onDetail ? "text-red-500" : "text-green-500"}`}>
+          onDetail: {JSON.stringify(onDetail)}
+        </div>
+        <div
+          className={`${
+            income.sheetsIndex ? "text-red-500" : "text-green-500"
+          }`}
+        >
+          sheetsIndex: {JSON.stringify(income.sheetsIndex)}
+        </div>
+      </div>
+    </>
+  );
 
   const [deleteAll, setDeleteAll] = useState<boolean>(false);
   useEffect(() => {
@@ -54,16 +90,18 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   }, [income.delete]);
 
   if (deleteAll) {
-    return <></>;
+    return <> </>;
   }
   return (
     <>
+      {/* {debug} */}
       <div
         className={`w-full overflow-hidden flex items-center gap-1 ${
           income.delete ? "py-0" : income.draft ? "py-1" : ""
         } duration-300`}
       >
         <LayoutIncomeItem
+          draftPriceMode={priceMode}
           edit={edit}
           onClickCheck={() => {
             onSelectEdit?.(itemIndex);
@@ -79,7 +117,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 }}
                 disabled={income.fetching || multipleLoading}
                 icon={<IoMdRemove className="text-lg"></IoMdRemove>}
-                className="!bg-red-500 !text-white "
+                className="!bg-red-500 !text-white scale-75"
               ></Button>
             )
           }
@@ -142,42 +180,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               )}
             </div>
           </div>
-          {/* <div className="flex gap-3 divide-y  border font-bold">
-              <div
-                className={`${
-                  income.fetching ? "text-red-500" : "text-green-500"
-                }`}
-              >
-                fetching: {JSON.stringify(income.fetching)}
-              </div>
-              <div
-                className={`${
-                  income.draft ? "text-red-500" : "text-green-500"
-                }`}
-              >
-                draft: {JSON.stringify(income.draft)}
-              </div>
-              <div
-                className={`${
-                  income.delete ? "text-red-500" : "text-green-500"
-                }`}
-              >
-                delete: {JSON.stringify(income.delete)}
-              </div>
-              <div>itemIndex: {itemIndex}</div>
-              <div
-                className={`${onDetail ? "text-red-500" : "text-green-500"}`}
-              >
-                onDetail: {JSON.stringify(onDetail)}
-              </div>
-              <div
-                className={`${
-                  income.sheetsIndex ? "text-red-500" : "text-green-500"
-                }`}
-              >
-                sheetsIndex: {JSON.stringify(income.sheetsIndex)}
-              </div>
-            </div> */}
+
           {/* sheetsIndex: {JSON.stringify(income.sheetsIndex)} */}
           {income.draft == false &&
             income.fetching == false &&
@@ -190,30 +193,21 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 } `}
               >
                 <div className="pt-4"></div>
-                <div
-                  onClick={() => {
-                    if (income.fetching !== true) {
-                      deleteOnServer?.(income.sheetsIndex, itemIndex);
-                      // setLoading();
-                      // actionApi
-                      //   .onUpdate?.("delete", income)
-                      //   .then((data) => {
-                      //     if (data) {
-                      //       // setDelete(itemIndex);
-                      //       actionApi.setDelete(itemIndex);
-                      //       // setIncome(data);
-                      //     } else {
-                      //       setLoading(false);
-                      //     }
-                      //   })
-                      //   .catch(() => {
-                      //     setLoading(false);
-                      //   });
-                    }
-                  }}
-                  className="w-fit border p-1 cursor-pointer bg-red-500 text-white rounded-lg"
-                >
-                  delete
+                <div className="flex  justify-end">
+                  <Button
+                    type="default"
+                    onClick={() => {
+                      if (income.fetching !== true) {
+                        deleteOnServer?.(income.sheetsIndex, itemIndex);
+                      }
+                    }}
+                    size="small"
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      <RiDeleteBin5Line className="text-xs" />
+                      <div>ลบรายการ</div>
+                    </div>
+                  </Button>
                 </div>
               </div>
             )}
@@ -239,15 +233,37 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 </div>
               </div>
               <div className="flex gap-2 justify-between">
-                <div className="w-[150px]">
-                  <IncomeInputTypes
-                    options={master.typesOfItems}
-                    name={"types_" + itemIndex}
-                    lable="หมวดหมู่"
-                  ></IncomeInputTypes>
+                <div className="flex gap-1">
+                  <div className="w-fit" onClick={() => {}}>
+                    <IncomeInputTypes
+                      options={master.typesOfItems}
+                      name={"types_" + itemIndex}
+                      lable="หมวดหมู่"
+                    ></IncomeInputTypes>
+                  </div>
+                  <div className="pt-1">
+                    <Button
+                      type={comment ? "primary" : "default"}
+                      onClick={() => {
+                        setCommnet(!comment);
+                        if (!comment === false) {
+                          removeCommnet?.(income, itemIndex);
+                        }
+                      }}
+                      size="small"
+                      icon={<MdOutlineEditNote></MdOutlineEditNote>}
+                    ></Button>
+                  </div>
                 </div>
                 <div className="">
                   <IncomePriceType
+                    color={`${
+                      priceMode === "Expenses" ? "#3b81f6" : "#21c55d"
+                    }`}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setPriceMode(value);
+                    }}
                     defaultValue={"Expenses"}
                     name={"priceType_" + itemIndex}
                     options={[
@@ -263,7 +279,11 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                   ></IncomePriceType>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div
+                className={`flex gap-2 overflow-hidden ${
+                  !comment ? "max-h-0" : "max-h-10"
+                } transition-all duration-300`}
+              >
                 <IncomeComment
                   name={"comment_" + itemIndex}
                   lable={"คอมเม้นต์"}

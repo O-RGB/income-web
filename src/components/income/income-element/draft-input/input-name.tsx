@@ -7,7 +7,7 @@ import SelectCommon from "@/components/common/select";
 const { Option } = Select;
 interface IncomeInputNameProps {
   name: string;
-  lable: string;
+  lable?: string;
   option?: SelectProps["options"];
 }
 
@@ -37,7 +37,7 @@ const IncomeInputName: React.FC<IncomeInputNameProps> = ({
         rules={[{ required: true }]}
         name={name}
         className="m-0 w-full"
-        label={<div className="text-xs !mb-1">{lable}</div>}
+        // label={<div className="text-xs !mb-1">{lable}</div>}
         // label={lable}
       >
         <AutoCompleteCommon

@@ -28,30 +28,34 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
     let re: number = 0;
     if (incomeOfday) {
       incomeOfday?.map((data) => {
+        console.log(data);
         if (data.delete !== true) {
-          if (data.expensesPrice !== "") {
-            ex = ex + Number(data.expensesPrice);
-          } else if (data.revenuePrice !== "") {
-            re = re + Number(data.revenuePrice);
+          if (data.expensesPrice > 0) {
+            console.log(data.name, data.expensesCount);
+            ex = ex + data.expensesPrice;
+          } else if (data.revenuePrice > 0) {
+            console.log(data.name, data.revenuePrice);
+            re = re + data.revenuePrice;
           }
         }
       });
+      setSummary({
+        Expenses: ex,
+        Revenue: re,
+      });
     }
-
-    setSummary({
-      Expenses: ex,
-      Revenue: re,
-    });
   };
   useEffect(() => {
     if (incomeOfday.length > 0 || date !== _date) {
       summary();
-      setDate(date);
     }
+    setDate(date);
+    // }
   }, [incomeOfday]);
 
   return (
     <div className="flex flex-col   gap-1 bg-white">
+      {/* {JSON.stringify(summaryData)} */}
       <div className="flex flex-col sm:flex-row gap-1 ">
         <TagSummary
           // loading={incomeOfday == "load"}
@@ -69,7 +73,7 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
           icon={<TiArrowSortedUp className="text-white"></TiArrowSortedUp>}
           iconColor="bg-green-500"
         ></TagSummary>
-        <TagSummary
+        {/* <TagSummary
           // loading={incomeOfday == "load"}
           color="bg-blue-200"
           price={
@@ -80,7 +84,7 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
           title="รายจ่ายสุทธิวันนี้"
           icon={<AiFillStar className="text-white"></AiFillStar>}
           iconColor="bg-blue-500"
-        ></TagSummary>
+        ></TagSummary> */}
       </div>
     </div>
   );

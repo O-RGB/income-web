@@ -14,9 +14,9 @@ const IncomeComment: React.FC<IncomeInputProps> = ({ lable, name }) => {
       <Form.Item
         name={name}
         className="m-0 w-full"
-        label={<div className="text-xs !mb-1">{lable}</div>}
+        // label={<div className="text-xs !mb-1">{lable}</div>}
       >
-        <InputCommon></InputCommon>
+        <InputCommon placeholder={lable}></InputCommon>
       </Form.Item>
     </>
   );
