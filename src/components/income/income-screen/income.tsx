@@ -244,8 +244,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           });
         }}
       ></FloatingButton> */}
-
-      <div className="flex flex-col gap-1">
+     
+      <div className="flex flex-col gap-1 relative">
+        <div className="absolute top-0 text-xs">version: 1.0.1</div>
+      
         <DetailOfMonth
           master={master}
           date={dateSelect}
@@ -281,19 +283,16 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           </Button>
         </div>
       </div>
-
       {/* <div className="p-2 border rounded-md">
         {chartData && (
           <BarChart indexAxis="y" height={100} data={chartData}></BarChart>
         )}
       </div> */}
-
       <SummaryOfDay
         date={dateSelect}
         dayIndex={dateSelect.getDate()}
         incomeOfday={incomes}
       ></SummaryOfDay>
-
       {/* {countDraft} */}
       <IncomeRender
         headForm={headForm}

@@ -17,7 +17,14 @@ const IncomeInputPrice: React.FC<IncomeInputPriceProps> = ({ name, lable }) => {
         // label={<div className="text-xs !mb-1">{lable}</div>}
         // label={lable}
       >
-        <InputNumberCommon inputMode="numeric" placeholder={lable} min={0} />
+        <InputNumberCommon
+          formatter={(value) =>
+            `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          }
+          inputMode="numeric"
+          placeholder={lable}
+          min={0}
+        />
       </Form.Item>
     </>
   );

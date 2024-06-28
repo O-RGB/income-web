@@ -7,6 +7,7 @@ import { FaPen, FaPlus } from "react-icons/fa6";
 import IncomeElement from "../../income-element/element";
 import { DynamicKeysToArray, hanndelInputIncome } from "./im-lib";
 import SummaryOfDay from "./summary/summaryOfDay";
+import { FaSave } from "react-icons/fa";
 
 interface IncomeRenderProps {
   master: IMasterDataImcomes;
@@ -70,7 +71,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                         headForm.submit();
                       }}
                       className="!bg-blue-500 !text-white flex justify-center items-center"
-                      icon={<FaPlus />}
+                      icon={<FaSave />}
                     >
                       บันทึก
                     </Button>

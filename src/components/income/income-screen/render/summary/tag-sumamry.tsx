@@ -1,4 +1,5 @@
 "use client";
+import { NumberFormat } from "@/libs/number";
 import React from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 
@@ -41,7 +42,11 @@ const TagSummary: React.FC<TagSummaryProps> = ({
               loading ? "max-w-0" : "max-w-[500px]"
             } transition-all duration-1000 overflow-hidden`}
           >
-            {loading ? <span className="text-nowrap">กำลังโหลด</span> : price}
+            {loading ? (
+              <span className="text-nowrap">กำลังโหลด</span>
+            ) : (
+              NumberFormat(price)
+            )}
           </div>{" "}
           ฿
         </div>

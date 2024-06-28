@@ -1,3 +1,4 @@
+import { NumberFormat } from "@/libs/number";
 import React from "react";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 
@@ -16,9 +17,9 @@ const RenderPrice: React.FC<RenderPriceProps> = ({
     <>
       <div className="text-xl font-bold flex gap-2 items-center">
         {_priceType == "Expenses" ? (
-          <div>{Number(expensesPrice)}</div>
+          <div>{NumberFormat(expensesPrice)}</div>
         ) : (
-          <div>{Number(revenuePrice)}</div>
+          <div>{NumberFormat(revenuePrice)}</div>
         )}
 
         <div className="text-lg font-bold text-gray-400 opacity-50">
