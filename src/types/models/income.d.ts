@@ -9,7 +9,7 @@ interface UIMapingIncome {
 interface IncomeFormInput {
   name: string;
   price: string;
-  types: string;
+  types: IIncomeTypes | string;
   count: string;
   priceType: "Expenses" | "Revenue"; // assuming priceType can be either 'Expenses' or 'Revenue'
   indexOfList: number;
@@ -21,10 +21,10 @@ interface IIncome extends UIMapingIncome {
   day: Date;
   types: string;
   name: string;
-  expensesCount: number  
-  expensesPrice: number  
-  revenueCount: number 
-  revenuePrice: number  
+  expensesCount: number;
+  expensesPrice: number;
+  revenueCount: number;
+  revenuePrice: number;
   comment: string;
 }
 
@@ -40,5 +40,6 @@ interface IIncomesListAdd {
   incomes: IIncome[];
 }
 interface IIncomeDelete {
+  sheetsName?: "TYPE";
   sheetsIndex: number;
 }

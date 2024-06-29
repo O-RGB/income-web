@@ -16,7 +16,7 @@ export const GenArrayToKey = () => {
 };
 
 export const MapingTypeToLabel = (
-  typesOfItems?: RadioOptions[],
+  typesOfItems?: IIncomeTypes[],
   typeId?: string
 ) => {
   if (typeId) {
@@ -24,11 +24,11 @@ export const MapingTypeToLabel = (
       if (typeId === "T00") {
         return undefined;
       }
-      const findType: RadioOptions | undefined = typesOfItems?.find(
-        (data) => data.value === typeId
+      const findType: IIncomeTypes | undefined = typesOfItems?.find(
+        (data) => data.typeId === typeId
       );
       if (findType) {
-        return findType.label;
+        return findType.name;
       }
     }
   }

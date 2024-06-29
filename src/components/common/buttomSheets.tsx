@@ -2,6 +2,7 @@ import { Sheet } from "react-modal-sheet";
 import { useState } from "react";
 
 import React from "react";
+import { ColorPicker } from "antd";
 
 interface ButtomSheetsProps {
   isOpen?: boolean;
@@ -19,11 +20,11 @@ const ButtomSheets: React.FC<ButtomSheetsProps> = ({
       <Sheet
         snapPoints={[600, 400, 100, 0]}
         isOpen={isOpen ?? false}
+        className="!z-40"
         onClose={() => {
           onClose?.();
         }}
         initialSnap={1}
-       
       >
         <Sheet.Container layoutScroll>
           <Sheet.Header />

@@ -19,7 +19,7 @@ export default function Home() {
   });
   const [duplicateItems, setDuplicate] = useState<RadioOptions[]>([]);
   const [displayCal, setDisplayCal] = useState<IGetDisplayCal>();
-  const [IncomeTypesOptions, setIncomeTypesOptions] = useState<RadioOptions[]>(
+  const [IncomeTypesOptions, setIncomeTypesOptions] = useState<IIncomeTypes[]>(
     []
   );
   const [dateSelect, setDateSelect] = useState<Date>(new Date());
@@ -33,18 +33,6 @@ export default function Home() {
     waitAction?: boolean;
     dateChange?: boolean;
   }) => {
-    // if (fetch && !loading.pageLoad) {
-    //   return;
-    // }
-
-    // if (waitAction && !loading.waitActioning) {
-    //   return;
-    // }
-
-    // if (dateChange && !loading.dateChange) {
-    //   return;
-    // }
-
     setLoading({
       pageLoad: fetch ? true : false,
       waitActioning: waitAction ? true : false,
@@ -74,8 +62,7 @@ export default function Home() {
     if (getUrl) {
       const incomes = await FetchTypesIncome(getUrl);
       if (incomes) {
-        const options = GenOption("name", "typeId", incomes);
-        setIncomeTypesOptions(options);
+        setIncomeTypesOptions(incomes);
       }
     }
   };
@@ -142,11 +129,11 @@ export default function Home() {
       } as IGeneralReturnFetch<undefined>;
     }
   };
-  const onDeleteIncome = async (sheetsIndex: number) => {
+  const onDeleteIncome = async (input: IIncomeDelete) => {
     let getUrl = getLocalByKey("google_sheets");
     if (getUrl) {
       initLoad({ waitAction: true });
-      return DeleteIncome(getUrl, sheetsIndex).finally(() => {
+      return DeleteIncome(getUrl, input).finally(() => {
         initLoad({ waitAction: false });
       });
     } else {

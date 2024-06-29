@@ -115,11 +115,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                 const d = DynamicKeysToArray(e);
                 var yt: IIncome[] = [];
                 d.map((data) => {
-                  const dat = hanndelInputIncome(
-                    data,
-                    master.typesOfItems,
-                    dateSelect
-                  );
+                  const dat = hanndelInputIncome(data, dateSelect);
                   yt.push(dat);
                 });
 

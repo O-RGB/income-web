@@ -1,11 +1,13 @@
 interface IIncomeTypes {
+  rowIndex: number;
   typeId: string;
   name: string;
-  relationship?: string[];
+  color: string;
+  icons: string;
 }
 
 interface IMasterDataImcomes {
-  typesOfItems: RadioOptions[];
+  typesOfItems: IIncomeTypes[];
   dupOfMonth: RadioOptions[];
   IGetDisplayCal?: IGetDisplayCal;
 }

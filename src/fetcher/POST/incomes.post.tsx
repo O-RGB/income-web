@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Fetcher } from "@/utils/fetch/fetch";
 
 export const AddIncome = (
@@ -48,14 +48,18 @@ export const AddIncomeByIndexSheets = (
 
 export const DeleteIncome = (
   key: string,
-  sheetsIndex: number,
+  input: IIncomeDelete,
   loading?: (load: boolean) => void
 ) => {
   return Fetcher<IIncomeDelete, boolean>(
     key,
     {
       method: "POST",
-      data: { sheetsIndex, query: "POST_delete_income" },
+      data: {
+        sheetsIndex: input.sheetsIndex,
+        sheetsName: input.sheetsName,
+        query: "POST_delete_income",
+      },
     },
     loading
   );

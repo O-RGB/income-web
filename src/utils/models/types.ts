@@ -1,23 +1,31 @@
 export class IncomeTypesModel implements IIncomeTypes {
+  rowIndex: number;
   typeId: string;
   name: string;
-  relationship?: string[] | undefined;
+  color: string;
+  icons: string;
 
   public constructor(
+    rowIndex: number,
     typeId: string,
     name: string,
-    relationship: string[] | undefined
+    color: string,
+    icons: string
   ) {
+    this.rowIndex = rowIndex;
     this.typeId = typeId;
-    this.relationship = relationship;
+    this.icons = icons;
+    this.color = color;
     this.name = name;
   }
 
   public getTypes(): IIncomeTypes {
     return {
-      name: this.name,
+      rowIndex: this.rowIndex,
       typeId: this.typeId,
-      relationship: this.relationship,
+      name: this.name,
+      color: this.color,
+      icons: this.icons,
     };
   }
 }

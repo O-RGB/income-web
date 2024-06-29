@@ -17,7 +17,7 @@ interface IncomeListInDayProps {
     income: IIncome[]
   ) => Promise<IGeneralReturnFetch<IIncome[] | undefined>>;
   deleteIncome?: (
-    sheetsIndex: number
+    input: IIncomeDelete
   ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
   onSelectDate: (date: Date) => void;
   dateSelect: Date;
@@ -169,7 +169,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   const deleteOnServer = async (sheetsIndex: number, listIndex: number) => {
     if (deleteIncome) {
       fetchingByIndex(listIndex);
-      const deleted = await deleteIncome(sheetsIndex);
+      const deleted = await deleteIncome({ sheetsIndex });
       if (deleted.data === true) {
         deleteOnClient(listIndex);
       }
@@ -244,10 +244,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           });
         }}
       ></FloatingButton> */}
-     
+
       <div className="flex flex-col gap-1 relative">
         <div className="absolute top-0 text-xs">version: 1.0.1</div>
-      
+
         <DetailOfMonth
           master={master}
           date={dateSelect}

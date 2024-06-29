@@ -4,6 +4,9 @@ export const GenOption = (
   lists: any
 ): RadioOptions[] => {
   return lists.map((data: any, index: number): RadioOptions => {
-    return { label: data[labelKey], value: data[valueKey] };
+    return {
+      label: data[labelKey],
+      value: data[valueKey],
+    };
   });
 };

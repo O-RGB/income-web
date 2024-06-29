@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Fetcher } from "@/utils/fetch/fetch";
 import { IncomeTypesModel } from "@/utils/models/types";
 
@@ -18,7 +18,9 @@ export const FetchTypesIncome = async (
   if (res.success === true) {
     var types: IIncomeTypes[] = [];
     res.data?.map((list) => {
-      types.push(new IncomeTypesModel(list[0], list[1], list[2]));
+      types.push(
+        new IncomeTypesModel(list[0], list[1], list[2], list[3], list[4])
+      );
     });
     return types;
   }

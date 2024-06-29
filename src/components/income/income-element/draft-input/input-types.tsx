@@ -9,9 +9,9 @@ import Category from "@/components/category";
 interface IncomeInputTypesProps {
   // name: string;
   // lable: string;
-  options: RadioOptions[];
+  options: IIncomeTypes[];
   value?: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: IIncomeTypes) => void;
 }
 
 const IncomeInputTypes: React.FC<IncomeInputTypesProps> = ({
@@ -22,15 +22,15 @@ const IncomeInputTypes: React.FC<IncomeInputTypesProps> = ({
   onChange,
 }) => {
   const [buttom, setButtom] = useState<boolean>(false);
-  const [selectValue, setValue] = useState<RadioOptions>();
-  const onSelectCate = (value: RadioOptions) => {
+  const [selectValue, setValue] = useState<IIncomeTypes>();
+  const onSelectCate = (value: IIncomeTypes) => {
     setValue(value);
-    onChange?.(value.value);
+    onChange?.(value);
     setButtom(false);
   };
   useEffect(() => {
     if (options) {
-      const find = options.find((x) => x.value === value);
+      const find = options.find((x) => x.typeId === value);
       if (find) {
         setValue(find);
       }
@@ -46,18 +46,18 @@ const IncomeInputTypes: React.FC<IncomeInputTypesProps> = ({
       >
         <Category
           onSelectCate={onSelectCate}
-          selectValue={selectValue?.value}
+          selectValue={selectValue?.typeId}
           options={options}
         ></Category>
       </ButtomSheets>
       <Button
         size="small"
-        type={selectValue?.value !== "T00" ? "primary" : "default"}
+        type={selectValue?.typeId !== "T00" ? "primary" : "default"}
         onClick={() => {
           setButtom(true);
         }}
       >
-        <div className="text-xs">{selectValue?.label}</div>
+        <div className="text-xs">{selectValue?.name}</div>
       </Button>
     </>
   );

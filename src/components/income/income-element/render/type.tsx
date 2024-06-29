@@ -5,7 +5,7 @@ interface RenderTypeProps {
   types: string;
   comment?: React.ReactNode;
   _priceType?: priceType;
-  typesOfItems?: RadioOptions[];
+  typesOfItems?: IIncomeTypes[];
 }
 
 const RenderType: React.FC<RenderTypeProps> = ({
