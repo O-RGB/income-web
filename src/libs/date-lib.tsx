@@ -14,7 +14,7 @@ export function getDaysInMonth(month: number, year: number) {
 
 export function DateFormat(
   date?: string | Date | undefined,
-  format: string = "LL"
+  format: string = "ll"
 ) {
   return moment(date).format(format);
 }

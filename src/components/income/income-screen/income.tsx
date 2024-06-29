@@ -227,23 +227,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       ></Analytics>
       {/* incomesData: {JSON.stringify(incomesData)}
       firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
-      {/* <FloatingButton
-        onClick={() => {
-          onElementUpdate("add", {
-            sheetsIndex: 1,
-            day: dateNow.getDate(),
-            expensesCount: 1,
-            expensesPrice: 100,
-            name: "ทดสอบเท่านั้น",
-            types: "",
-            revenueCount: "",
-            revenuePrice: "",
-            delete: false,
-            fetching: true,
-            draft: false,
-          });
-        }}
-      ></FloatingButton> */}
 
       <div className="flex flex-col gap-1 relative">
         <div className="absolute top-0 text-xs">version: 1.0.1</div>
@@ -258,19 +241,19 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           incomes={incomes}
         ></DetailOfMonth>
         {/* <hr /> */}
-        <div className="flex justify-between gap-2">
+        <div className="flex justify-end gap-2">
           <Button
             onClick={() => setAnalytics(!analytics)}
-            className="w-full shadow-sm"
+            className="w-fit shadow-sm"
           >
             <div className="flex gap-2   justify-center items-center">
               <div>
                 <FaChartPie></FaChartPie>
               </div>
-              <div className="">สรุปข้อมูลเดือนนี้</div>
+              <div className="">ดูสรุป</div>
             </div>
           </Button>
-          <Button
+          {/* <Button
             onClick={() => setAnalytics(!analytics)}
             className="w-fit shadow-sm"
           >
@@ -280,7 +263,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
               </div>
               <div className="">ตั้งค่า</div>
             </div>
-          </Button>
+          </Button> */}
         </div>
       </div>
       {/* <div className="p-2 border rounded-md">

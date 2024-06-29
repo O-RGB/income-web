@@ -8,6 +8,8 @@ import IncomeElement from "../../income-element/element";
 import { DynamicKeysToArray, hanndelInputIncome } from "./im-lib";
 import SummaryOfDay from "./summary/summaryOfDay";
 import { FaSave } from "react-icons/fa";
+import FloatingButton from "@/components/form-data/floating-button/floating-button";
+import { BiLayerPlus } from "react-icons/bi";
 
 interface IncomeRenderProps {
   master: IMasterDataImcomes;
@@ -66,26 +68,50 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                 <div></div>
                 <div className="flex gap-2">
                   {draftCount > 0 && (
-                    <Button
+                    // <Button
+                    //   onClick={() => {
+                    //     headForm.submit();
+                    //   }}
+                    //   className="!bg-blue-500 !text-white flex justify-center items-center"
+                    //   icon={<FaSave />}
+                    // >
+                    //   บันทึก
+                    // </Button>
+                    <FloatingButton
+                      noti={draftCount > 0 ? String(draftCount) : undefined}
+                      color="bg-amber-500"
+                      hoverColor="hover:bg-amber-500/50"
+                      icon={<FaSave className="text-lg"></FaSave>}
+                      right="6rem"
                       onClick={() => {
                         headForm.submit();
                       }}
-                      className="!bg-blue-500 !text-white flex justify-center items-center"
-                      icon={<FaSave />}
-                    >
-                      บันทึก
-                    </Button>
+                    ></FloatingButton>
                   )}
                   {!onClickEdit ? (
-                    <Button
+                    // <Button
+                    //   onClick={
+                    //     loading.waitActioning == false
+                    //       ? action?.setDraft
+                    //       : () => {}
+                    //   }
+                    // >
+                    //   + เพิ่มข้อมูลวันที่ {dateSelect.getDate()}
+                    // </Button>
+                    <FloatingButton
+                      icon={
+                        draftCount > 0 ? (
+                          <BiLayerPlus className="text-xl"></BiLayerPlus>
+                        ) : (
+                          <FaPlus className="text-lg"></FaPlus>
+                        )
+                      }
                       onClick={
                         loading.waitActioning == false
                           ? action?.setDraft
                           : () => {}
                       }
-                    >
-                      + เพิ่มข้อมูลวันที่ {dateSelect.getDate()}
-                    </Button>
+                    ></FloatingButton>
                   ) : (
                     <Button
                       onClick={

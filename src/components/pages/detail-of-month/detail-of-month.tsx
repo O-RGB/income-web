@@ -1,6 +1,9 @@
 import CalendarCommon from "@/components/common/calendar";
 import { DateFormat } from "@/libs/date-lib";
+import { Button } from "antd";
 import React, { useEffect, useState } from "react";
+import { FaArrowRight } from "react-icons/fa6";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { MdCalendarMonth } from "react-icons/md";
 
 interface DetailOfMonthProps {
@@ -18,48 +21,45 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
 }) => {
   const [openDate, setOpenDate] = useState<boolean>(false);
 
-  useEffect(() => {
-    //   if (incomes) {
-    //     console.log("incomes = ", incomes);
-    //     const date = DateFormat();
-    //     setT(date);
-    //     let ex: number = 0;
-    //     let re: number = 0;
-    //     incomes?.map((income) => {
-    //       if (Number(income.expensesPrice)) {
-    //         ex = ex + Number(income.expensesPrice);
-    //       }
-    //       if (Number(income.revenuePrice)) {
-    //         re = re + Number(income.revenuePrice);
-    //       }
-    //       // income.map((onDay) => {
-    //       //   if (Number(onDay.expensesPrice)) {
-    //       //     ex = ex + Number(onDay.expensesPrice);
-    //       //   }
-    //       //   if (Number(onDay.revenuePrice)) {
-    //       //     re = re + Number(onDay.revenuePrice);
-    //       //   }
-    //       // });
-    //     });
-    //     setPriceSummary({
-    //       Expenses: ex,
-    //       Revenue: re,
-    //     });
-    //   }
-  }, [incomes]);
+  useEffect(() => {}, [date]);
   return (
     <>
-      <div className="flex flex-col gap-3">
-        <div className=" flex justify-between pt-5">
-          <div className="text-4xl">{DateFormat(date)}</div>
-          <div
+      <div className="flex flex-col gap-3 select-none">
+        <div className="flex justify-center items-center pt-5 w-full  relative">
+          <div className="flex items-center justify-center text-xl w-fit ">
+            <div
+              onClick={() => {
+                let cloneDate = new Date(date);
+                cloneDate.setDate(cloneDate.getDate() - 1);
+                onDateChange?.(cloneDate);
+              }}
+              className="p-2 mt-1 flex items-center justify-center cursor-pointer hover:text-blue-500 duration-300"
+            >
+              <IoIosArrowBack></IoIosArrowBack>
+            </div>
+            <div className="">{DateFormat(date)}</div>
+            {new Date().getUTCDate() > date.getUTCDate() && (
+              <div
+                onClick={() => {
+                  let cloneDate = new Date(date);
+                  cloneDate.setDate(cloneDate.getDate() + 1);
+                  onDateChange?.(cloneDate);
+                }}
+                className="p-2 mt-1 flex items-center justify-center cursor-pointer hover:text-blue-500 duration-300"
+              >
+                <IoIosArrowForward></IoIosArrowForward>
+              </div>
+            )}
+          </div>
+          <Button
+            size="small"
+            icon={<MdCalendarMonth />}
+            className="absolute right-0"
             onClick={() => {
               setOpenDate(!openDate);
             }}
-            className="p-3 rounded-md  border cursor-pointer bg-blue-500 hover:bg-slate-300 text-white duration-300"
-          >
-            <MdCalendarMonth />
-          </div>
+            type="text"
+          ></Button>
         </div>
         <div
           className={`${
@@ -67,6 +67,7 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
           } transition-all duration-300`}
         >
           <CalendarCommon
+            date={date}
             sumLists={master.IGetDisplayCal?.calendar}
             onDateChange={onDateChange}
           ></CalendarCommon>

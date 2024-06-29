@@ -1,4 +1,5 @@
 "use client";
+import InputCommon from "@/components/common/input";
 import IncomeListInDay from "@/components/income/income-screen/income";
 import {
   FetchGetDisplayCal,
@@ -9,9 +10,11 @@ import { FetchTypesIncome } from "@/fetcher/GET/types.fetch";
 import { AddIncomesList, DeleteIncome } from "@/fetcher/POST/incomes.post";
 import { GenOption } from "@/libs/gen-options";
 import { getLocalByKey, setLocal } from "@/libs/local";
+import { Button, Form, Modal } from "antd";
 import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [checkGGKey, setGGKey] = useState<boolean>(false);
   const [incomes, setIncomes] = useState<IIncome[]>([]);
   const [loading, setLoading] = useState<ILoading>({
     pageLoad: false,
@@ -146,10 +149,15 @@ export default function Home() {
   };
 
   const getData = () => {
-    getIncomeSheets();
-    getTypes();
-    getDuplecate();
-    getDisplay();
+    let getUrl = getLocalByKey("google_sheets");
+    if (getUrl) {
+      getIncomeSheets();
+      getTypes();
+      getDuplecate();
+      getDisplay();
+    } else {
+      setGGKey(true);
+    }
   };
 
   useEffect(() => {
@@ -160,7 +168,40 @@ export default function Home() {
 
   return (
     <div>
-      <div className="border p-2 flex gap-2">
+      <Modal
+        title="ลงชื่อเข้าใช้ระบบ"
+        closable={false}
+        open={checkGGKey}
+        footer={<></>}
+      >
+        <Form
+          layout="vertical"
+          onFinish={(e) => {
+            const res = setLocal("google_sheets", e.google_sheets);
+            if (res) {
+              setGGKey(false);
+              getData();
+            }
+          }}
+        >
+          <Form.Item
+            required
+            rules={[{ required: true, message: "บังคับกรอก" }]}
+            name={"google_sheets"}
+            label={
+              <div className="pb-1">Google Sheets Key (ครั้งแรกเท่านั้น)</div>
+            }
+          >
+            <InputCommon size="middle"></InputCommon>
+          </Form.Item>
+          <div className="flex justify-end">
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </div>
+        </Form>
+      </Modal>
+      {/* <div className="border p-2 flex gap-2">
         <input
           className="border w-full"
           placeholder="google sheets url"
@@ -172,7 +213,7 @@ export default function Home() {
         <button className="p-2 border" onClick={() => getIncomeSheets()}>
           Update
         </button>
-      </div>
+      </div> */}
 
       <IncomeListInDay
         master={{

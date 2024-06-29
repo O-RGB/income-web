@@ -56,7 +56,7 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
   return (
     <div className="flex flex-col   gap-1 bg-white">
       {/* {JSON.stringify(summaryData)} */}
-      <div className="flex flex-col sm:flex-row gap-1 ">
+      <div className="flex   gap-1 ">
         <TagSummary
           // loading={incomeOfday == "load"}
           color="bg-red-200"

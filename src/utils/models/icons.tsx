@@ -125,7 +125,7 @@ export class IconsModelList {
     
 }
 
-class IconsModel implements IIcons {
+export class IconsModel implements IIcons {
   name: string;
   render: React.ReactNode;
   constructor(name: string, render: React.ReactNode) {

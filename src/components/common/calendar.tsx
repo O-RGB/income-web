@@ -14,12 +14,14 @@ interface CalendarCommonProps {
   onDateChange?: (date: Date) => void;
   datelist?: Date[];
   sumLists?: ICalenderList[];
+  date: Date;
 }
 
 const CalendarCommon: React.FC<CalendarCommonProps> = ({
   onDateChange,
   datelist = [new Date("May 19, 2024")],
   sumLists,
+  date,
 }) => {
   const { token } = theme.useToken();
 
@@ -76,6 +78,7 @@ const CalendarCommon: React.FC<CalendarCommonProps> = ({
             // }}
             disabledDate={disabledDate}
             fullscreen={false}
+            value={dayjs(date)}
             onChange={(date) => {
               onDateChange?.(date.toDate());
             }}

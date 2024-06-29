@@ -1,4 +1,5 @@
 import { MapingTypeToLabel } from "@/libs/income-lib";
+import { IconsModel, IconsModelList } from "@/utils/models/icons";
 import React, { useEffect, useState } from "react";
 
 interface RenderTypeProps {
@@ -14,12 +15,24 @@ const RenderType: React.FC<RenderTypeProps> = ({
   _priceType = "Expenses",
   typesOfItems,
 }) => {
-  const [typeLable, setTypeLabel] = useState<string>();
+  const [typeLable, setTypeLabel] = useState<{
+    type: IIncomeTypes;
+    icon: IconsModel;
+  }>();
 
   useEffect(() => {
     if (types) {
-      const data = MapingTypeToLabel(typesOfItems, types);
-      setTypeLabel(data);
+      const data = typesOfItems?.find((x) => x.typeId === types);
+      if (data) {
+        const icone = new IconsModelList();
+        const ele = icone.getIconById(data.icons);
+        if (ele) {
+          setTypeLabel({
+            type: data,
+            icon: ele,
+          });
+        }
+      }
     }
   }, [typesOfItems, types]);
   return (
@@ -34,11 +47,13 @@ const RenderType: React.FC<RenderTypeProps> = ({
         >
           {typeLable && (
             <div
-              className={`${
-                _priceType === "Expenses" ? "bg-red-400" : "bg-green-500"
-              } text-xs p-1 border text-white  w-fit rounded-md text-nowrap`}
+              style={{
+                backgroundColor: typeLable.type.color,
+              }}
+              className={` text-xs p-1 font-bold text-white  w-fit rounded-md text-nowrap flex gap-0.5 items-center`}
             >
-              {typeLable}
+              <div>{typeLable.icon.render}</div>
+              <div>{typeLable.type.name}</div>
             </div>
           )}
           {comment}
