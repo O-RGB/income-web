@@ -9,12 +9,12 @@ import IncomePriceType from "./draft-input/input-price-type";
 import IncomeInputTypes from "./draft-input/input-types";
 import IncomeInputCountItem from "./draft-input/input-count-item";
 import LayoutIncomeItem from "./layout-income";
-import { Button, Checkbox, Form } from "antd";
+import { Button, Checkbox, Form, Popconfirm } from "antd";
 import { IoMdRemove } from "react-icons/io";
 import IncomeComment from "./draft-input/input-comment";
 import ButtomSheets from "@/components/common/buttomSheets";
-import { MdOutlineEditNote } from "react-icons/md";
-import { RiDeleteBin5Line } from "react-icons/ri";
+import { MdFollowTheSigns, MdOutlineEditNote } from "react-icons/md";
+import { RiDeleteBin5Line, RiGpsFill } from "react-icons/ri";
 
 interface IncomeListProps {
   income: IIncome;
@@ -217,21 +217,33 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 } `}
               >
                 <div className="pt-4"></div>
-                <div className="flex  justify-end">
-                  <Button
-                    type="default"
-                    onClick={() => {
+                <div className="flex gap-2 justify-between">
+                  <Button type="text" size="small">
+                    <div className="flex items-center justify-center gap-1">
+                      <RiGpsFill className="text-xs" />
+                      <div>ติดตามสิ่งนี้</div>
+                    </div>
+                  </Button>
+                  <Popconfirm
+                  style={{right:10}}
+                    className="!bg-white/70"
+                    title="ลบรายการนี้"
+                    description="ยืนยันการลบรายการแล้วใช่ไหม?"
+                    onConfirm={() => {
                       if (income.fetching !== true) {
                         deleteOnServer?.(income.sheetsIndex, itemIndex);
                       }
                     }}
-                    size="small"
+                    okText="ลบออก"
+                    cancelText="ยกเลิก"
                   >
-                    <div className="flex items-center justify-center gap-1">
-                      <RiDeleteBin5Line className="text-xs" />
-                      <div>ลบรายการ</div>
-                    </div>
-                  </Button>
+                    <Button type="text" size="small">
+                      <div className="flex items-center justify-center gap-1">
+                        <RiDeleteBin5Line className="text-xs" />
+                        {/* <div>ลบรายการ</div> */}
+                      </div>
+                    </Button>
+                  </Popconfirm>
                 </div>
               </div>
             )}

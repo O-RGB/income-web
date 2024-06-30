@@ -11,6 +11,7 @@ interface DetailOfMonthProps {
   onDateChange?: (date: Date) => void;
   date: Date;
   master: IMasterDataImcomes;
+  panelBut?: React.ReactNode;
 }
 
 const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
@@ -18,14 +19,15 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
   onDateChange,
   date,
   master,
+  panelBut,
 }) => {
   const [openDate, setOpenDate] = useState<boolean>(false);
 
   useEffect(() => {}, [date]);
   return (
     <>
-      <div className="flex flex-col gap-3 select-none">
-        <div className="flex justify-center items-center pt-5 w-full  relative">
+      <div className="flex flex-col   select-none justify-start items-center">
+        <div className="flex  items-center  w-full relative justify-between py-4">
           <div className="flex items-center justify-center  w-fit ">
             <div
               onClick={() => {
@@ -37,7 +39,17 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
             >
               <IoIosArrowBack></IoIosArrowBack>
             </div>
-            <div className="text-lg">{DateFormat(date)}</div>
+            <div
+              onClick={() => {
+                setOpenDate(!openDate);
+              }}
+              className="text-lg flex items-center justify-center gap-2"
+            >
+              <div>{DateFormat(date)}</div>
+              <div>
+                <MdCalendarMonth className="text-sm" />
+              </div>
+            </div>
             {new Date().getUTCDate() > date.getUTCDate() && (
               <div
                 onClick={() => {
@@ -51,15 +63,7 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
               </div>
             )}
           </div>
-          <Button
-            size="small"
-            icon={<MdCalendarMonth />}
-            className="absolute right-0"
-            onClick={() => {
-              setOpenDate(!openDate);
-            }}
-            type="text"
-          ></Button>
+          <div>{panelBut}</div>
         </div>
         <div
           className={`${

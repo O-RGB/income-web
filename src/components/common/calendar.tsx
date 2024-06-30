@@ -58,6 +58,7 @@ const CalendarCommon: React.FC<CalendarCommonProps> = ({
       <ConfigProvider locale={locale}>
         <div style={wrapperStyle}>
           <Calendar
+            className="!bg-white/70"
             // cellRender={(date) => {
             //   const dateSeelct = date.date();
             //   const sum = sumLists?.find((x) => x.day === dateSeelct);

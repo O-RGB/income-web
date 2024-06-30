@@ -14,7 +14,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
   onClick,
   right = "2rem",
   icon,
-  color = "bg-sky-500",
+  color = "bg-sky-400",
   hoverColor = "hover:bg-sky-500/80",
   noti,
 }) => {

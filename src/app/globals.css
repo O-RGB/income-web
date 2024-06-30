@@ -13,12 +13,12 @@
 }
 
 html,
-body,
-* {
+body {
   font-family: "Mali", sans-serif;
 }
 
-.ant-typography,
-.ant-btn {
-  font-family: "Mali", sans-serif;
+
+.ant-popover .ant-popover-inner{
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter:  blur(3px);
 }

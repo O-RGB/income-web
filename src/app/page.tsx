@@ -170,7 +170,7 @@ export default function Home() {
     <div className="relative min-h-screen">
       <div className="absolute w-full h-full top-0 z-1 ">
         <img
-          src="/wallpaper/test4.jpg"
+          src="/wallpaper/test6.jpg"
           alt=""
           className="w-full h-full object-cover opacity-70 "
         />

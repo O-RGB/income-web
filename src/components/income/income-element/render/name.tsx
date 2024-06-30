@@ -1,6 +1,6 @@
 import { Mali } from "next/font/google";
 import React from "react";
-const inter = Mali({ subsets: ["thai"], weight: "500" });
+
 
 interface RenderNameProps {
   name: string;
@@ -18,7 +18,7 @@ const RenderName: React.FC<RenderNameProps> = ({
       <div
         className={`${
           _priceType === "Expenses" ? "" : "text-end"
-        }  w-[80%] ${colorTheme?.text} ${inter.className}`}
+        }  w-[80%] ${colorTheme?.text}`}
       >
         {name}
       </div>

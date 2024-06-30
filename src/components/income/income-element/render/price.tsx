@@ -2,7 +2,6 @@ import { NumberFormat } from "@/libs/number";
 import { Mali } from "next/font/google";
 import React from "react";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
-const inter = Mali({ subsets: ["thai"], weight: "500" });
 
 interface RenderPriceProps {
   _priceType?: priceType;
@@ -19,7 +18,7 @@ const RenderPrice: React.FC<RenderPriceProps> = ({
 }) => {
   return (
     <>
-      <div className={`text-xl font-bold flex gap-2 items-center ${inter.className}`}>
+      <div className={`text-xl font-medium flex gap-2 items-center`}>
         {_priceType == "Expenses" ? (
           <div className={`${colorTheme?.text}`}>
             {NumberFormat(expensesPrice)}

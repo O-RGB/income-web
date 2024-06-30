@@ -10,6 +10,7 @@ import Analytics from "./analytics/analytics";
 import { GrSettingsOption } from "react-icons/gr";
 import { CalLineChart, CalSumOfMonth } from "./analytics/lib";
 import ButtonCommon from "@/components/common/button";
+import { FcSettings } from "react-icons/fc";
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
@@ -233,9 +234,9 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
 
       <div className="flex flex-col gap-1 relative">
-        <div className="absolute top-0 text-xs">version: 1.0.1</div>
+        <div className="absolute top-1 text-[8px]">version: 1.0.1</div>
 
-        <div>
+        <div className="flex justify-between items-center ">
           <DetailOfMonth
             master={master}
             date={dateSelect}
@@ -244,8 +245,12 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
               setIncomes([]);
             }}
             incomes={incomes}
+            panelBut={
+              <>
+                <Button icon={<FcSettings></FcSettings>} type="text"></Button>
+              </>
+            }
           ></DetailOfMonth>
-          <hr />
         </div>
       </div>
 
@@ -261,17 +266,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         >
           สรุป
         </ButtonCommon>
-        {/* <Button
-          onClick={() => setAnalytics(!analytics)}
-          className="w-fit shadow-sm !bg-white/70 !border-transparent"
-        >
-          <div className="flex gap-2 justify-center items-center">
-            <div>
-              <FaChartPie></FaChartPie>
-            </div>
-            <div className="">ดูสรุป</div>
-          </div>
-        </Button> */}
       </div>
       {/* {countDraft} */}
       <IncomeRender

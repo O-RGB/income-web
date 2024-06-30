@@ -128,8 +128,10 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
             </div>
 
             {_incomes.length === 0 && (
-              <div className="text-xs text-gray-300 flex w-full justify-center items-center h-40">
-                ไม่มีข้อมูล
+              <div className="text-xs  flex w-full justify-center items-center h-40">
+                <div className="p-3 rounded-md bg-white/50 text-gray-800">
+                  ไม่มีข้อมูล
+                </div>
               </div>
             )}
 
