@@ -10,14 +10,15 @@ import { TbGraphFilled } from "react-icons/tb";
 export class IconsModelList {
   icons = new Map<string, IconsModel>();
   constructor() {
-    this.icons.set("1", new IconsModel("IoBus", <IoBus />));
-    this.icons.set("2", new IconsModel("FaPumpSoap", <FaPumpSoap />));
-    this.icons.set("3", new IconsModel("GiWashingMachine", <GiWashingMachine />));
-    this.icons.set("4", new IconsModel("FaCalendarCheck", <FaCalendarCheck />));
-    this.icons.set("5", new IconsModel("TbGraphFilled", <TbGraphFilled />));
-    this.icons.set("6", new IconsModel("MdSoupKitchen", <MdSoupKitchen />));
-    this.icons.set("7", new IconsModel("IoFastFoodSharp", <IoFastFoodSharp />));
-    this.icons.set("8", new IconsModel("BiSolidCoffee", <BiSolidCoffee />));
+    const sizes = 'w-7 h-7'
+    this.icons.set("1", new IconsModel("car-icon", <img className={sizes} src="/icons/car-icon.png"/>));
+    this.icons.set("2", new IconsModel("soap-icon", <img className={sizes} src="/icons/soap-icon.png"/>));
+    this.icons.set("3", new IconsModel("washing-icon", <img className={sizes} src="/icons/washing-icon.png"/>));
+    this.icons.set("4", new IconsModel("home-icon", <img className={sizes} src="/icons/home-icon.png"/>));
+    this.icons.set("5", new IconsModel("graph-icon", <img className={sizes} src="/icons/graph-icon.png"/>));
+    this.icons.set("6", new IconsModel("meat-icon", <img className={sizes} src="/icons/meat-icon.png"/>));
+    this.icons.set("7", new IconsModel("food-icon", <img className={sizes} src="/icons/food-icon.png"/>));
+    this.icons.set("8", new IconsModel("tea-icon", <img className={sizes} src="/icons/tea-icon.png"/>));
     this.icons.set("9", new IconsModel("MdShoppingCart", <MdShoppingCart />));
     this.icons.set("10", new IconsModel("FaPiggyBank", <FaPiggyBank />));
     this.icons.set("11", new IconsModel("IoIosCard", <IoIosCard />));

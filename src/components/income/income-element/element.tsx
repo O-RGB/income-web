@@ -225,7 +225,6 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                     </div>
                   </Button>
                   <Popconfirm
-                  style={{right:10}}
                     className="!bg-white/70"
                     title="ลบรายการนี้"
                     description="ยืนยันการลบรายการแล้วใช่ไหม?"
