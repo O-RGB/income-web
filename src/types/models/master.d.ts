@@ -49,3 +49,8 @@ interface ITypesList {
 interface IDisplayPlotType extends IPrice {
   day: number;
 }
+
+interface IConfigList {
+  name: string;
+  value: string;
+}

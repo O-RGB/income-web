@@ -4,6 +4,7 @@ import GoogleSheetsUrl from "@/components/form/google-sheets-url";
 import WallpaperForm from "@/components/form/wallpaper/wallpaper-form";
 import IncomeListInDay from "@/components/income/income-screen/income";
 import SettingModal from "@/components/setting/setting";
+import { FetchConfig } from "@/fetcher/GET/config.fetch";
 import {
   FetchGetDisplayCal,
   FetchGetDupOfMonth,
@@ -13,12 +14,15 @@ import { FetchTypesIncome } from "@/fetcher/GET/types.fetch";
 import { AddIncomesList, DeleteIncome } from "@/fetcher/POST/incomes.post";
 import { GenOption } from "@/libs/gen-options";
 import { getLocalByKey, setLocal } from "@/libs/local";
-import { Modal } from "antd";
+import { ConfigList } from "@/utils/models/config";
+import { Button, Modal } from "antd";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 export default function Home() {
   const [googleKey, setGoogleKey] = useState<string | "">();
   const [wallpaper, setWallpaper] = useState<string>("");
+  const [version, setVersion] = useState<string>();
+  const [isVersionOld, setVersionOld] = useState<boolean>(false);
   const [incomes, setIncomes] = useState<{
     fetched: boolean;
     income: IIncome[];
@@ -36,10 +40,12 @@ export default function Home() {
     []
   );
   const [dateSelect, setDateSelect] = useState<Date>(new Date());
+  const [config, setConfig] = useState<ConfigList>();
 
   const localLoad = async () => {
     let getUrl = getLocalByKey("google_sheets");
     let wallpaper = getLocalByKey("wallpaper");
+    let version = getLocalByKey("version");
     if (getUrl) {
       setGoogleKey(getUrl);
     }
@@ -47,7 +53,11 @@ export default function Home() {
       setWallpaper(wallpaper);
     }
 
-    return getUrl;
+    if (version) {
+      setVersion(version);
+    }
+
+    return { getUrl, version };
   };
 
   const initLoad = ({
@@ -60,12 +70,6 @@ export default function Home() {
     dateChange?: boolean;
   }) => {
     setLoading({
-      pageLoad: fetch ? true : false,
-      waitActioning: waitAction ? true : false,
-      dateChange: dateChange ? true : false,
-    });
-
-    console.log({
       pageLoad: fetch ? true : false,
       waitActioning: waitAction ? true : false,
       dateChange: dateChange ? true : false,
@@ -102,6 +106,22 @@ export default function Home() {
       const cal = await FetchGetDisplayCal(key, date);
       if (cal) {
         setDisplayCal(cal);
+      }
+    }
+  };
+
+  const getConfig = async (url?: string, version?: string) => {
+    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+    if (key) {
+      const config = await FetchConfig(key);
+      if (config) {
+        setConfig(config);
+        const data = config.getValueByName("version");
+        if (data) {
+          if (data.value !== version) {
+            setVersionOld(true);
+          }
+        }
       }
     }
   };
@@ -168,8 +188,9 @@ export default function Home() {
 
   //Setting
   const [openSetting, setSetting] = useState<boolean>(false);
+  const [updateing, setUpdate] = useState<boolean>(false);
 
-  const getData = (url?: string) => {
+  const getData = (url?: string, version?: string) => {
     const key = url ? url : googleKey !== "" ? googleKey : undefined;
     console.log(key);
     if (key) {
@@ -177,6 +198,7 @@ export default function Home() {
       getTypes(key);
       getDuplecate(key);
       getDisplay(undefined, key);
+      getConfig(key, version);
     } else {
       setGoogleKey("");
     }
@@ -185,7 +207,7 @@ export default function Home() {
   useEffect(() => {
     localLoad().then((url) => {
       if (!incomes.fetched) {
-        getData(url ?? undefined);
+        getData(url.getUrl ?? undefined, url.version ?? undefined);
       }
     });
   }, []);
@@ -214,6 +236,30 @@ export default function Home() {
           />
         </div>
       )}
+      <Modal
+        title="ตรวจพบเวอร์ชันใหม่"
+        closable={false}
+        open={isVersionOld}
+        footer={<></>}
+      >
+        <Button
+          loading={updateing}
+          onClick={() => {
+            if (config) {
+              const version = config.getValueByName("version");
+              const new_sheets = config.getValueByName("gg_key");
+              if (version?.value && new_sheets?.value) {
+                setUpdate(true);
+                const res_v = setLocal("version", version.value);
+                const res_g = setLocal("google_sheets", new_sheets.value);
+                window.location.reload();
+              }
+            }
+          }}
+        >
+          อัปเดต
+        </Button>
+      </Modal>
       <Modal
         title="ลงชื่อเข้าใช้ระบบ"
         closable={false}
@@ -264,6 +310,7 @@ export default function Home() {
         onSelectDate={setDateSelect}
         incomes={incomes.income}
         loading={loading}
+        version={version}
       ></IncomeListInDay>
     </div>
   );

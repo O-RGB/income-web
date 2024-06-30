@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Mali:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Mali:wght@300;400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -17,10 +17,4 @@
 html,
 body {
   font-family: "Mali", sans-serif;
-}
-
-
-.ant-popover .ant-popover-inner .ant-btn{
-  background-color: rgba(255, 255, 255, 0.7) !important;
-  backdrop-filter:  blur(3px);
 }

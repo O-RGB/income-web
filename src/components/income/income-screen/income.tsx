@@ -25,6 +25,7 @@ interface IncomeListInDayProps {
   onClickSetting?: () => void;
   dateSelect: Date;
   loading: ILoading;
+  version?: string;
 }
 
 const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
@@ -36,6 +37,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   dateSelect,
   onClickSetting,
   loading,
+  version,
 }) => {
   const [incomesData, setIncomes] = useState<IIncome[]>([]);
   const [firstIndexSheets, setFirstIndex] = useState<number>(0);
@@ -236,7 +238,9 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
 
       <div className="flex flex-col gap-1 relative">
-        <div className="absolute top-1 text-[8px] text-gray-500">Version: 1.0.1 Bata test</div>
+        <div className="absolute top-1 text-[8px] text-gray-500">
+          Version: {version} Bata test
+        </div>
 
         <div className="flex justify-between items-center ">
           <DetailOfMonth
