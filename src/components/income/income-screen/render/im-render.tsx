@@ -8,8 +8,9 @@ import IncomeElement from "../../income-element/element";
 import { DynamicKeysToArray, hanndelInputIncome } from "./im-lib";
 import SummaryOfDay from "./summary/summaryOfDay";
 import { FaSave } from "react-icons/fa";
-import FloatingButton from "@/components/form-data/floating-button/floating-button";
+
 import { BiLayerPlus } from "react-icons/bi";
+import FloatingButton from "@/components/common/floating-button";
 
 interface IncomeRenderProps {
   master: IMasterDataImcomes;

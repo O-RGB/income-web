@@ -1,5 +1,6 @@
 const crendentialKeys: { [key: string]: string } = {
   google_sheets: "google_sheets",
+  wallpaper: "wallpaper",
 };
 
 export const setLocal = (key: string, data: string) => {

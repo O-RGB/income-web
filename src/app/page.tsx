@@ -1,5 +1,7 @@
 "use client";
 import InputCommon from "@/components/common/input";
+import GoogleSheetsUrl from "@/components/form/google-sheets-url";
+import WallpaperForm from "@/components/form/wallpaper/wallpaper-form";
 import IncomeListInDay from "@/components/income/income-screen/income";
 import SettingModal from "@/components/setting/setting";
 import {
@@ -11,13 +13,19 @@ import { FetchTypesIncome } from "@/fetcher/GET/types.fetch";
 import { AddIncomesList, DeleteIncome } from "@/fetcher/POST/incomes.post";
 import { GenOption } from "@/libs/gen-options";
 import { getLocalByKey, setLocal } from "@/libs/local";
-import { Button, Form, Modal } from "antd";
+import { Modal } from "antd";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [checkGGKey, setGGKey] = useState<boolean>(false);
-  const [wallpaper, setWallpaper] = useState<string>();
-  const [incomes, setIncomes] = useState<IIncome[]>([]);
+  const [googleKey, setGoogleKey] = useState<string | "">();
+  const [wallpaper, setWallpaper] = useState<string>("");
+  const [incomes, setIncomes] = useState<{
+    fetched: boolean;
+    income: IIncome[];
+  }>({
+    fetched: false,
+    income: [],
+  });
   const [loading, setLoading] = useState<ILoading>({
     pageLoad: false,
     waitActioning: false,
@@ -28,6 +36,19 @@ export default function Home() {
     []
   );
   const [dateSelect, setDateSelect] = useState<Date>(new Date());
+
+  const localLoad = async () => {
+    let getUrl = getLocalByKey("google_sheets");
+    let wallpaper = getLocalByKey("wallpaper");
+    if (getUrl) {
+      setGoogleKey(getUrl);
+    }
+    if (wallpaper) {
+      setWallpaper(wallpaper);
+    }
+
+    return getUrl;
+  };
 
   const initLoad = ({
     fetch,
@@ -58,20 +79,20 @@ export default function Home() {
     getDisplay(date);
   };
 
-  const getTypes = async () => {
-    let getUrl = getLocalByKey("google_sheets");
-    if (getUrl) {
-      const incomes = await FetchTypesIncome(getUrl);
+  const getTypes = async (url?: string) => {
+    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+    if (key) {
+      const incomes = await FetchTypesIncome(key);
       if (incomes) {
         setIncomeTypesOptions(incomes);
       }
     }
   };
 
-  const getDuplecate = async () => {
-    let getUrl = getLocalByKey("google_sheets");
-    if (getUrl) {
-      const incomes = await FetchGetDupOfMonth(getUrl);
+  const getDuplecate = async (url?: string) => {
+    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+    if (key) {
+      const incomes = await FetchGetDupOfMonth(key);
       if (incomes) {
         const convent = incomes.map((data) => {
           return { name: data, value: data };
@@ -82,44 +103,51 @@ export default function Home() {
     }
   };
 
-  const getDisplay = async (date: Date = new Date()) => {
-    let getUrl = getLocalByKey("google_sheets");
-    if (getUrl) {
-      const cal = await FetchGetDisplayCal(getUrl, date);
+  const getDisplay = async (date: Date = new Date(), url?: string) => {
+    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+    if (key) {
+      const cal = await FetchGetDisplayCal(key, date);
       if (cal) {
         setDisplayCal(cal);
       }
     }
   };
 
-  const getIncomeSheets = (date?: Date) => {
-    let getUrl = getLocalByKey("google_sheets");
-    if (getUrl) {
-      setIncomes([]);
+  const getIncomeSheets = (date?: Date, url?: string) => {
+    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+    if (key) {
       initLoad({ fetch: true });
-      FetchGetOfDay(getUrl, date ? date : new Date())
+      FetchGetOfDay(key, date ? date : new Date())
         .then((incomes) => {
           if (incomes) {
-            setIncomes(incomes);
+            setIncomes({
+              fetched: true,
+              income: incomes,
+            });
           }
         })
         .catch((e) => {
-          setIncomes([]);
+          setIncomes({
+            fetched: false,
+            income: [],
+          });
         })
         .finally(() => {
           initLoad({ fetch: false, waitAction: false });
         });
     } else {
-      setIncomes([]);
+      setIncomes({
+        fetched: false,
+        income: [],
+      });
       initLoad({ fetch: false, waitAction: false });
     }
   };
 
   const onAddIncome = async (income: IIncome[]) => {
-    let getUrl = getLocalByKey("google_sheets");
-    if (getUrl) {
+    if (googleKey) {
       initLoad({ waitAction: true });
-      return AddIncomesList(getUrl, { incomes: income }).finally(() => {
+      return AddIncomesList(googleKey, { incomes: income }).finally(() => {
         initLoad({ waitAction: false });
       });
     } else {
@@ -131,10 +159,9 @@ export default function Home() {
     }
   };
   const onDeleteIncome = async (input: IIncomeDelete) => {
-    let getUrl = getLocalByKey("google_sheets");
-    if (getUrl) {
+    if (googleKey) {
       initLoad({ waitAction: true });
-      return DeleteIncome(getUrl, input).finally(() => {
+      return DeleteIncome(googleKey, input).finally(() => {
         initLoad({ waitAction: false });
       });
     } else {
@@ -147,74 +174,79 @@ export default function Home() {
   };
 
   //Setting
-  const onChangeWallpaper = () => {
-    
-  }
+  const [openSetting, setSetting] = useState<boolean>(false);
 
-  const getData = () => {
-    let getUrl = getLocalByKey("google_sheets");
-    if (getUrl) {
-      getIncomeSheets();
-      getTypes();
-      getDuplecate();
-      getDisplay();
+  const getData = (url?: string) => {
+    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+    console.log(key);
+    if (key) {
+      getIncomeSheets(undefined, key);
+      getTypes(key);
+      getDuplecate(key);
+      getDisplay(undefined, key);
     } else {
-      setGGKey(true);
+      setGoogleKey("");
     }
   };
 
   useEffect(() => {
-    if (incomes.length === 0) {
-      getData();
-    }
+    localLoad().then((url) => {
+      if (!incomes.fetched) {
+        getData(url ?? undefined);
+      }
+    });
   }, []);
 
   return (
     <div className="relative min-h-screen">
-      <div className="fixed w-full h-full top-0  ">
-        <img
-          src="/wallpaper/test6.jpg"
-          alt=""
-          className="w-full h-full object-cover  "
-        />
-      </div>
+      {wallpaper && (
+        <div className="fixed w-full h-full top-0  ">
+          <img
+            src={wallpaper}
+            alt=""
+            className="w-full h-full object-cover  "
+          />
+        </div>
+      )}
       <Modal
         title="ลงชื่อเข้าใช้ระบบ"
         closable={false}
-        open={checkGGKey}
+        open={googleKey == ""}
         footer={<></>}
       >
-        <Form
-          layout="vertical"
+        <GoogleSheetsUrl
           onFinish={(e) => {
             const res = setLocal("google_sheets", e.google_sheets);
             if (res) {
-              setGGKey(false);
-              getData();
+              window.location.reload();
             }
           }}
-        >
-          <Form.Item
-            required
-            rules={[{ required: true, message: "บังคับกรอก" }]}
-            name={"google_sheets"}
-            label={
-              <div className="pb-1">Google Sheets Key (ครั้งแรกเท่านั้น)</div>
-            }
-          >
-            <InputCommon size="middle"></InputCommon>
-          </Form.Item>
-          <div className="flex justify-end">
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </div>
-        </Form>
+        ></GoogleSheetsUrl>
       </Modal>
 
-      <SettingModal></SettingModal>
+      <SettingModal
+        onChangeGoogleSheetKey={(e) => {
+          const res = setLocal("google_sheets", e.google_sheets);
+          if (res) {
+            window.location.reload();
+          }
+        }}
+        onChangeWallpaper={(url) => {
+          const res = setLocal("wallpaper", url ?? "");
+          if (res) {
+            setWallpaper(url ?? "");
+          }
+        }}
+        close={() => {
+          setSetting(false);
+        }}
+        open={openSetting}
+      ></SettingModal>
 
       <IncomeListInDay
+        onClickSetting={() => {
+          setSetting(true);
+        }}
         master={{
           dupOfMonth: duplicateItems,
           typesOfItems: IncomeTypesOptions,
@@ -224,7 +256,7 @@ export default function Home() {
         onAddIncome={onAddIncome}
         deleteIncome={onDeleteIncome}
         onSelectDate={onSelectDate}
-        incomes={incomes}
+        incomes={incomes.income}
         loading={loading}
       ></IncomeListInDay>
     </div>

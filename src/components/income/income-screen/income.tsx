@@ -22,6 +22,7 @@ interface IncomeListInDayProps {
     input: IIncomeDelete
   ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
   onSelectDate: (date: Date) => void;
+  onClickSetting?: () => void;
   dateSelect: Date;
   loading: ILoading;
 }
@@ -33,6 +34,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   deleteIncome,
   onSelectDate,
   dateSelect,
+  onClickSetting,
   loading,
 }) => {
   const [incomesData, setIncomes] = useState<IIncome[]>([]);
@@ -247,7 +249,11 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
             incomes={incomes}
             panelBut={
               <>
-                <Button icon={<FcSettings></FcSettings>} type="text"></Button>
+                <Button
+                  onClick={onClickSetting}
+                  icon={<FcSettings></FcSettings>}
+                  type="text"
+                ></Button>
               </>
             }
           ></DetailOfMonth>
