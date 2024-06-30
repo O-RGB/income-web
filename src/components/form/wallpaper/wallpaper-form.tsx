@@ -5,10 +5,19 @@ import { RxValueNone } from "react-icons/rx";
 
 const image = [
   "",
-  "/wallpaper/test3.jpg",
-  "/wallpaper/test4.jpg",
+//   "/wallpaper/test3.jpg",
+//   "/wallpaper/test4.jpg",
   "/wallpaper/test5.jpg",
   "/wallpaper/test6.jpg",
+  "/wallpaper/test7.jpg",
+  "/wallpaper/test8.jpg",
+//   "/wallpaper/test9.jpg",
+  "/wallpaper/test10.jpg",
+//   "/wallpaper/test11.jpg",
+//   "/wallpaper/test12.jpg",
+  "/wallpaper/test13.jpg",
+  "/wallpaper/test14.jpg",
+  "/wallpaper/test15.jpg",
 ];
 
 interface WallpaperFormProps {

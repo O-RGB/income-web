@@ -11,6 +11,7 @@ import { GrSettingsOption } from "react-icons/gr";
 import { CalLineChart, CalSumOfMonth } from "./analytics/lib";
 import ButtonCommon from "@/components/common/button";
 import { FcSettings } from "react-icons/fc";
+import { IconsModelList } from "@/utils/models/icons";
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
@@ -26,6 +27,8 @@ interface IncomeListInDayProps {
   dateSelect: Date;
   loading: ILoading;
   version?: string;
+  icons: IconsModelList;
+  fetchNewType?: () => Promise<void>;
 }
 
 const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
@@ -38,6 +41,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   onClickSetting,
   loading,
   version,
+  icons,
+  fetchNewType,
 }) => {
   const [incomesData, setIncomes] = useState<IIncome[]>([]);
   const [firstIndexSheets, setFirstIndex] = useState<number>(0);
@@ -279,10 +284,11 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       </div>
       {/* {countDraft} */}
       <IncomeRender
+        fetchNewType={fetchNewType}
+        icons={icons}
         headForm={headForm}
         action={{
           setDraft: addDraft,
-          // setDelete: deleteIncomes,
           setDeleteOnClient: deleteOnClient,
           setDelete: deleteOnServer,
           setAdd: addIncomes,

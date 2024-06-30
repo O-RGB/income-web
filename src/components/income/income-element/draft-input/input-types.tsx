@@ -12,6 +12,7 @@ interface IncomeInputTypesProps {
   options: IIncomeTypes[];
   value?: string;
   onChange?: (value: IIncomeTypes) => void;
+  fetchNewType?: () => Promise<void>;
 }
 
 const IncomeInputTypes: React.FC<IncomeInputTypesProps> = ({
@@ -19,6 +20,7 @@ const IncomeInputTypes: React.FC<IncomeInputTypesProps> = ({
   // lable,
   options,
   value,
+  fetchNewType,
   onChange,
 }) => {
   const [buttom, setButtom] = useState<boolean>(false);
@@ -48,6 +50,7 @@ const IncomeInputTypes: React.FC<IncomeInputTypesProps> = ({
           onSelectCate={onSelectCate}
           selectValue={selectValue?.typeId}
           options={options}
+          fetchNewType={fetchNewType}
         ></Category>
       </ButtomSheets>
       <Button

@@ -14,6 +14,7 @@ interface RenderDayProps {
   colorTheme: ColorTheme;
   types: string;
   typesOfItems?: IIncomeTypes[];
+  icons: IconsModelList;
 }
 
 const RenderDay: React.FC<RenderDayProps> = ({
@@ -23,6 +24,7 @@ const RenderDay: React.FC<RenderDayProps> = ({
   colorTheme,
   typesOfItems,
   types,
+  icons,
 }) => {
   const [typeLable, setTypeLabel] = useState<{
     type: IIncomeTypes;
@@ -33,8 +35,7 @@ const RenderDay: React.FC<RenderDayProps> = ({
     if (types) {
       const data = typesOfItems?.find((x) => x.typeId === types);
       if (data) {
-        const icone = new IconsModelList();
-        const ele = icone.getIconById(data.icons);
+        const ele = icons.getIconById(data.icons);
         if (ele) {
           setTypeLabel({
             type: data,

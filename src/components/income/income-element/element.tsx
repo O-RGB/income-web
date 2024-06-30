@@ -15,6 +15,9 @@ import IncomeComment from "./draft-input/input-comment";
 import ButtomSheets from "@/components/common/buttomSheets";
 import { MdFollowTheSigns, MdOutlineEditNote } from "react-icons/md";
 import { RiDeleteBin5Line, RiGpsFill } from "react-icons/ri";
+import { IconsModelList } from "@/utils/models/icons";
+import { FaNoteSticky } from "react-icons/fa6";
+import { FaNotesMedical } from "react-icons/fa";
 
 interface IncomeListProps {
   income: IIncome;
@@ -27,6 +30,8 @@ interface IncomeListProps {
   removeCommnet?: (income: IIncome, index: number) => void;
   edit: boolean;
   onSelectEdit?: (index: number) => void;
+  icons: IconsModelList;
+  fetchNewType?: () => Promise<void>;
 }
 
 const IncomeElement: React.FC<IncomeListProps> = ({
@@ -39,6 +44,8 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   deleteOnClient,
   deleteOnServer,
   onSelectEdit,
+  fetchNewType,
+  icons,
 }) => {
   const [comment, setCommnet] = useState<boolean>(false);
   const [priceMode, setPriceMode] = useState<"Expenses" | "Revenue">(
@@ -156,6 +163,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               >
                 {income.draft === false && (
                   <RenderDay
+                    icons={icons}
                     typesOfItems={master.typesOfItems}
                     types={income.types}
                     colorTheme={colorTheme}
@@ -180,11 +188,19 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               {/* <div className="flex gap-2"> */}
               <div>
                 <RenderType
+                  icons={icons}
                   typesOfItems={master.typesOfItems}
                   comment={
-                    <div className="line-clamp-1 opacity-50">
-                      {income.comment}
-                    </div>
+                    income.comment ? (
+                      <div className="line-clamp-1 opacity-50 text-[10px] flex gap-1 items-center">
+                        <span>
+                          <MdOutlineEditNote></MdOutlineEditNote>
+                        </span>
+                        <span>{income.comment}</span>
+                      </div>
+                    ) : (
+                      <></>
+                    )
                   }
                   _priceType={income._priceType}
                   types={income.types}
@@ -282,6 +298,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                         initialValue={"T00"}
                       >
                         <IncomeInputTypes
+                          fetchNewType={fetchNewType}
                           options={master.typesOfItems}
                           // name={"types_" + itemIndex}
                           // lable="หมวดหมู่"

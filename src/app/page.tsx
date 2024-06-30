@@ -15,6 +15,7 @@ import { AddIncomesList, DeleteIncome } from "@/fetcher/POST/incomes.post";
 import { GenOption } from "@/libs/gen-options";
 import { getLocalByKey, setLocal } from "@/libs/local";
 import { ConfigList } from "@/utils/models/config";
+import { IconsModelList } from "@/utils/models/icons";
 import { Button, Modal } from "antd";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 
@@ -41,6 +42,9 @@ export default function Home() {
   );
   const [dateSelect, setDateSelect] = useState<Date>(new Date());
   const [config, setConfig] = useState<ConfigList>();
+  const [iconModel, setIconModel] = useState<IconsModelList>(
+    new IconsModelList()
+  );
 
   const localLoad = async () => {
     let getUrl = getLocalByKey("google_sheets");
@@ -296,6 +300,8 @@ export default function Home() {
       ></SettingModal>
 
       <IncomeListInDay
+        fetchNewType={getTypes}
+        icons={iconModel}
         onClickSetting={() => {
           setSetting(true);
         }}

@@ -11,6 +11,7 @@ import { FaSave } from "react-icons/fa";
 
 import { BiLayerPlus } from "react-icons/bi";
 import FloatingButton from "@/components/common/floating-button";
+import { IconsModelList } from "@/utils/models/icons";
 
 interface IncomeRenderProps {
   master: IMasterDataImcomes;
@@ -19,8 +20,9 @@ interface IncomeRenderProps {
   loading: ILoading;
   action?: IActionDayIncomesLists;
   headForm: FormInstance<any>;
-
+  icons: IconsModelList;
   draftCount: number;
+  fetchNewType?: () => Promise<void>;
 }
 
 const IncomeRender: React.FC<IncomeRenderProps> = ({
@@ -31,6 +33,8 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   action,
   headForm,
   draftCount,
+  icons,
+  fetchNewType,
 }) => {
   //not re render
   const [_incomes, setIncomesTemp] = useState<IIncome[]>([]);
@@ -160,6 +164,8 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                   return (
                     <div key={`incom-${dateSelect.getDate()}-${jindex}`}>
                       <IncomeElement
+                        fetchNewType={fetchNewType}
+                        icons={icons}
                         edit={onClickEdit}
                         removeCommnet={(income, index) => {
                           headForm.setFieldValue("comment_" + index, undefined);

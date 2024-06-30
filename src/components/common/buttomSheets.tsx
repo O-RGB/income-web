@@ -18,7 +18,7 @@ const ButtomSheets: React.FC<ButtomSheetsProps> = ({
   return (
     <>
       <Sheet
-        snapPoints={[600, 400, 100, 0]}
+        // snapPoints={[600, 600, 600, 0]}
         isOpen={isOpen ?? false}
         className="!z-40"
         onClose={() => {

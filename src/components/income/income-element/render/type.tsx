@@ -10,6 +10,7 @@ interface RenderTypeProps {
   comment?: React.ReactNode;
   _priceType?: priceType;
   typesOfItems?: IIncomeTypes[];
+  icons: IconsModelList;
 }
 
 const RenderType: React.FC<RenderTypeProps> = ({
@@ -17,6 +18,7 @@ const RenderType: React.FC<RenderTypeProps> = ({
   comment,
   _priceType = "Expenses",
   typesOfItems,
+  icons,
 }) => {
   const [typeLable, setTypeLabel] = useState<{
     type: IIncomeTypes;
@@ -27,8 +29,7 @@ const RenderType: React.FC<RenderTypeProps> = ({
     if (types) {
       const data = typesOfItems?.find((x) => x.typeId === types);
       if (data) {
-        const icone = new IconsModelList();
-        const ele = icone.getIconById(data.icons);
+        const ele = icons.getIconById(data.icons);
         if (ele) {
           setTypeLabel({
             type: data,
@@ -39,7 +40,7 @@ const RenderType: React.FC<RenderTypeProps> = ({
     }
   }, [typesOfItems, types]);
   return (
-    <div className=" pl-0.5">
+    <div className="  ">
       {types && types.trim().length > 0 && (
         <div
           className={`flex flex-row gap-2 w-full ${
@@ -50,11 +51,11 @@ const RenderType: React.FC<RenderTypeProps> = ({
         >
           {typeLable && (
             <div
-              style={{
-                backgroundColor: HexToRgba(typeLable.type.color, 0.1),
-                color: typeLable.type.color,
-              }}
-              className={` text-[10px]    px-1   w-fit rounded-md text-nowrap flex gap-1 items-center`}
+              // style={{
+              //   backgroundColor: HexToRgba(typeLable.type.color, 0.1),
+              //   color: typeLable.type.color,
+              // }}
+              className={`text-[10px] px-1 w-fit rounded-md text-nowrap flex gap-1 items-center`}
             >
               {/* <div
                 className="text-base"
@@ -62,6 +63,7 @@ const RenderType: React.FC<RenderTypeProps> = ({
               >
                 {typeLable.icon.render}
               </div> */}
+              <div className="w-1 h-1 rounded-full bg-gray-400"></div>
               <div>{typeLable.type.name}</div>
             </div>
           )}

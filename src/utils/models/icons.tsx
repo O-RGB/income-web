@@ -11,103 +11,27 @@ export class IconsModelList {
   icons = new Map<string, IconsModel>();
   constructor() {
     const sizes = 'w-7 h-7'
-    this.icons.set("1", new IconsModel("car-icon", <img className={sizes} src="/icons/car-icon.png"/>));
-    this.icons.set("2", new IconsModel("soap-icon", <img className={sizes} src="/icons/soap-icon.png"/>));
-    this.icons.set("3", new IconsModel("washing-icon", <img className={sizes} src="/icons/washing-icon.png"/>));
-    this.icons.set("4", new IconsModel("home-icon", <img className={sizes} src="/icons/home-icon.png"/>));
-    this.icons.set("5", new IconsModel("graph-icon", <img className={sizes} src="/icons/graph-icon.png"/>));
-    this.icons.set("6", new IconsModel("meat-icon", <img className={sizes} src="/icons/meat-icon.png"/>));
-    this.icons.set("7", new IconsModel("food-icon", <img className={sizes} src="/icons/food-icon.png"/>));
-    this.icons.set("8", new IconsModel("tea-icon", <img className={sizes} src="/icons/tea-icon.png"/>));
-    this.icons.set("9", new IconsModel("MdShoppingCart", <MdShoppingCart />));
-    this.icons.set("10", new IconsModel("FaPiggyBank", <FaPiggyBank />));
-    this.icons.set("11", new IconsModel("IoIosCard", <IoIosCard />));
-    this.icons.set("12", new IconsModel("FaMoneyBillWave", <FaMoneyBillWave />));
-    this.icons.set("13", new IconsModel("GiElectric", <GiElectric />));
-    this.icons.set("14", new IconsModel("MdSchool", <MdSchool />));
-    this.icons.set("15", new IconsModel("FaCar", <FaCar />));
-    this.icons.set("16", new IconsModel("IoIosRestaurant", <IoIosRestaurant />));
-    this.icons.set("17", new IconsModel("GiGasPump", <GiGasPump />));
-    this.icons.set("18", new IconsModel("MdHome", <MdHome />));
-    this.icons.set("19", new IconsModel("FaShoppingBag", <FaShoppingBag />));
-    this.icons.set("20", new IconsModel("MdLocalHospital", <MdLocalHospital />));
-    this.icons.set("21", new IconsModel("FaTrain", <FaTrain />));
-    this.icons.set("22", new IconsModel("GiMedicinePills", <GiMedicinePills />));
-    this.icons.set("23", new IconsModel("MdFlight", <MdFlight />));
-    this.icons.set("24", new IconsModel("FaUtensils", <FaUtensils />));
-    this.icons.set("25", new IconsModel("FaTheaterMasks", <FaTheaterMasks />));
-    this.icons.set("26", new IconsModel("FaLightbulb", <FaLightbulb />));
-    this.icons.set("27", new IconsModel("IoIosWater", <IoIosWater />));
-    this.icons.set("28", new IconsModel("FaGraduationCap", <FaGraduationCap />));
-    this.icons.set("29", new IconsModel("MdPets", <MdPets />));
-    this.icons.set("30", new IconsModel("IoIosMedical", <IoIosMedical />));
-    this.icons.set("31", new IconsModel("MdDirectionsCar", <MdDirectionsCar />));
-    this.icons.set("32", new IconsModel("FaBicycle", <FaBicycle />));
-    this.icons.set("33", new IconsModel("GiThermometerCold", <GiThermometerCold />));
-    this.icons.set("34", new IconsModel("IoIosCash", <IoIosCash />));
-    this.icons.set("35", new IconsModel("MdLocalCafe", <MdLocalCafe />));
-    this.icons.set("36", new IconsModel("FaAppleAlt", <FaAppleAlt />));
-    this.icons.set("37", new IconsModel("GiHouseKeys", <GiHouseKeys />));
-    this.icons.set("38", new IconsModel("MdFitnessCenter", <MdFitnessCenter />));
-    this.icons.set("39", new IconsModel("FaParking", <FaParking />));
-    this.icons.set("40", new IconsModel("MdDirectionsWalk", <MdDirectionsWalk />));
-    this.icons.set("41", new IconsModel("FaTaxi", <FaTaxi />));
-    this.icons.set("42", new IconsModel("MdComputer", <MdComputer />));
-    this.icons.set("43", new IconsModel("FaBusAlt", <FaBusAlt />));
-    this.icons.set("44", new IconsModel("IoIosPartlySunny", <IoIosPartlySunny />));
-    this.icons.set("45", new IconsModel("FaTruck", <FaTruck />));
-    this.icons.set("46", new IconsModel("MdSubway", <MdSubway />));
-    this.icons.set("47", new IconsModel("MdOutlineFastfood", <MdOutlineFastfood />));
-    this.icons.set("48", new IconsModel("FaHamburger", <FaHamburger />));
-    this.icons.set("49", new IconsModel("GiMilkCarton", <GiMilkCarton />));
-    this.icons.set("50", new IconsModel("MdOutlineLocalBar", <MdOutlineLocalBar />));
-    this.icons.set("51", new IconsModel("FaIceCream", <FaIceCream />));
-    this.icons.set("52", new IconsModel("GiShop", <GiShop />));
-    this.icons.set("53", new IconsModel("IoIosCar", <IoIosCar />));
-    this.icons.set("54", new IconsModel("FaPlane", <FaPlane />));
-    this.icons.set("55", new IconsModel("MdOutlineLocalGroceryStore", <MdOutlineLocalGroceryStore />));
-    this.icons.set("56", new IconsModel("FaMobileAlt", <FaMobileAlt />));
-    this.icons.set("57", new IconsModel("GiTakeMyMoney", <GiTakeMyMoney />));
-    this.icons.set("58", new IconsModel("IoIosHome", <IoIosHome />));
-    this.icons.set("59", new IconsModel("FaLaptopHouse", <FaLaptopHouse />));
-    this.icons.set("60", new IconsModel("GiReceiveMoney", <GiReceiveMoney />));
-    this.icons.set("61", new IconsModel("IoIosHeart", <IoIosHeart />));
-    this.icons.set("62", new IconsModel("MdOutlineDirectionsCar", <MdOutlineDirectionsCar />));
-    this.icons.set("63", new IconsModel("FaTrain", <FaTrain />));
-    this.icons.set("64", new IconsModel("GiForkKnifeSpoon", <GiForkKnifeSpoon />));
-    this.icons.set("65", new IconsModel("MdRestaurant", <MdRestaurant />));
-    this.icons.set("66", new IconsModel("FaHouseUser", <FaHouseUser />));
-    this.icons.set("67", new IconsModel("IoMdAirplane", <IoMdAirplane />));
-    this.icons.set("68", new IconsModel("MdLocalPizza", <MdLocalPizza />));
-    this.icons.set("69", new IconsModel("FaDollarSign", <FaDollarSign />));
-    this.icons.set("70", new IconsModel("GiMoneyStack", <GiMoneyStack />));
-    this.icons.set("71", new IconsModel("IoIosCash", <IoIosCash />));
-    this.icons.set("72", new IconsModel("FaFileInvoiceDollar", <FaFileInvoiceDollar />));
-    this.icons.set("73", new IconsModel("MdOutlineShoppingBag", <MdOutlineShoppingBag />));
-    this.icons.set("74", new IconsModel("FaCartArrowDown", <FaCartArrowDown />));
-    this.icons.set("75", new IconsModel("GiCardExchange", <GiCardExchange />));
-    this.icons.set("76", new IconsModel("IoMdBasket", <IoMdBasket />));
-    this.icons.set("77", new IconsModel("MdOutlineHotel", <MdOutlineHotel />));
-    this.icons.set("78", new IconsModel("FaBed", <FaBed />));
-    this.icons.set("79", new IconsModel("GiShoppingCart", <GiShoppingCart />));
-    this.icons.set("80", new IconsModel("IoIosBasket", <IoIosBasket />));
-    this.icons.set("81", new IconsModel("FaStore", <FaStore />));
-    this.icons.set("82", new IconsModel("GiShop", <GiShop />));
-    this.icons.set("83", new IconsModel("MdOutlineStoreMallDirectory", <MdOutlineStoreMallDirectory />));
-    this.icons.set("84", new IconsModel("GiBanknote", <GiBanknote />));
-    this.icons.set("85", new IconsModel("GiWallet", <GiWallet />));
-    this.icons.set("86", new IconsModel("IoIosWallet", <IoIosWallet />));
-    this.icons.set("87", new IconsModel("FaCreditCard", <FaCreditCard />));
-    this.icons.set("88", new IconsModel("GiBank", <GiBank />));
-    this.icons.set("89", new IconsModel("IoIosCard", <IoIosCard />));
-    this.icons.set("90", new IconsModel("FaUniversity", <FaUniversity />));
-    this.icons.set("91", new IconsModel("MdOutlineMoneyOff", <MdOutlineMoneyOff />));
-    this.icons.set("92", new IconsModel("FaMoneyCheckAlt", <FaMoneyCheckAlt />));
-    this.icons.set("93", new IconsModel("IoIosCash", <IoIosCash />));
-    this.icons.set("94", new IconsModel("FaPiggyBank", <FaPiggyBank />));
-    this.icons.set("95", new IconsModel("MdAttachMoney", <MdAttachMoney />));
-    this.icons.set("96", new IconsModel("GiReceiveMoney", <GiReceiveMoney />));
-    this.icons.set("97", new IconsModel("IoIosWallet", <IoIosWallet />));
+    this.icons.set("1", new IconsModel("COLOR","1", <img className={sizes} src="/icons/car-icon.png"/>));
+    this.icons.set("2", new IconsModel("COLOR","2", <img className={sizes} src="/icons/soap-icon.png"/>));
+    this.icons.set("3", new IconsModel("COLOR","3", <img className={sizes} src="/icons/washing-icon.png"/>));
+    this.icons.set("4", new IconsModel("COLOR","4", <img className={sizes} src="/icons/home-icon.png"/>));
+    this.icons.set("5", new IconsModel("COLOR","5", <img className={sizes} src="/icons/graph-icon.png"/>));
+    this.icons.set("6", new IconsModel("COLOR","6", <img className={sizes} src="/icons/meat-icon.png"/>));
+    this.icons.set("7", new IconsModel("COLOR","7", <img className={sizes} src="/icons/food-icon.png"/>));
+    this.icons.set("8", new IconsModel("COLOR","8", <img className={sizes} src="/icons/tea-icon.png"/>));
+    this.icons.set("9", new IconsModel("COLOR","9", <img className={sizes} src="/icons/foot-icon.png"/>));
+    this.icons.set("10", new IconsModel("COLOR","10", <img className={sizes} src="/icons/dumbbell-icon.png"/>));
+    this.icons.set("11", new IconsModel("COLOR","11", <img className={sizes} src="/icons/bread-icon.png"/>));
+    this.icons.set("12", new IconsModel("COLOR","12", <img className={sizes} src="/icons/apple-icon.png"/>));
+    this.icons.set("13", new IconsModel("COLOR","13", <img className={sizes} src="/icons/milk-icon.png"/>));
+    this.icons.set("14", new IconsModel("COLOR","14", <img className={sizes} src="/icons/rabbitcup-icon.png"/>));
+    this.icons.set("15", new IconsModel("COLOR","15", <img className={sizes} src="/icons/dog-icon.png"/>));
+    this.icons.set("16", new IconsModel("COLOR","16", <img className={sizes} src="/icons/watermelon-icon.png"/>));
+    this.icons.set("17", new IconsModel("COLOR","17", <img className={sizes} src="/icons/chicken-icon.png"/>));
+    this.icons.set("18", new IconsModel("COLOR","18", <img className={sizes} src="/icons/cake-icon.png"/>));
+    this.icons.set("19", new IconsModel("COLOR","19", <img className={sizes} src="/icons/strawberry-icon.png"/>));
+    this.icons.set("20", new IconsModel("COLOR","20", <img className={sizes} src="/icons/camera-icon.png"/>));
+    this.icons.set("21", new IconsModel("COLOR","21", <img className={sizes} src="/icons/book-icon.png"/>));
   }
 
   getIconById(iconId: string | number) {
@@ -127,9 +51,11 @@ export class IconsModelList {
 }
 
 export class IconsModel implements IIcons {
+  typeRender: "COLOR" | "COMMON";
   name: string;
   render: React.ReactNode;
-  constructor(name: string, render: React.ReactNode) {
+  constructor(typeRender: "COLOR" | "COMMON", name: string, render: React.ReactNode) {
+    this.typeRender = typeRender;
     this.name = name;
     this.render = render;
   }
