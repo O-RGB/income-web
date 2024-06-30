@@ -1,6 +1,7 @@
 "use client";
 import InputCommon from "@/components/common/input";
 import IncomeListInDay from "@/components/income/income-screen/income";
+import SettingModal from "@/components/setting/setting";
 import {
   FetchGetDisplayCal,
   FetchGetDupOfMonth,
@@ -15,6 +16,7 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [checkGGKey, setGGKey] = useState<boolean>(false);
+  const [wallpaper, setWallpaper] = useState<string>();
   const [incomes, setIncomes] = useState<IIncome[]>([]);
   const [loading, setLoading] = useState<ILoading>({
     pageLoad: false,
@@ -54,10 +56,6 @@ export default function Home() {
     setDateSelect(date);
     getIncomeSheets(date);
     getDisplay(date);
-  };
-
-  const onChangeInput = (value: string) => {
-    setLocal("google_sheets", value);
   };
 
   const getTypes = async () => {
@@ -148,6 +146,11 @@ export default function Home() {
     }
   };
 
+  //Setting
+  const onChangeWallpaper = () => {
+    
+  }
+
   const getData = () => {
     let getUrl = getLocalByKey("google_sheets");
     if (getUrl) {
@@ -168,11 +171,11 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen">
-      <div className="absolute w-full h-full top-0 z-1 ">
+      <div className="fixed w-full h-full top-0  ">
         <img
           src="/wallpaper/test6.jpg"
           alt=""
-          className="w-full h-full object-cover opacity-70 "
+          className="w-full h-full object-cover  "
         />
       </div>
       <Modal
@@ -208,19 +211,8 @@ export default function Home() {
           </div>
         </Form>
       </Modal>
-      {/* <div className="border p-2 flex gap-2">
-        <input
-          className="border w-full"
-          placeholder="google sheets url"
-          type="text"
-          onChange={(e) => {
-            onChangeInput(e.target.value);
-          }}
-        />
-        <button className="p-2 border" onClick={() => getIncomeSheets()}>
-          Update
-        </button>
-      </div> */}
+
+      <SettingModal></SettingModal>
 
       <IncomeListInDay
         master={{
