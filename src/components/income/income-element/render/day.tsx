@@ -48,10 +48,14 @@ const RenderDay: React.FC<RenderDayProps> = ({
   return (
     <div>
       <div
-        style={{
-          backgroundColor: HexToRgba(colorTheme.color, 0.1),
-          color: HexToRgba(colorTheme.color, 1),
-        }}
+        style={
+          typeLable?.icon.render
+            ? undefined
+            : {
+                backgroundColor: HexToRgba(colorTheme.color, 0.1),
+                color: HexToRgba(colorTheme.color, 1),
+              }
+        }
         className={`${
           state === "loading"
             ? "bg-gray-500"
