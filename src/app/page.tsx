@@ -14,7 +14,7 @@ import { AddIncomesList, DeleteIncome } from "@/fetcher/POST/incomes.post";
 import { GenOption } from "@/libs/gen-options";
 import { getLocalByKey, setLocal } from "@/libs/local";
 import { Modal } from "antd";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 export default function Home() {
   const [googleKey, setGoogleKey] = useState<string | "">();
@@ -70,13 +70,6 @@ export default function Home() {
       waitActioning: waitAction ? true : false,
       dateChange: dateChange ? true : false,
     });
-  };
-
-  const onSelectDate = (date: Date) => {
-    initLoad({ dateChange: true });
-    setDateSelect(date);
-    getIncomeSheets(date);
-    getDisplay(date);
   };
 
   const getTypes = async (url?: string) => {
@@ -197,6 +190,19 @@ export default function Home() {
     });
   }, []);
 
+  useEffect(() => {
+    initLoad({ fetch: true, dateChange: true });
+    const timeer = setTimeout(() => {
+      setIncomes({ fetched: false, income: [] });
+      getDisplay(dateSelect);
+      getIncomeSheets(dateSelect);
+    }, 1000);
+
+    return () => {
+      clearInterval(timeer);
+    };
+  }, [dateSelect]);
+
   return (
     <div className="relative min-h-screen">
       {wallpaper && (
@@ -255,7 +261,7 @@ export default function Home() {
         dateSelect={dateSelect}
         onAddIncome={onAddIncome}
         deleteIncome={onDeleteIncome}
-        onSelectDate={onSelectDate}
+        onSelectDate={setDateSelect}
         incomes={incomes.income}
         loading={loading}
       ></IncomeListInDay>

@@ -218,7 +218,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               >
                 <div className="pt-4"></div>
                 <div className="flex gap-2 justify-between">
-                  <Button type="text" size="small">
+                  <Button disabled type="text" size="small">
                     <div className="flex items-center justify-center gap-1">
                       <RiGpsFill className="text-xs" />
                       <div>ติดตามสิ่งนี้</div>

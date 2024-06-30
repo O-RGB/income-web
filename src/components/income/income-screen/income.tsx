@@ -236,7 +236,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
 
       <div className="flex flex-col gap-1 relative">
-        <div className="absolute top-1 text-[8px]">version: 1.0.1</div>
+        <div className="absolute top-1 text-[8px] text-gray-500">Version: 1.0.1 Bata test</div>
 
         <div className="flex justify-between items-center ">
           <DetailOfMonth

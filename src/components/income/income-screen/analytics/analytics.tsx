@@ -95,7 +95,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ open, close, master }) => {
             <div className="text-lg font-bold">สรุปรายรับจ่ายเดือนนี้</div>
             {chartDayData && <LineChart data={chartDayData}></LineChart>}
           </div>
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <div className="text-lg font-bold">สรุปรายรับจ่ายแต่ละหมวดหมู่</div>
             {typeOfDay &&
               typeOfDay.map((data, index) => {
@@ -105,7 +105,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ open, close, master }) => {
                   </div>
                 );
               })}
-          </div>
+          </div> */}
         </div>
       </Modal>
     </>
