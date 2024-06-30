@@ -167,7 +167,14 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
+    <div className="relative min-h-screen">
+      <div className="absolute w-full h-full top-0 z-1 ">
+        <img
+          src="/wallpaper/test4.jpg"
+          alt=""
+          className="w-full h-full object-cover opacity-70 "
+        />
+      </div>
       <Modal
         title="ลงชื่อเข้าใช้ระบบ"
         closable={false}

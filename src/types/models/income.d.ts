@@ -43,3 +43,10 @@ interface IIncomeDelete {
   sheetsName?: "TYPE";
   sheetsIndex: number;
 }
+
+interface ColorTheme {
+  priceType: priceType;
+  color: string;
+  background: string;
+  text: string;
+}

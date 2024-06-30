@@ -1,6 +1,9 @@
+import { HexToRgba } from "@/libs/color";
 import { MapingTypeToLabel } from "@/libs/income-lib";
 import { IconsModel, IconsModelList } from "@/utils/models/icons";
+import { Mali } from "next/font/google";
 import React, { useEffect, useState } from "react";
+const inter = Mali({ subsets: ["thai"], weight: "300" });
 
 interface RenderTypeProps {
   types: string;
@@ -36,7 +39,7 @@ const RenderType: React.FC<RenderTypeProps> = ({
     }
   }, [typesOfItems, types]);
   return (
-    <>
+    <div className=" pl-0.5">
       {types && types.trim().length > 0 && (
         <div
           className={`flex flex-row gap-2 w-full ${
@@ -48,18 +51,24 @@ const RenderType: React.FC<RenderTypeProps> = ({
           {typeLable && (
             <div
               style={{
-                backgroundColor: typeLable.type.color,
+                backgroundColor: HexToRgba(typeLable.type.color, 0.1),
+                color: typeLable.type.color,
               }}
-              className={` text-xs p-1 font-bold text-white  w-fit rounded-md text-nowrap flex gap-0.5 items-center`}
+              className={` text-[10px]    px-1   w-fit rounded-md text-nowrap flex gap-1 items-center`}
             >
-              <div>{typeLable.icon.render}</div>
+              {/* <div
+                className="text-base"
+                style={{ color: typeLable.type.color }}
+              >
+                {typeLable.icon.render}
+              </div> */}
               <div>{typeLable.type.name}</div>
             </div>
           )}
-          {comment}
+          <span className={`${inter.className}`}>{comment}</span>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

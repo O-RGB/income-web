@@ -8,6 +8,7 @@ interface LayoutIncomeItemProps {
   draftPriceMode?: priceType;
   edit: boolean;
   onClickCheck?: () => void;
+  colorTheme: ColorTheme;
 }
 
 const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
@@ -17,6 +18,7 @@ const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
   draftPriceMode,
   edit,
   onClickCheck,
+  colorTheme,
 }) => {
   const [show, setShow] = useState<boolean>(false);
   useEffect(() => {
@@ -48,15 +50,10 @@ const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
 
           <div
             className={`flex flex-col px-3 py-2 gap-2  ${
-              initIncome.fetching
-                ? "bg-gray-200"
-                : initIncome._priceType == "Expenses" &&
-                  draftPriceMode === "Expenses"
-                ? "bg-red-50/50"
-                : "bg-green-50/50"
+              initIncome.fetching ? "bg-gray-200" : colorTheme.background
             }  ${
-              initIncome.draft ? "" : "hover:bg-gray-100"
-            }    duration-300 transition-all border border-white rounded-sm w-full `}
+              initIncome.draft ? "" : ``
+            }    duration-300 transition-all   backdrop-blur rounded-lg w-full `}
           >
             <div>{children}</div>
           </div>

@@ -54,26 +54,26 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
   }, [incomeOfday]);
 
   return (
-    <div className="flex flex-col   gap-1 bg-white">
+    <>
       {/* {JSON.stringify(summaryData)} */}
-      <div className="flex   gap-1 ">
-        <TagSummary
-          // loading={incomeOfday == "load"}
-          color="bg-red-200"
-          price={incomeOfday !== undefined ? summaryData.Expenses : 0}
-          icon={<TiArrowSortedDown className="text-white"></TiArrowSortedDown>}
-          title="รายจ่าย"
-          iconColor="bg-red-500"
-        ></TagSummary>
-        <TagSummary
-          color="bg-green-200"
-          // loading={incomeOfday}
-          price={incomeOfday !== null ? summaryData.Revenue : 0}
-          title="รายรับ"
-          icon={<TiArrowSortedUp className="text-white"></TiArrowSortedUp>}
-          iconColor="bg-green-500"
-        ></TagSummary>
-        {/* <TagSummary
+
+      <TagSummary
+        // loading={incomeOfday == "load"}
+        color="bg-white/70"
+        price={incomeOfday !== undefined ? summaryData.Expenses : 0}
+        icon={<TiArrowSortedDown className="text-red-500"></TiArrowSortedDown>}
+        title="รายจ่าย"
+        iconColor="text-red-500"
+      ></TagSummary>
+      <TagSummary
+        color="bg-white/70"
+        // loading={incomeOfday}
+        price={incomeOfday !== null ? summaryData.Revenue : 0}
+        title="รายรับ"
+        icon={<TiArrowSortedUp className="text-green-500"></TiArrowSortedUp>}
+        iconColor="text-green-500"
+      ></TagSummary>
+      {/* <TagSummary
           // loading={incomeOfday == "load"}
           color="bg-blue-200"
           price={
@@ -85,8 +85,7 @@ const SummaryOfDay: React.FC<SummaryOfDayProps> = ({
           icon={<AiFillStar className="text-white"></AiFillStar>}
           iconColor="bg-blue-500"
         ></TagSummary> */}
-      </div>
-    </div>
+    </>
   );
 };
 

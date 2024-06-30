@@ -9,6 +9,7 @@ import { FaChartPie } from "react-icons/fa6";
 import Analytics from "./analytics/analytics";
 import { GrSettingsOption } from "react-icons/gr";
 import { CalLineChart, CalSumOfMonth } from "./analytics/lib";
+import ButtonCommon from "@/components/common/button";
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
@@ -181,6 +182,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     setIncomes([]);
     var incomeUpdate: IIncome[] = [];
     var data = clone[listIndex];
+    let deleted = data.delete;
 
     if (data) {
       //Animation
@@ -190,7 +192,9 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         }
         return _;
       });
-      countDraftIndex("-");
+      if (!deleted) {
+        countDraftIndex("-");
+      }
       // setCountDraft((value) => value - 1);
       updateSheetsIndex(incomeUpdate);
     } else {
@@ -219,7 +223,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   }, [master.IGetDisplayCal]);
 
   return (
-    <div className="px-2 flex flex-col gap-2">
+    <div className="relative z-30 px-2 flex flex-col gap-2">
       <Analytics
         master={master}
         open={analytics}
@@ -231,51 +235,44 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       <div className="flex flex-col gap-1 relative">
         <div className="absolute top-0 text-xs">version: 1.0.1</div>
 
-        <DetailOfMonth
-          master={master}
-          date={dateSelect}
-          onDateChange={(date) => {
-            onSelectDate(date);
-            setIncomes([]);
-          }}
-          incomes={incomes}
-        ></DetailOfMonth>
-        {/* <hr /> */}
-        <div className="flex justify-end gap-2">
-          <Button
-            onClick={() => setAnalytics(!analytics)}
-            className="w-fit shadow-sm"
-          >
-            <div className="flex gap-2   justify-center items-center">
-              <div>
-                <FaChartPie></FaChartPie>
-              </div>
-              <div className="">ดูสรุป</div>
-            </div>
-          </Button>
-          {/* <Button
-            onClick={() => setAnalytics(!analytics)}
-            className="w-fit shadow-sm"
-          >
-            <div className="flex gap-2   justify-center items-center">
-              <div>
-                <GrSettingsOption></GrSettingsOption>
-              </div>
-              <div className="">ตั้งค่า</div>
-            </div>
-          </Button> */}
+        <div>
+          <DetailOfMonth
+            master={master}
+            date={dateSelect}
+            onDateChange={(date) => {
+              onSelectDate(date);
+              setIncomes([]);
+            }}
+            incomes={incomes}
+          ></DetailOfMonth>
+          <hr />
         </div>
       </div>
-      {/* <div className="p-2 border rounded-md">
-        {chartData && (
-          <BarChart indexAxis="y" height={100} data={chartData}></BarChart>
-        )}
-      </div> */}
-      <SummaryOfDay
-        date={dateSelect}
-        dayIndex={dateSelect.getDate()}
-        incomeOfday={incomes}
-      ></SummaryOfDay>
+
+      <div className="flex gap-1">
+        <SummaryOfDay
+          date={dateSelect}
+          dayIndex={dateSelect.getDate()}
+          incomeOfday={incomes}
+        ></SummaryOfDay>
+        <ButtonCommon
+          onClick={() => setAnalytics(!analytics)}
+          icon={<FaChartPie></FaChartPie>}
+        >
+          สรุป
+        </ButtonCommon>
+        {/* <Button
+          onClick={() => setAnalytics(!analytics)}
+          className="w-fit shadow-sm !bg-white/70 !border-transparent"
+        >
+          <div className="flex gap-2 justify-center items-center">
+            <div>
+              <FaChartPie></FaChartPie>
+            </div>
+            <div className="">ดูสรุป</div>
+          </div>
+        </Button> */}
+      </div>
       {/* {countDraft} */}
       <IncomeRender
         headForm={headForm}

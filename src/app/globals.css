@@ -11,3 +11,14 @@
   font-weight: 100 !important;
   font-size: smaller !important;
 }
+
+html,
+body,
+* {
+  font-family: "Mali", sans-serif;
+}
+
+.ant-typography,
+.ant-btn {
+  font-family: "Mali", sans-serif;
+}

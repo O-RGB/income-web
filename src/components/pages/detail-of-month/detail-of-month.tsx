@@ -26,18 +26,18 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
     <>
       <div className="flex flex-col gap-3 select-none">
         <div className="flex justify-center items-center pt-5 w-full  relative">
-          <div className="flex items-center justify-center text-xl w-fit ">
+          <div className="flex items-center justify-center  w-fit ">
             <div
               onClick={() => {
                 let cloneDate = new Date(date);
                 cloneDate.setDate(cloneDate.getDate() - 1);
                 onDateChange?.(cloneDate);
               }}
-              className="p-2 mt-1 flex items-center justify-center cursor-pointer hover:text-blue-500 duration-300"
+              className="p-2 flex items-center justify-center cursor-pointer hover:text-blue-500 duration-300"
             >
               <IoIosArrowBack></IoIosArrowBack>
             </div>
-            <div className="">{DateFormat(date)}</div>
+            <div className="text-lg">{DateFormat(date)}</div>
             {new Date().getUTCDate() > date.getUTCDate() && (
               <div
                 onClick={() => {
@@ -45,7 +45,7 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
                   cloneDate.setDate(cloneDate.getDate() + 1);
                   onDateChange?.(cloneDate);
                 }}
-                className="p-2 mt-1 flex items-center justify-center cursor-pointer hover:text-blue-500 duration-300"
+                className="p-2 flex items-center justify-center cursor-pointer hover:text-blue-500 duration-300"
               >
                 <IoIosArrowForward></IoIosArrowForward>
               </div>

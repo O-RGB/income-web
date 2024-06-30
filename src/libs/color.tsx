@@ -40,3 +40,17 @@ export const getColorPair = () => {
   const border = darkenColor(color, -20); // Darken the color by 20%
   return { color, border };
 };
+
+export function HexToRgba(hex: string, alpha: number) {
+  // Remove the hash at the start if it's there
+  hex = hex.replace(/^#/, "");
+
+  // Parse r, g, b values
+  var bigint = parseInt(hex, 16);
+  var r = (bigint >> 16) & 255;
+  var g = (bigint >> 8) & 255;
+  var b = bigint & 255;
+
+  // Return the RGBA string
+  return "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
+}

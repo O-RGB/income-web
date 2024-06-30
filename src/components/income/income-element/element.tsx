@@ -45,6 +45,22 @@ const IncomeElement: React.FC<IncomeListProps> = ({
     "Expenses"
   );
   const [onDetail, setDetail] = useState<boolean>(false);
+  const [colorTheme, setColorTheme] = useState<ColorTheme>(
+    income._priceType === "Expenses"
+      ? {
+          priceType: "Expenses",
+          background: "bg-white/70",
+          color: "#ff5c5c",
+          text: "text-gray-700",
+        }
+      : {
+          priceType: "Revenue",
+          background: "bg-white/70",
+          color: "#3dc940",
+          text: "text-gray-700",
+        }
+  );
+
   const onClickIncomeHandel = () => {
     setDetail(!onDetail);
   };
@@ -96,11 +112,12 @@ const IncomeElement: React.FC<IncomeListProps> = ({
     <>
       {/* {debug} */}
       <div
-        className={`w-full overflow-hidden flex items-center gap-1 ${
-          income.delete ? "py-0" : income.draft ? "py-1" : ""
+        className={`w-full overflow-hidden flex items-center gap-1    ${
+          income.delete ? "py-0 pb-0" : income.draft ? "py-1" : "pb-1"
         } duration-300`}
       >
         <LayoutIncomeItem
+          colorTheme={colorTheme}
           draftPriceMode={priceMode}
           edit={edit}
           onClickCheck={() => {
@@ -139,6 +156,9 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               >
                 {income.draft === false && (
                   <RenderDay
+                    typesOfItems={master.typesOfItems}
+                    types={income.types}
+                    colorTheme={colorTheme}
                     state={
                       income.fetching || multipleLoading ? "loading" : undefined
                     }
@@ -149,6 +169,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
 
                 {income.draft === false ? (
                   <RenderName
+                    colorTheme={colorTheme}
                     _priceType={income._priceType}
                     name={income.name}
                   ></RenderName>
@@ -157,22 +178,25 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 )}
               </div>
               {/* <div className="flex gap-2"> */}
-              <RenderType
-                typesOfItems={master.typesOfItems}
-                comment={
-                  <div className="line-clamp-1 opacity-50">
-                    {income.comment}
-                  </div>
-                }
-                _priceType={income._priceType}
-                types={income.types}
-              ></RenderType>
+              <div>
+                <RenderType
+                  typesOfItems={master.typesOfItems}
+                  comment={
+                    <div className="line-clamp-1 opacity-50">
+                      {income.comment}
+                    </div>
+                  }
+                  _priceType={income._priceType}
+                  types={income.types}
+                ></RenderType>
+              </div>
 
               {/* </div> */}
             </div>
             <div className={`flex gap-2 items-start `}>
               {income.draft == false && (
                 <RenderPrice
+                  colorTheme={colorTheme}
                   _priceType={income._priceType}
                   expensesPrice={income.expensesPrice}
                   revenuePrice={income.revenuePrice}

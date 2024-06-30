@@ -152,7 +152,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                 // onSaveIncomes?.(yt);
               }}
             >
-              <div className="flex flex-col-reverse  ">
+              <div className="flex flex-col-reverse  pb-32 ">
                 {_incomes.map((im, jindex) => {
                   return (
                     <div key={`incom-${dateSelect.getDate()}-${jindex}`}>

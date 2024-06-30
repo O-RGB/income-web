@@ -4,6 +4,7 @@ import { Button, ColorPicker } from "antd";
 import { FaCheck, FaEdit, FaSave, FaStepBackward } from "react-icons/fa";
 import { RiArrowGoBackLine } from "react-icons/ri";
 import { IconsModelList } from "@/utils/models/icons";
+import { HexToRgba } from "@/libs/color";
 
 interface CateSelectProps {
   value: IIncomeTypes;
@@ -65,7 +66,10 @@ const CateSelect: React.FC<CateSelectProps> = ({
         >
           <div className="flex gap-3 items-center">
             <div
-              style={{ backgroundColor: value.color }}
+              style={{
+                backgroundColor: HexToRgba(value.color, 0.1),
+                color: value.color,
+              }}
               className={`w-8 h-8 rounded-full flex items-center justify-center text-white  ${
                 index === 0 ? "bg-gray-200" : "bg-orange-200"
               }`}
