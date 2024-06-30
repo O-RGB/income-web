@@ -20,7 +20,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "รายรับรายจ่าย",
   description: "แอปรายรับรายจ่ายน่ารัก ๆ น่าใช้ พร้อมตัวการ์ตูนน่ารัก",
-  icons: "/icon.png",
+  // icons: "/icon.png",
   openGraph: {
     title: "รายรับรายจ่าย",
     description: "แอปรายรับรายจ่ายน่ารัก ๆ น่าใช้ พร้อมตัวการ์ตูนน่ารัก",
