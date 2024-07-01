@@ -14,7 +14,7 @@ import { IoMdRemove } from "react-icons/io";
 import IncomeComment from "./draft-input/input-comment";
 import ButtomSheets from "@/components/common/buttomSheets";
 import { MdFollowTheSigns, MdOutlineEditNote } from "react-icons/md";
-import { RiDeleteBin5Line, RiGpsFill } from "react-icons/ri";
+import { RiDeleteBin5Line, RiEdit2Line, RiGpsFill } from "react-icons/ri";
 import { IconsModelList } from "@/utils/models/icons";
 import { FaNoteSticky } from "react-icons/fa6";
 import { FaNotesMedical } from "react-icons/fa";
@@ -240,25 +240,32 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                       <div>ติดตามสิ่งนี้</div>
                     </div>
                   </Button>
-                  <Popconfirm
-                    // className="!bg-white/70"
-                    title="ลบรายการนี้"
-                    description="ยืนยันการลบรายการแล้วใช่ไหม?"
-                    onConfirm={() => {
-                      if (income.fetching !== true) {
-                        deleteOnServer?.(income.sheetsIndex, itemIndex);
-                      }
-                    }}
-                    okText="ลบออก"
-                    cancelText="ยกเลิก"
-                  >
-                    <Button type="text" size="small">
+                  <div className="flex gap-1">
+                    <Button disabled type="text" size="small">
                       <div className="flex items-center justify-center gap-1">
-                        <RiDeleteBin5Line className="text-xs" />
-                        {/* <div>ลบรายการ</div> */}
+                        <RiEdit2Line className="text-xs" />
                       </div>
                     </Button>
-                  </Popconfirm>
+                    <Popconfirm
+                      // className="!bg-white/70"
+                      title="ลบรายการนี้"
+                      description="ยืนยันการลบรายการแล้วใช่ไหม?"
+                      onConfirm={() => {
+                        if (income.fetching !== true) {
+                          deleteOnServer?.(income.sheetsIndex, itemIndex);
+                        }
+                      }}
+                      okText="ลบออก"
+                      cancelText="ยกเลิก"
+                    >
+                      <Button type="text" size="small">
+                        <div className="flex items-center justify-center gap-1">
+                          <RiDeleteBin5Line className="text-xs" />
+                          {/* <div>ลบรายการ</div> */}
+                        </div>
+                      </Button>
+                    </Popconfirm>
+                  </div>
                 </div>
               </div>
             )}

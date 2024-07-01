@@ -22,12 +22,19 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
   panelBut,
 }) => {
   const [openDate, setOpenDate] = useState<boolean>(false);
+  const [isDateLimit, setDateLimit] = useState<boolean>(false);
+  const today = new Date();
 
-  useEffect(() => {}, [date]);
+  useEffect(() => {
+    const clone = new Date(date);
+    clone.setDate(clone.getDate() + 1);
+    setDateLimit(clone.getTime() > today.getTime());
+  }, [date]);
+
   return (
     <>
-      <div className="flex flex-col   select-none justify-start items-center">
-        <div className="flex  items-center  w-full relative justify-between py-4">
+      <div className="flex flex-col select-none justify-start items-center">
+        <div className="flex items-center  w-full relative justify-between py-4">
           <div className="flex items-center justify-center  w-fit ">
             <div
               onClick={() => {
@@ -50,7 +57,8 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
                 <MdCalendarMonth className="text-sm" />
               </div>
             </div>
-            {new Date().getUTCDate() > date.getUTCDate() && (
+
+            {!isDateLimit && (
               <div
                 onClick={() => {
                   let cloneDate = new Date(date);

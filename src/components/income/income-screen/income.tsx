@@ -180,7 +180,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   const deleteOnServer = async (sheetsIndex: number, listIndex: number) => {
     if (deleteIncome) {
       fetchingByIndex(listIndex);
-      const deleted = await deleteIncome({ sheetsIndex });
+      const deleted = await deleteIncome({
+        sheetsIndex,
+        sheetsDate: dateSelect,
+      });
       if (deleted.data === true) {
         deleteOnClient(listIndex);
       }

@@ -32,7 +32,7 @@ export default function Home() {
     income: [],
   });
   const [loading, setLoading] = useState<ILoading>({
-    pageLoad: false,
+    pageLoad: true,
     waitActioning: false,
   });
   const [duplicateItems, setDuplicate] = useState<RadioOptions[]>([]);
@@ -130,11 +130,11 @@ export default function Home() {
     }
   };
 
-  const getIncomeSheets = (date?: Date, url?: string) => {
+  const getIncomeSheets = async (date?: Date, url?: string) => {
     const key = url ? url : googleKey !== "" ? googleKey : undefined;
     if (key) {
       initLoad({ fetch: true });
-      FetchGetOfDay(key, date ? date : new Date())
+      await FetchGetOfDay(key, date ? date : new Date())
         .then((incomes) => {
           if (incomes) {
             setIncomes({
@@ -150,14 +150,15 @@ export default function Home() {
           });
         })
         .finally(() => {
-          initLoad({ fetch: false, waitAction: false });
+          setTimeout(() => {
+            initLoad({ fetch: false, waitAction: false });
+          }, 100);
         });
     } else {
       setIncomes({
         fetched: false,
         income: [],
       });
-      initLoad({ fetch: false, waitAction: false });
     }
   };
 
@@ -194,21 +195,22 @@ export default function Home() {
   const [openSetting, setSetting] = useState<boolean>(false);
   const [updateing, setUpdate] = useState<boolean>(false);
 
-  const getData = (url?: string, version?: string) => {
+  const getData = async (url?: string, version?: string) => {
     const key = url ? url : googleKey !== "" ? googleKey : undefined;
-    console.log(key);
     if (key) {
       getIncomeSheets(undefined, key);
       getTypes(key);
-      getDuplecate(key);
-      getDisplay(undefined, key);
-      getConfig(key, version);
+      await getDuplecate(key);
+      await getDisplay(undefined, key);
+      await getConfig(key, version);
+      initLoad({ fetch: false, dateChange: false });
     } else {
       setGoogleKey("");
     }
   };
 
   useEffect(() => {
+    initLoad({ fetch: true });
     localLoad().then((url) => {
       if (!incomes.fetched) {
         getData(url.getUrl ?? undefined, url.version ?? undefined);
@@ -240,29 +242,34 @@ export default function Home() {
           />
         </div>
       )}
+
       <Modal
         title="ตรวจพบเวอร์ชันใหม่"
         closable={false}
         open={isVersionOld}
         footer={<></>}
       >
-        <Button
-          loading={updateing}
-          onClick={() => {
-            if (config) {
-              const version = config.getValueByName("version");
-              const new_sheets = config.getValueByName("gg_key");
-              if (version?.value && new_sheets?.value) {
-                setUpdate(true);
-                const res_v = setLocal("version", version.value);
-                const res_g = setLocal("google_sheets", new_sheets.value);
-                window.location.reload();
+        <div className="flex flex-col gap-2 items-center justify-center">
+          <img src="/update.png" className="w-20 h-20 " alt="" />
+          <Button
+            type="primary"
+            loading={updateing}
+            onClick={() => {
+              if (config) {
+                const version = config.getValueByName("version");
+                const new_sheets = config.getValueByName("gg_key");
+                if (version?.value && new_sheets?.value) {
+                  setUpdate(true);
+                  const res_v = setLocal("version", version.value);
+                  const res_g = setLocal("google_sheets", new_sheets.value);
+                  window.location.reload();
+                }
               }
-            }
-          }}
-        >
-          อัปเดต
-        </Button>
+            }}
+          >
+            อัปเดต
+          </Button>
+        </div>
       </Modal>
       <Modal
         title="ลงชื่อเข้าใช้ระบบ"

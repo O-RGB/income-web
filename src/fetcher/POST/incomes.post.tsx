@@ -58,6 +58,7 @@ export const DeleteIncome = (
       data: {
         sheetsIndex: input.sheetsIndex,
         sheetsName: input.sheetsName,
+        sheetsDate: input.sheetsDate,
         query: "POST_delete_income",
       },
     },

@@ -42,6 +42,7 @@ interface IIncomesListAdd {
 interface IIncomeDelete {
   sheetsName?: "TYPE";
   sheetsIndex: number;
+  sheetsDate: Date;
 }
 
 interface ColorTheme {
