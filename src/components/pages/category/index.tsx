@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CateSelect from "./cate-select";
 import { Button, Form, Modal } from "antd";
 import { FaPen, FaPlus } from "react-icons/fa6";
 import { CreateType, DeleteType, EditType } from "@/fetcher/POST/types.post";
 import { getLocalByKey } from "@/libs/local";
-import TypesManager from "../form/types/types";
+import TypesManager from "../../form/types/types";
+import { MasterContext } from "@/contexts/master.context";
 
 interface CategoryProps {
   options: IIncomeTypes[];
   selectValue?: string;
   onSelectCate?: (cate: IIncomeTypes) => void;
-  fetchNewType?: () => Promise<void>;
 }
 
 const Category: React.FC<CategoryProps> = ({
   options,
   selectValue,
   onSelectCate,
-  fetchNewType,
 }) => {
+  const { Get } = useContext(MasterContext);
   const resetFrom = () => {
     setView(undefined);
     setIndexFocus(-1);
@@ -124,7 +124,7 @@ const Category: React.FC<CategoryProps> = ({
           value={viewValue}
           form={form}
           onDelete={deleteType}
-          fetchNewType={fetchNewType}
+          isSuccess={Get.getTypes}
           onClose={() => {
             setView(undefined);
             setIndexFocus(-1);

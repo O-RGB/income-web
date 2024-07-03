@@ -1,4 +1,4 @@
-import BarChart from "@/components/charts/bar-chart";
+import BarChart from "@/components/common/charts/bar-chart";
 import { Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import {
@@ -8,7 +8,7 @@ import {
   CalTypeOfDay,
   meanOfDay,
 } from "./lib";
-import LineChart from "@/components/charts/line-chart";
+import LineChart from "@/components/common/charts/line-chart";
 import { NumberFormat } from "@/libs/number";
 
 interface AnalyticsProps {

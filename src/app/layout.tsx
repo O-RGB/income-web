@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, K2D, Mali, Sarabun } from "next/font/google";
 import "./globals.css";
 import { ConfigProvider } from "antd";
+import { MasterProvider } from "@/contexts/master.context";
 
 const inter = Mali({
   subsets: ["thai"],
@@ -45,7 +46,7 @@ export default function RootLayout({
             },
           }}
         >
-          {children}
+          <MasterProvider> {children}</MasterProvider>
         </ConfigProvider>
       </body>
     </html>

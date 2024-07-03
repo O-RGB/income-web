@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import DetailOfMonth from "@/components/pages/detail-of-month/detail-of-month";
 import IncomeRender from "./render/im-render";
 import { Button, Form } from "antd";
-import BarChart from "@/components/charts/bar-chart";
-import SummaryOfDay from "./render/summary/summaryOfDay";
+import BarChart from "@/components/common/charts/bar-chart";
+import SummaryOfDay from "../../tools/summary/summaryOfDay";
 import { FaChartPie } from "react-icons/fa6";
-import Analytics from "./analytics/analytics";
+import Analytics from "../../modals/analytics/analytics";
 import { GrSettingsOption } from "react-icons/gr";
-import { CalLineChart, CalSumOfMonth } from "./analytics/lib";
+import { CalLineChart, CalSumOfMonth } from "../../modals/analytics/lib";
 import ButtonCommon from "@/components/common/button";
 import { FcSettings } from "react-icons/fc";
 import { IconsModelList } from "@/utils/models/icons";
@@ -26,9 +26,7 @@ interface IncomeListInDayProps {
   onClickSetting?: () => void;
   dateSelect: Date;
   loading: ILoading;
-  version?: string;
-  icons: IconsModelList;
-  fetchNewType?: () => Promise<void>;
+  version?: string; 
 }
 
 const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
@@ -40,9 +38,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   dateSelect,
   onClickSetting,
   loading,
-  version,
-  icons,
-  fetchNewType,
+  version, 
 }) => {
   const [incomesData, setIncomes] = useState<IIncome[]>([]);
   const [firstIndexSheets, setFirstIndex] = useState<number>(0);
@@ -273,11 +269,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       </div>
 
       <div className="flex gap-1">
-        <SummaryOfDay
-          date={dateSelect}
-          dayIndex={dateSelect.getDate()}
-          incomeOfday={incomes}
-        ></SummaryOfDay>
+        <SummaryOfDay date={dateSelect} incomeOfday={incomes}></SummaryOfDay>
         <ButtonCommon
           onClick={() => setAnalytics(!analytics)}
           icon={<FaChartPie></FaChartPie>}
@@ -285,10 +277,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           สรุป
         </ButtonCommon>
       </div>
-      {/* {countDraft} */}
-      <IncomeRender
-        fetchNewType={fetchNewType}
-        icons={icons}
+
+      <IncomeRender 
         headForm={headForm}
         action={{
           setDraft: addDraft,

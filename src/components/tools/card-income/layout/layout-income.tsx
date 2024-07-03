@@ -1,13 +1,9 @@
-import { Checkbox } from "antd";
 import React, { useEffect, useState } from "react";
 
 interface LayoutIncomeItemProps {
   initIncome: IIncome;
   children?: React.ReactNode;
   actionTop?: React.ReactNode;
-  draftPriceMode?: priceType;
-  edit: boolean;
-  onClickCheck?: () => void;
   colorTheme: ColorTheme;
 }
 
@@ -15,9 +11,6 @@ const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
   initIncome,
   children,
   actionTop,
-  draftPriceMode,
-  edit,
-  onClickCheck,
   colorTheme,
 }) => {
   const [show, setShow] = useState<boolean>(false);
@@ -34,16 +27,13 @@ const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
           show ? "" : "translate-x-full"
         } ${
           initIncome.delete
-            ? "max-h-0 duration-500 invisible "
+            ? "max-h-0 duration-300 invisible "
             : initIncome.draft
-            ? "max-h-[500px] border border-blue-500 rounded-md p-1  duration-1000 "
+            ? "max-h-[500px] border border-blue-500 rounded-md p-1  duration-700 "
             : "max-h-[200px] duration-1000"
         } `}
       >
-        <div
-          className={`w-full ${edit == true ? "pointer-events-none" : '"'}`}
-          onClick={(e) => (edit == true ? e.stopPropagation() : undefined)}
-        >
+        <div className={`w-full`}>
           <div className="absolute top-0 right-0 flex gap-1 z-10">
             {actionTop}
           </div>

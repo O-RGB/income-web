@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import InputCommon from "../common/input";
+import InputCommon from "../../common/input";
 import { Button, ColorPicker } from "antd";
 import { FaCheck, FaEdit, FaSave, FaStepBackward } from "react-icons/fa";
 import { RiArrowGoBackLine } from "react-icons/ri";
@@ -11,7 +11,6 @@ interface CateSelectProps {
   index: number;
   selectValue?: string;
   onSelectCate?: (cate: IIncomeTypes) => void;
-  editMode?: boolean;
   onEditCate?: (value: IIncomeTypes) => void;
 }
 
@@ -20,7 +19,6 @@ const CateSelect: React.FC<CateSelectProps> = ({
   index,
   selectValue,
   onSelectCate,
-  editMode,
   onEditCate,
 }) => {
   const [renderIcon, setIcon] = useState<React.ReactNode>();
@@ -29,7 +27,6 @@ const CateSelect: React.FC<CateSelectProps> = ({
     const data = icons.getIconById(value.icons);
     const i = data?.getIcon();
     setIcon(i);
-    console.log(value.name, value.icons, "rerender");
   }, [value]);
 
   return (

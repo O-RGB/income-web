@@ -12,7 +12,7 @@ interface TypesManagerProps {
   onEdit?: (type: IIncomeTypes) => Promise<boolean>;
   onDelete?: (rowId: number, indexOfList: number) => Promise<boolean>;
   onClose?: (value: boolean) => void;
-  fetchNewType?: () => Promise<void>;
+  isSuccess?: () => Promise<void>;
   form?: FormInstance<any>;
 }
 
@@ -22,7 +22,7 @@ const TypesManager: React.FC<TypesManagerProps> = ({
   onEdit,
   onDelete,
   onClose,
-  fetchNewType,
+  isSuccess,
   form,
   indexOfList,
 }) => {
@@ -47,7 +47,7 @@ const TypesManager: React.FC<TypesManagerProps> = ({
           t?.then((data) => {
             if (data) {
               setLoad(false);
-              fetchNewType?.().then(() => {});
+              isSuccess?.().then(() => {});
             }
             setLoad(false);
             onClose?.(false);
@@ -85,7 +85,7 @@ const TypesManager: React.FC<TypesManagerProps> = ({
                   indexOfList
                     ? onDelete?.(value.rowIndex, indexOfList).then((data) => {
                         if (data) {
-                          fetchNewType?.().then(() => {});
+                          isSuccess?.().then(() => {});
                         }
                         setLoadDelete(false);
                         onClose?.(false);
