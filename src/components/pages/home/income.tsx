@@ -26,7 +26,7 @@ interface IncomeListInDayProps {
   onClickSetting?: () => void;
   dateSelect: Date;
   loading: ILoading;
-  version?: string; 
+  version?: string;
 }
 
 const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
@@ -38,7 +38,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   dateSelect,
   onClickSetting,
   loading,
-  version, 
+  version,
 }) => {
   const [incomesData, setIncomes] = useState<IIncome[]>([]);
   const [firstIndexSheets, setFirstIndex] = useState<number>(0);
@@ -116,7 +116,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     let clone = incomesData;
     setIncomes([]);
     const data = await onAddIncome(incomesList);
-    console.log(data);
     if (data && data.success) {
       data.data?.map((inSheets) => {
         const index = inSheets.indexOfList;
@@ -135,7 +134,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           });
         }
       });
-      console.log("add clone", clone);
 
       updateSheetsIndex(clone, "CLOSE");
       setCountDraft(0);
@@ -233,6 +231,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
   return (
     <div className="relative z-30 px-2 flex flex-col gap-2">
+     
       <Analytics
         master={master}
         open={analytics}
@@ -278,7 +277,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         </ButtonCommon>
       </div>
 
-      <IncomeRender 
+      <IncomeRender
         headForm={headForm}
         action={{
           setDraft: addDraft,

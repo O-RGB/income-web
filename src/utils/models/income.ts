@@ -63,3 +63,26 @@ export class IncomeModel implements IIncome {
     };
   }
 }
+
+class LocalIncomeList {
+  list = new Map<Date, LocalIncome>();
+  constructor() {}
+
+  getIncomeByDate(date: Date) {
+    return this.list.get(date);
+  }
+}
+
+class LocalIncome {
+  date: Date | undefined;
+  income: IIncome[] = [];
+  constructor() {}
+
+  getIncome() {
+    return this.income;
+  }
+
+  pushIncome(income: IIncome) {
+    this.income.push(income);
+  }
+}

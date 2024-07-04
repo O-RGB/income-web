@@ -29,7 +29,6 @@ const WallpaperForm: React.FC<WallpaperFormProps> = ({ onChangeWallpaper }) => {
     <>
       <Form
         onFieldsChange={(e: any) => {
-          console.log(e);
           onChangeWallpaper?.(e[0].value);
         }}
       >

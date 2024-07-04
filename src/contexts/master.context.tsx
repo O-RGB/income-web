@@ -79,7 +79,6 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
 
   const getTypes = async (url?: string) => {
     const key = url ? url : googleKey !== "" ? googleKey : undefined;
-    console.log("IN CONTEXT TYPE", key);
     if (key) {
       const incomes = await FetchTypesIncome(key);
       if (incomes) {

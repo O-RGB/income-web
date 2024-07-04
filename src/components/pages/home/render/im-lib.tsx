@@ -22,7 +22,6 @@ export const DynamicKeysToArray = (obj: PathName): IncomeFormInput[] => {
       }
     }
   });
-  console.log("grouped", grouped);
   const changed: IncomeFormInput[] = [];
   Object.keys(grouped).map((key) => {
     const entry = grouped[key];

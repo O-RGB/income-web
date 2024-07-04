@@ -31,7 +31,8 @@ function QueryPost(params: any): FormData {
 export async function Fetcher<Input = any, Result = any>(
   key: string,
   param?: IFetcher<Input, IInitQuery>,
-  loading?: (load: boolean) => void
+  loading?: (load: boolean) => void,
+  signal?: AbortSignal
 ): Promise<IGeneralReturnFetch<Result | undefined>> {
   //LOAD
   loading?.(true);
@@ -55,6 +56,7 @@ export async function Fetcher<Input = any, Result = any>(
   return await fetch(url, {
     method: param?.method ? param.method : "GET",
     body: formParam,
+    signal: signal,
     // cache: "no-store",
     // mode: "cors",
     cache: "no-cache",

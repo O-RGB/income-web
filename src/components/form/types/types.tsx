@@ -34,7 +34,6 @@ const TypesManager: React.FC<TypesManagerProps> = ({
       <Form
         form={form}
         onFinish={(input) => {
-          console.log(input);
           setLoad(true);
           let maping = {
             color: value ? value.color : "",

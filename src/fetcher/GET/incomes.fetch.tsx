@@ -6,7 +6,8 @@ import { IncomeModel } from "@/utils/models/income";
 export const FetchGetOfDay = async (
   url: string,
   setDay: Date,
-  loading?: (load: boolean) => void
+  loading?: (load: boolean) => void,
+  signal?: AbortSignal
 ) => {
   const initDate = DateFormat(setDay, "MM-DD-YYYY");
   const res = await Fetcher<{ day: string }, any[]>(
@@ -17,7 +18,8 @@ export const FetchGetOfDay = async (
         day: initDate,
       },
     },
-    loading
+    loading,
+    signal
   );
 
   if (res.success === true) {

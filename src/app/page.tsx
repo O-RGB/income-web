@@ -1,5 +1,5 @@
 "use client";
-import GoogleSheetsUrl from "@/components/form/google-sheets-url";
+
 import SettingModal from "@/components/modals/setting";
 import IncomeListInDay from "@/components/pages/home/income";
 
@@ -7,13 +7,13 @@ import { MasterContext } from "@/contexts/master.context";
 import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
 import { AddIncomesList, DeleteIncome } from "@/fetcher/POST/incomes.post";
 import { getLocalByKey, setLocal } from "@/libs/local";
-import { Modal } from "antd";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const { Get, Master, Set, googleKey, Facility } = useContext(MasterContext);
   const [wallpaper, setWallpaper] = useState<string>("");
   const [version, setVersion] = useState<string>();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const [incomes, setIncomes] = useState<{
     fetched: boolean;
@@ -46,7 +46,6 @@ export default function Home() {
 
     return { getUrl, version };
   };
-
   const initLoad = ({
     fetch,
     waitAction,
@@ -62,12 +61,25 @@ export default function Home() {
       dateChange: dateChange ? true : false,
     });
   };
-
   const getIncomeSheets = async (date?: Date, url?: string) => {
     const key = url ? url : googleKey !== "" ? googleKey : undefined;
     if (key) {
-      initLoad({ fetch: true });
-      await FetchGetOfDay(key, date ? date : new Date())
+      // ยกเลิก fetch ก่อนหน้าถ้ามี
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
+      initLoad({ fetch: true, waitAction: true });
+
+      await FetchGetOfDay(
+        key,
+        date ? date : new Date(),
+        undefined,
+        abortController.signal
+      )
         .then((incomes) => {
           if (incomes) {
             setIncomes({
@@ -75,26 +87,29 @@ export default function Home() {
               income: incomes,
             });
           }
+          initLoad({ fetch: false, waitAction: false });
         })
         .catch((e) => {
+          console.log(e)
           setIncomes({
-            fetched: false,
+            fetched: true,
             income: [],
           });
-        })
-        .finally(() => {
-          setTimeout(() => {
-            initLoad({ fetch: false, waitAction: false });
-          }, 100);
+          initLoad({ fetch: false, waitAction: false });
         });
+      // .finally(() => {
+      //   setTimeout(() => {
+      //     initLoad({ fetch: false, waitAction: false });
+      //   }, 100);
+      // });
     } else {
       setIncomes({
         fetched: false,
         income: [],
       });
+      initLoad({ fetch: false, waitAction: false });
     }
   };
-
   const onAddIncome = async (income: IIncome[]) => {
     if (googleKey) {
       initLoad({ waitAction: true });
@@ -142,7 +157,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    initLoad({ fetch: true });
+    initLoad({ fetch: true, waitAction: true });
     localLoad().then((url) => {
       if (!incomes.fetched) {
         getData(url.getUrl ?? undefined, url.version ?? undefined);
@@ -151,15 +166,18 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    initLoad({ fetch: true, dateChange: true });
+    initLoad({ fetch: true, waitAction: true });
+    setIncomes({ fetched: false, income: [] });
     const timeer = setTimeout(() => {
-      setIncomes({ fetched: false, income: [] });
-      Get.getDisplay(dateSelect);
+      // Get.getDisplay(dateSelect);
       getIncomeSheets(dateSelect);
-    }, 1000);
+    }, 100);
 
     return () => {
       clearInterval(timeer);
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [dateSelect]);
 
@@ -173,7 +191,7 @@ export default function Home() {
             className="w-full h-full object-cover  "
           />
         </div>
-      )}
+      )} 
 
       <SettingModal
         onChangeGoogleSheetKey={(e) => {
