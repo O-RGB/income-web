@@ -10,7 +10,7 @@ interface RenderTypeProps {
   comment?: React.ReactNode;
   _priceType?: priceType;
   typesOfItems?: IIncomeTypes[];
-  icons: IconsModelList;
+  icons?: IconsModelList;
 }
 
 const RenderType: React.FC<RenderTypeProps> = ({
@@ -29,7 +29,7 @@ const RenderType: React.FC<RenderTypeProps> = ({
     if (types) {
       const data = typesOfItems?.find((x) => x.typeId === types);
       if (data) {
-        const ele = icons.getIconById(data.icons);
+        const ele = icons?.getIconById(data.icons);
         if (ele) {
           setTypeLabel({
             type: data,

@@ -15,7 +15,7 @@ interface IncomeListProps {
   master: IMasterDataImcomes;
   itemIndex: number;
   lockAction: boolean;
-  icons: IconsModelList;
+  icons?: IconsModelList;
   deleteOnClient?: (index: number) => void;
   deleteOnServer?: (sheetsIndex: number, listIndex: number) => void;
   removeCommnet?: (income: IIncome, index: number) => void;

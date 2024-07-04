@@ -23,7 +23,7 @@ type MasterContextType = {
   Facility: {
     autoSelect: RadioOptions[];
     analytics: IGetDisplayCal | undefined;
-    iconModel: IconsModelList;
+    iconModel: IconsModelList | undefined;
   };
   Get: {
     getTypes: (url?: string) => Promise<void>;
@@ -73,9 +73,10 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     []
   );
   const [updateing, setUpdateing] = useState<boolean>(false);
-  const [iconModel, setIconModel] = useState<IconsModelList>(
-    new IconsModelList()
-  );
+  const [iconModel, setIconModel] = useState<IconsModelList>();
+  const createIconsModel = () => {
+    setIconModel(new IconsModelList());
+  };
 
   const getTypes = async (url?: string) => {
     const key = url ? url : googleKey !== "" ? googleKey : undefined;
@@ -141,7 +142,9 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     }
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    createIconsModel();
+  }, []);
 
   return (
     <MasterContext.Provider
@@ -169,6 +172,7 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     >
       <>
         <CheckForUpdate
+          verionsConfig={config?.config}
           isVersionOld={isVersionOld}
           loading={updateing}
           onClickUpdate={updateWebVersion}

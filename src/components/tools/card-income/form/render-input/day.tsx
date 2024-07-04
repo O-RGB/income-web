@@ -14,7 +14,7 @@ interface RenderDayProps {
   colorTheme: ColorTheme;
   types: string;
   typesOfItems?: IIncomeTypes[];
-  icons: IconsModelList;
+  icons?: IconsModelList;
 }
 
 const RenderDay: React.FC<RenderDayProps> = ({
@@ -35,7 +35,7 @@ const RenderDay: React.FC<RenderDayProps> = ({
     if (types) {
       const data = typesOfItems?.find((x) => x.typeId === types);
       if (data) {
-        const ele = icons.getIconById(data.icons);
+        const ele = icons?.getIconById(data.icons);
         if (ele) {
           setTypeLabel({
             type: data,

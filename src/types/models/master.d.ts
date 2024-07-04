@@ -43,6 +43,7 @@ interface ICalenderList {
 
 interface ITypesList {
   type: string;
+  iconId: string;
   plot: IDisplayPlotType[];
 }
 

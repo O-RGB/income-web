@@ -27,6 +27,7 @@ export default function Home() {
     waitActioning: false,
   });
 
+  const [dateTemp, setDateTemp] = useState<Date>(new Date());
   const [dateSelect, setDateSelect] = useState<Date>(new Date());
 
   const localLoad = async () => {
@@ -116,6 +117,7 @@ export default function Home() {
     if (googleKey) {
       initLoad({ waitAction: true });
       return AddIncomesList(googleKey, { incomes: income }).finally(() => {
+        Get.getDisplay(undefined, googleKey);
         initLoad({ waitAction: false });
       });
     } else {
@@ -147,11 +149,11 @@ export default function Home() {
   const getData = async (url?: string, version?: string) => {
     const key = url ? url : googleKey !== "" ? googleKey : undefined;
     if (key) {
+      Get.getConfig(key, version);
       getIncomeSheets(undefined, key);
       Get.getTypes(key);
       await Get.getDuplecate(key);
       await Get.getDisplay(undefined, key);
-      await Get.getConfig(key, version);
       // initLoad({ fetch: false, dateChange: false });
     } else {
       Set.setGoogleKey("");
@@ -171,8 +173,11 @@ export default function Home() {
     initLoad({ fetch: true, waitAction: true });
     setIncomes({ fetched: false, income: [] });
     const timeer = setTimeout(() => {
-      // Get.getDisplay(dateSelect);
       getIncomeSheets(dateSelect);
+      if (dateTemp.getMonth() !== dateSelect.getMonth()) {
+        Get.getDisplay(dateSelect);
+      }
+      setDateTemp(dateSelect);
     }, 100);
 
     return () => {

@@ -12,6 +12,7 @@ import { CalLineChart, CalSumOfMonth } from "../../modals/analytics/lib";
 import ButtonCommon from "@/components/common/button";
 import { FcSettings } from "react-icons/fc";
 import { IconsModelList } from "@/utils/models/icons";
+import CategorySummary from "@/components/tools/summary/category/category-summary";
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
@@ -231,7 +232,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
   return (
     <div className="relative z-30 px-2 flex flex-col gap-2">
-     
       <Analytics
         master={master}
         open={analytics}
@@ -266,7 +266,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           ></DetailOfMonth>
         </div>
       </div>
-
+      <div className="flex flex-col gap-1">
+        {/* <div className="text-xs  ">หมวดหมู่</div> */}
+        <CategorySummary></CategorySummary>
+      </div>
       <div className="flex gap-1">
         <SummaryOfDay date={dateSelect} incomeOfday={incomes}></SummaryOfDay>
         <ButtonCommon

@@ -34,7 +34,9 @@ const DetailOfMonth: React.FC<DetailOfMonthProps> = ({
   return (
     <>
       <div className="flex flex-col select-none justify-start items-center">
-        <div className="flex items-center  w-full relative justify-between py-4">
+        <div
+          className={`flex items-center  w-full relative justify-between pt-4`}
+        >
           <div className="flex items-center justify-center  w-fit ">
             <div
               onClick={() => {

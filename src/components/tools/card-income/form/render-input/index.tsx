@@ -11,7 +11,7 @@ interface RenderIncomeCardProps {
   income: IIncome;
   onClick?: () => void;
   isDraft: boolean;
-  icons: IconsModelList;
+  icons?: IconsModelList;
   master: IMasterDataImcomes;
   colorTheme: ColorTheme;
   loading: boolean;

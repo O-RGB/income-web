@@ -46,13 +46,13 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
 
   return (
     <>
-      <div className="flex flex-col " key={`incom-day-${dateSelect.getDate()}`}>
+      <div key={`incom-day-${dateSelect.getDate()}`}>
         {loading.pageLoad ? (
           <div className="h-56 flex justify-center items-center">
             <AiOutlineLoading3Quarters className="animate-spin text-2xl" />
           </div>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div>
             <div>
               <div className="w-full flex justify-between items-center ">
                 <div></div>
@@ -112,7 +112,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                 }
               }}
             >
-              <div className="flex flex-col-reverse  pb-32 ">
+              <div className="flex flex-col-reverse pb-32">
                 {_incomes.map((im, jindex) => {
                   return (
                     <div key={`incom-${dateSelect.getDate()}-${jindex}`}>
