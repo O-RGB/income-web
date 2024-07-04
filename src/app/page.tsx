@@ -86,16 +86,18 @@ export default function Home() {
               fetched: true,
               income: incomes,
             });
+            setTimeout(() => {
+              initLoad({ fetch: false, waitAction: false });
+            }, 100);
           }
-          initLoad({ fetch: false, waitAction: false });
         })
         .catch((e) => {
-          console.log(e)
+          console.log(e);
           setIncomes({
             fetched: true,
             income: [],
           });
-          initLoad({ fetch: false, waitAction: false });
+          // initLoad({ fetch: false, waitAction: false });
         });
       // .finally(() => {
       //   setTimeout(() => {
@@ -107,7 +109,7 @@ export default function Home() {
         fetched: false,
         income: [],
       });
-      initLoad({ fetch: false, waitAction: false });
+      // initLoad({ fetch: false, waitAction: false });
     }
   };
   const onAddIncome = async (income: IIncome[]) => {
@@ -150,7 +152,7 @@ export default function Home() {
       await Get.getDuplecate(key);
       await Get.getDisplay(undefined, key);
       await Get.getConfig(key, version);
-      initLoad({ fetch: false, dateChange: false });
+      // initLoad({ fetch: false, dateChange: false });
     } else {
       Set.setGoogleKey("");
     }
@@ -191,7 +193,7 @@ export default function Home() {
             className="w-full h-full object-cover  "
           />
         </div>
-      )} 
+      )}
 
       <SettingModal
         onChangeGoogleSheetKey={(e) => {
