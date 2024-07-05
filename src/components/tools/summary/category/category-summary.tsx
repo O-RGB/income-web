@@ -39,7 +39,7 @@ const CategorySummary: React.FC<CategorySummaryProps> = ({}) => {
 
   return (
     <>
-      <div className="flex gap-3 w-full overflow-auto  h-[70px] hide-scrollbar">
+      <div className="flex gap-3 w-full overflow-y-hidden overflow-x-auto h-[72px] hide-scrollbar">
         {analytics.length === 0 &&
           Array(9)
             .fill(1)
