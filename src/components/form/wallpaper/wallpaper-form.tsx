@@ -18,6 +18,13 @@ const image = [
   "/wallpaper/test13.jpg",
   "/wallpaper/test14.jpg",
   "/wallpaper/test15.jpg",
+  "/wallpaper/test17.jpg",
+  "/wallpaper/test18.jpg",
+  "/wallpaper/test19.jpg",
+  "/wallpaper/test20.jpg",
+  "/wallpaper/test21.jpg",
+  "/wallpaper/test22.jpg",
+  "/wallpaper/test23.jpg",
 ];
 
 interface WallpaperFormProps {
