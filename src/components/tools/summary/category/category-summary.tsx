@@ -17,7 +17,6 @@ const CategorySummary: React.FC<CategorySummaryProps> = ({}) => {
   const { Facility } = useMaster();
   const [analytics, setAnalytics] = useState<CategoryAnalytics[]>([]);
 
-
   useEffect(() => {
     let cal: CategoryAnalytics[] = [];
     Facility.analytics?.types.map((data) => {
@@ -39,7 +38,7 @@ const CategorySummary: React.FC<CategorySummaryProps> = ({}) => {
 
   return (
     <>
-      <div className="flex gap-3 w-full overflow-y-hidden overflow-x-auto h-[72px] hide-scrollbar">
+      <div className="flex gap-3 w-full overflow-y-hidden overflow-x-auto h-[72px] hide-scrollbar ">
         {analytics.length === 0 &&
           Array(9)
             .fill(1)

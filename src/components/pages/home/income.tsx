@@ -45,6 +45,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   const [firstIndexSheets, setFirstIndex] = useState<number>(0);
   const [analytics, setAnalytics] = useState<boolean>(false);
   const [countDraft, setCountDraft] = useState<number>(0);
+  const [listIsAction, setListAction] = useState<number[]>([]);
   const [headForm] = Form.useForm();
 
   const countDraftIndex = (mode: "-" | "+") => {
@@ -117,8 +118,9 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     let clone = incomesData;
     setIncomes([]);
     const data = await onAddIncome(incomesList);
-    if (data && data.success) {
-      data.data?.map((inSheets) => {
+    const res = data.data;
+    if (res && data.success) {
+      res?.map((inSheets) => {
         const index = inSheets.indexOfList;
         const _check = clone[index];
         if (_check) {
@@ -128,7 +130,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
             draft: false,
             delete: false,
             fetching: false,
+
+            _priceType: inSheets.expensesPrice > 0 ? "Expenses" : "Revenue",
           };
+          console.log(clone[index]);
           addReslut.push({
             index: index,
             result: true,
@@ -271,7 +276,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         <CategorySummary></CategorySummary>
       </div>
       <div className="flex gap-1">
-        <SummaryOfDay date={dateSelect} incomeOfday={incomes}></SummaryOfDay>
+        <SummaryOfDay date={dateSelect} incomeOfday={incomesData}></SummaryOfDay>
         <ButtonCommon
           onClick={() => setAnalytics(!analytics)}
           icon={<FaChartPie></FaChartPie>}

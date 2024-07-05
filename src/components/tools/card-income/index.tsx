@@ -34,7 +34,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   icons,
 }) => {
   const isDraft = income.draft;
-  const loading = income.fetching || lockAction;
+  const loading = income.fetching;
   const isDelete = income.delete;
 
   const [deleteAll, setDeleteAll] = useState<boolean>(false);
@@ -58,7 +58,11 @@ const IncomeElement: React.FC<IncomeListProps> = ({
         };
 
   const onClickIncomeHandel = () => {
-    setDetail(!onDetail);
+    if (!lockAction) {
+      setDetail(!onDetail);
+    } else {
+      setDetail(false);
+    }
   };
 
   const onCategorySelect = (value: IIncomeTypes) => {
@@ -102,6 +106,12 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   useEffect(() => {
     setCategory(income.types);
   }, [income]);
+
+  useEffect(() => {
+    if (loading) {
+      setDetail(false);
+    }
+  }, [loading]);
 
   if (deleteAll) {
     return <> </>;
@@ -166,12 +176,14 @@ const IncomeElement: React.FC<IncomeListProps> = ({
             ></RenderIncomeCard>
           )}
           {!isDraft && !loading && (
-            <RenderDetail
-              open={onDetail}
-              index={itemIndex}
-              income={income}
-              onClickDelete={deleteOnServer}
-            ></RenderDetail>
+            <div className={`${lockAction ? "pointer-events-none" : ""}`}>
+              <RenderDetail
+                open={onDetail && !lockAction}
+                index={itemIndex}
+                income={income}
+                onClickDelete={deleteOnServer}
+              ></RenderDetail>
+            </div>
           )}
         </LayoutIncomeItem>
       </div>
