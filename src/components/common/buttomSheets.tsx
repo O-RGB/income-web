@@ -18,7 +18,8 @@ const ButtomSheets: React.FC<ButtomSheetsProps> = ({
   return (
     <>
       <Sheet
-        // snapPoints={[600, 600, 600, 0]}
+        snapPoints={[500, 500, 500, 0]}
+        layoutScroll
         isOpen={isOpen ?? false}
         className="!z-40"
         onClose={() => {
@@ -26,7 +27,7 @@ const ButtomSheets: React.FC<ButtomSheetsProps> = ({
         }}
         initialSnap={1}
       >
-        <Sheet.Container layoutScroll>
+        <Sheet.Container>
           <Sheet.Header />
           <Sheet.Content>{children}</Sheet.Content>
         </Sheet.Container>

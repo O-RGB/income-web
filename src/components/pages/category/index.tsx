@@ -111,7 +111,7 @@ const Category: React.FC<CategoryProps> = ({
   }, [options]);
 
   return (
-    <div className="px-2 flex flex-col gap-4">
+    <div className="px-2 flex flex-col gap-4 ">
       <Modal
         title="สร้างหมวดหมู่"
         destroyOnClose
@@ -145,7 +145,7 @@ const Category: React.FC<CategoryProps> = ({
           สร้างหมวดหมู่
         </Button>
       </div>
-      <div className="min-h-[80vh]overflow-auto">
+      <div className="max-h-[25.5rem] overflow-auto">
         <div className="grid grid-cols-1 gap-2 w-full  relative z-50  ">
           {cloneType.map((data, index) => {
             return (
