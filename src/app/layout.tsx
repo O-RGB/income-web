@@ -62,6 +62,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="icon" type="image/x-icon" href="./favicon.ico" />
         <link
           rel="icon"
           href="/icon?<generated>"
