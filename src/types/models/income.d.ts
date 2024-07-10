@@ -50,4 +50,5 @@ interface ColorTheme {
   color: string;
   background: string;
   text: string;
+  className: string;
 }

@@ -45,7 +45,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   const [firstIndexSheets, setFirstIndex] = useState<number>(0);
   const [analytics, setAnalytics] = useState<boolean>(false);
   const [countDraft, setCountDraft] = useState<number>(0);
-  const [listIsAction, setListAction] = useState<number[]>([]);
   const [headForm] = Form.useForm();
 
   const countDraftIndex = (mode: "-" | "+") => {
@@ -276,7 +275,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         <CategorySummary></CategorySummary>
       </div>
       <div className="flex gap-1">
-        <SummaryOfDay date={dateSelect} incomeOfday={incomesData}></SummaryOfDay>
+        <SummaryOfDay
+          date={dateSelect}
+          incomeOfday={incomesData}
+        ></SummaryOfDay>
         <ButtonCommon
           onClick={() => setAnalytics(!analytics)}
           icon={<FaChartPie></FaChartPie>}

@@ -3,6 +3,7 @@ import { Inter, K2D, Mali, Sarabun } from "next/font/google";
 import "./globals.css";
 import { ConfigProvider } from "antd";
 import { MasterProvider } from "@/contexts/master.context";
+import { CalculatorProvider } from "@/contexts/calculator.context";
 
 const inter = Mali({
   subsets: ["thai"],
@@ -84,7 +85,9 @@ export default function RootLayout({
             },
           }}
         >
-          <MasterProvider> {children}</MasterProvider>
+          <CalculatorProvider>
+            <MasterProvider> {children}</MasterProvider>
+          </CalculatorProvider>
         </ConfigProvider>
       </body>
     </html>

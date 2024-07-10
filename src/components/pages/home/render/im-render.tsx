@@ -11,6 +11,10 @@ import { FaSave } from "react-icons/fa";
 import { BiLayerPlus } from "react-icons/bi";
 import FloatingButton from "@/components/common/floating-button";
 import { MasterContext } from "@/contexts/master.context";
+import SpeedDial from "@/components/common/speedDial";
+import { useCalculator } from "@/hooks/calculator-hooks";
+import Calculator from "@/components/common/calculator";
+import CalculatorMethod from "@/components/tools/calculator";
 
 interface IncomeRenderProps {
   master: IMasterDataImcomes;
@@ -19,7 +23,6 @@ interface IncomeRenderProps {
   loading: ILoading;
   action?: IActionDayIncomesLists;
   headForm: FormInstance<any>;
-
   draftCount: number;
 }
 
@@ -33,14 +36,17 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   draftCount,
 }) => {
   const { Facility } = useContext(MasterContext);
+  const { addIncome, removeIncome, removeAll } = useCalculator();
   //not re render
   const [_incomes, setIncomesTemp] = useState<IIncome[]>([]);
   const [_date, setDate] = useState(new Date());
+  const [onClickCalculator, setCalculator] = useState<boolean>(false);
 
   useEffect(() => {
     if (incomes.length > 0 || dateSelect !== _date) {
       setIncomesTemp(incomes);
       setDate(dateSelect);
+      removeAll();
     }
   }, [incomes]);
 
@@ -57,19 +63,32 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
               <div className="w-full flex justify-between items-center ">
                 <div></div>
                 <div className="flex gap-2">
-                  {draftCount > 0 && (
+                  {draftCount > 0 ? (
                     <FloatingButton
+                      disabled={onClickCalculator}
                       noti={draftCount > 0 ? String(draftCount) : undefined}
-                      color="bg-amber-500"
-                      hoverColor="hover:bg-amber-500/50"
+                      color="bg-green-500"
+                      hoverColor="hover:bg-green-400"
                       icon={<FaSave className="text-lg"></FaSave>}
                       right="6rem"
                       onClick={() => {
                         headForm.submit();
                       }}
                     ></FloatingButton>
+                  ) : (
+                    <SpeedDial
+                      onClickCalculator={() => {
+                        setCalculator(true);
+                      }}
+                      cancelEvent={() => {
+                        setCalculator(false);
+                        removeAll();
+                      }}
+                    ></SpeedDial>
                   )}
+
                   <FloatingButton
+                    disabled={onClickCalculator}
                     icon={
                       draftCount > 0 ? (
                         <BiLayerPlus className="text-xl"></BiLayerPlus>
@@ -95,6 +114,8 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
               </div>
             )}
 
+            <CalculatorMethod show={onClickCalculator}></CalculatorMethod>
+
             <Form
               form={headForm}
               layout="vertical"
@@ -117,8 +138,17 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                   return (
                     <div key={`incom-${dateSelect.getDate()}-${jindex}`}>
                       <IncomeElement
+                        onFocus={(fs, income) => {
+                          console.log(fs, income);
+                          if (fs) {
+                            addIncome(income);
+                          } else {
+                            removeIncome(income.sheetsIndex);
+                          }
+                        }}
+                        focusMode={onClickCalculator}
                         icons={Facility.iconModel}
-                        removeCommnet={(income, index) => {
+                        removeCommnet={(_, index) => {
                           headForm.setFieldValue("comment_" + index, undefined);
                         }}
                         deleteOnClient={action?.setDeleteOnClient}

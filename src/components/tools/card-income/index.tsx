@@ -11,20 +11,22 @@ import Category from "@/components/pages/category";
 
 interface IncomeListProps {
   income: IIncome;
-  dayRender?: boolean;
   master: IMasterDataImcomes;
   itemIndex: number;
   lockAction: boolean;
+  focusMode?: boolean;
   icons?: IconsModelList;
   deleteOnClient?: (index: number) => void;
   deleteOnServer?: (sheetsIndex: number, listIndex: number) => void;
   removeCommnet?: (income: IIncome, index: number) => void;
   onSelectEdit?: (index: number) => void;
+  onFocus?: (focus: boolean, income: IIncome) => void;
 }
 
 const IncomeElement: React.FC<IncomeListProps> = ({
   income,
   master,
+  focusMode = false,
   removeCommnet,
   itemIndex,
   lockAction = false,
@@ -32,6 +34,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   deleteOnServer,
   onSelectEdit,
   icons,
+  onFocus,
 }) => {
   const isDraft = income.draft;
   const loading = income.fetching;
@@ -40,6 +43,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   const [deleteAll, setDeleteAll] = useState<boolean>(false);
   const [buttom, setButtom] = useState<boolean>(false);
   const [category, setCategory] = useState<string>("T00");
+  const [focus, setFocus] = useState<boolean>(false);
 
   const [onDetail, setDetail] = useState<boolean>(false);
   const colorTheme: ColorTheme =
@@ -49,15 +53,23 @@ const IncomeElement: React.FC<IncomeListProps> = ({
           background: "bg-white/70",
           color: "#ff5c5c",
           text: "text-gray-700",
+          className: focus ? "!bg-red-900/20" : "",
         }
       : {
           priceType: "Revenue",
           background: "bg-white/70",
           color: "#3dc940",
           text: "text-gray-700",
+          className: focus ? "!bg-red-900/20" : "",
         };
 
   const onClickIncomeHandel = () => {
+    if (focusMode) {
+      onFocus?.(!focus, income);
+      setFocus(!focus);
+      return;
+    }
+
     if (!lockAction) {
       setDetail(!onDetail);
     } else {
@@ -112,6 +124,15 @@ const IncomeElement: React.FC<IncomeListProps> = ({
       setDetail(false);
     }
   }, [loading]);
+
+  useEffect(() => {
+    console.log("FO", focusMode);
+    if (focusMode) {
+      setDetail(false);
+    } else {
+      setFocus(false);
+    }
+  }, [focusMode]);
 
   if (deleteAll) {
     return <> </>;

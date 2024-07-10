@@ -44,7 +44,9 @@ const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
               WebkitBackdropFilter: "blur(5px)",
             }}
             className={`flex flex-col px-3 py-2 gap-2  ${
-              initIncome.fetching ? "bg-gray-200" : colorTheme.background
+              initIncome.fetching
+                ? "bg-gray-200"
+                : colorTheme.background + " " + colorTheme.className
             }  ${
               initIncome.draft ? "" : ``
             }    duration-300 transition-all rounded-lg w-full `}
