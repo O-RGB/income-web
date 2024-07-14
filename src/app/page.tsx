@@ -189,7 +189,7 @@ export default function Home() {
   }, [dateSelect]);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen select-none">
       {wallpaper && (
         <div className="fixed w-full h-full top-0  ">
           <img

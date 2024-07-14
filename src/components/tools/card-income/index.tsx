@@ -155,7 +155,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
         ></Category>
       </ButtomSheets>
       <div
-        className={`w-full overflow-hidden flex items-center gap-1    ${
+        className={`w-full overflow-hidden flex items-center gap-1 ${
           income.delete ? "py-0 pb-0" : isDraft ? "py-1" : "pb-1"
         } duration-300`}
       >

@@ -21,7 +21,7 @@ const IncomeInputPrice: React.FC<IncomeInputPriceProps> = ({ name, lable }) => {
           formatter={(value) =>
             `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
           }
-          inputMode="numeric"
+          inputMode="decimal"
           placeholder={lable}
           min={0}
         />
