@@ -1,8 +1,15 @@
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import React, { useEffect, useState, useCallback } from "react";
 import DroppableContainer from "./droppableContainer";
 import SortableItem from "./sortableItem";
+import { TfiLineDouble } from "react-icons/tfi";
 
 interface DraggableProps {
   incomes: IIncome[];
@@ -57,8 +64,11 @@ const Draggable: React.FC<DraggableProps> = ({
             <SortableItem
               key={`key-${income.indexOfList}`}
               id={`${income.indexOfList}`}
+              noneMove={memoizedRenderItem(income, index)}
             >
-              {memoizedRenderItem(income, index)}
+              <div className="touch-none">
+                <TfiLineDouble></TfiLineDouble>
+              </div>
             </SortableItem>
           ))}
         </DroppableContainer>

@@ -6,7 +6,23 @@ const Calculator: React.FC<ButtonCommonProps> = () => {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("0");
 
+  const isOperator = (char: string) => /[+\-*/]/.test(char);
+
   const handleClick = (value: string) => {
+    // Prevent multiple operators
+    if (isOperator(value) && (input === "" || isOperator(input.slice(-1)))) {
+      return;
+    }
+
+    // Prevent multiple decimal points in a single number
+    if (value === ".") {
+      const segments = input.split(/[+\-*/]/);
+      const currentSegment = segments[segments.length - 1];
+      if (currentSegment.includes(".")) {
+        return;
+      }
+    }
+
     setInput((prev) => prev + value);
   };
 
@@ -17,8 +33,13 @@ const Calculator: React.FC<ButtonCommonProps> = () => {
 
   const handleCalculate = () => {
     try {
-      const calculation = eval(input);
-      setResult(calculation);
+      if (isOperator(input.slice(-1))) {
+        setResult("Error");
+        return;
+      }
+      // Use Function constructor instead of eval for safety
+      const calculation = new Function("return " + input)();
+      setResult(calculation.toString());
     } catch (error) {
       setResult("Error");
     }
@@ -84,7 +105,11 @@ const Calculator: React.FC<ButtonCommonProps> = () => {
         <CalculatorButton label={"7"} />
         <CalculatorButton label={"8"} />
         <CalculatorButton label={"9"} />
-        <CalculatorButton label={"×"} className={OperatorButtonClass} />
+        <CalculatorButton
+          label={"×"}
+          operator="*"
+          className={OperatorButtonClass}
+        />
         <CalculatorButton label={"4"} />
         <CalculatorButton label={"5"} />
         <CalculatorButton label={"6"} />
