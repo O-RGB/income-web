@@ -5,6 +5,7 @@ interface LayoutIncomeItemProps {
   children?: React.ReactNode;
   actionTop?: React.ReactNode;
   colorTheme: ColorTheme;
+  onMoving?: boolean;
 }
 
 const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
@@ -12,12 +13,15 @@ const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
   children,
   actionTop,
   colorTheme,
+  onMoving = false,
 }) => {
-  const [show, setShow] = useState<boolean>(false);
+  const [show, setShow] = useState<boolean>(onMoving);
   useEffect(() => {
+    // if (onMoving === false) {
     setTimeout(() => {
       setShow(true);
     }, 100);
+    // }
   }, []);
 
   return (

@@ -21,6 +21,7 @@ interface IncomeListProps {
   removeCommnet?: (income: IIncome, index: number) => void;
   onSelectEdit?: (index: number) => void;
   onFocus?: (focus: boolean, income: IIncome) => void;
+  onMoving?: boolean;
 }
 
 const IncomeElement: React.FC<IncomeListProps> = ({
@@ -35,10 +36,12 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   onSelectEdit,
   icons,
   onFocus,
+  onMoving,
 }) => {
   const isDraft = income.draft;
   const loading = income.fetching;
   const isDelete = income.delete;
+  const active = onMoving;
 
   const [deleteAll, setDeleteAll] = useState<boolean>(false);
   const [buttom, setButtom] = useState<boolean>(false);
@@ -126,7 +129,6 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   }, [loading]);
 
   useEffect(() => {
-    console.log("FO", focusMode);
     if (focusMode) {
       setDetail(false);
     } else {
@@ -135,7 +137,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   }, [focusMode]);
 
   if (deleteAll) {
-    return <> </>;
+    return <></>;
   }
 
   return (
@@ -153,11 +155,16 @@ const IncomeElement: React.FC<IncomeListProps> = ({
         ></Category>
       </ButtomSheets>
       <div
-        className={`w-full overflow-hidden flex items-center gap-1    ${
+        className={`w-full overflow-hidden flex items-center gap-1  ${
+          active
+            ? "p-1 pb-1 mb-1 border-dashed border border-white/20 rounded-xl duration-300 transition-all"
+            : ""
+        }  ${
           income.delete ? "py-0 pb-0" : isDraft ? "py-1" : "pb-1"
         } duration-300`}
       >
         <LayoutIncomeItem
+          onMoving={onMoving}
           colorTheme={colorTheme}
           actionTop={
             isDraft === true && (

@@ -11,10 +11,12 @@ import { FaSave } from "react-icons/fa";
 import { BiLayerPlus } from "react-icons/bi";
 import FloatingButton from "@/components/common/floating-button";
 import { MasterContext } from "@/contexts/master.context";
-import SpeedDial from "@/components/common/speedDial";
+import SpeedDial from "@/components/tools/speed-dial/speedDial";
 import { useCalculator } from "@/hooks/calculator-hooks";
 import Calculator from "@/components/common/calculator";
 import CalculatorMethod from "@/components/tools/calculator";
+import Draggable from "@/components/tools/dnd";
+import ButtonCommon from "@/components/common/button";
 
 interface IncomeRenderProps {
   master: IMasterDataImcomes;
@@ -41,6 +43,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   const [_incomes, setIncomesTemp] = useState<IIncome[]>([]);
   const [_date, setDate] = useState(new Date());
   const [onClickCalculator, setCalculator] = useState<boolean>(false);
+  const [onMoving, setMoving] = useState<boolean>(false);
 
   useEffect(() => {
     if (incomes.length > 0 || dateSelect !== _date) {
@@ -77,11 +80,15 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                     ></FloatingButton>
                   ) : (
                     <SpeedDial
+                      onClickMove={() => {
+                        setMoving(true);
+                      }}
                       onClickCalculator={() => {
                         setCalculator(true);
                       }}
                       cancelEvent={() => {
                         setCalculator(false);
+                        setMoving(false);
                         removeAll();
                       }}
                     ></SpeedDial>
@@ -107,7 +114,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
             </div>
 
             {_incomes.length === 0 && (
-              <div className="text-xs  flex w-full justify-center items-center h-40">
+              <div className="text-xs flex w-full justify-center items-center h-40">
                 <div className="p-3 rounded-md bg-white/50 text-gray-800">
                   ไม่มีข้อมูล
                 </div>
@@ -115,6 +122,13 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
             )}
 
             <CalculatorMethod show={onClickCalculator}></CalculatorMethod>
+            {onMoving && (
+              <div className="fixed z-30 bottom-9 left-6 text-white">
+                <ButtonCommon icon={<FaSave></FaSave>} color="bg-green-500">
+                  Save
+                </ButtonCommon>
+              </div>
+            )}
 
             <Form
               form={headForm}
@@ -133,13 +147,16 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                 }
               }}
             >
-              <div className="flex flex-col-reverse pb-32">
-                {_incomes.map((im, jindex) => {
+              <Draggable
+                incomes={_incomes}
+                onMoving={onMoving}
+                className="flex flex-col-reverse pb-32"
+                renderItem={(node, jindex) => {
                   return (
                     <div key={`incom-${dateSelect.getDate()}-${jindex}`}>
                       <IncomeElement
+                        onMoving={onMoving}
                         onFocus={(fs, income) => {
-                          console.log(fs, income);
                           if (fs) {
                             addIncome(income);
                           } else {
@@ -158,12 +175,12 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                         }
                         master={master}
                         itemIndex={jindex}
-                        income={im}
+                        income={node}
                       ></IncomeElement>
                     </div>
                   );
-                })}
-              </div>
+                }}
+              ></Draggable>
             </Form>
           </div>
         )}

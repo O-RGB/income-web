@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { BiExit } from "react-icons/bi";
-import { FaPlus, FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { ImExit } from "react-icons/im";
+import { IoMdMove } from "react-icons/io";
 import { IoGridSharp } from "react-icons/io5";
-import { TbCalculatorFilled } from "react-icons/tb";
+import { TbSum } from "react-icons/tb";
+import ButtonSpeedDial from "./button";
 
 interface IconSpeed {
   icons: React.ReactNode;
@@ -12,11 +13,13 @@ interface IconSpeed {
 
 interface SpeedDialProps {
   onClickCalculator?: () => void;
+  onClickMove?: () => void;
   cancelEvent?: () => void;
 }
 
 const SpeedDial: React.FC<SpeedDialProps> = ({
   onClickCalculator,
+  onClickMove,
   cancelEvent,
 }) => {
   const [open, setOpen] = useState(false);
@@ -34,7 +37,7 @@ const SpeedDial: React.FC<SpeedDialProps> = ({
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
-      if (onAction) {
+      if (onAction || open === false) {
         return;
       }
 
@@ -43,7 +46,7 @@ const SpeedDial: React.FC<SpeedDialProps> = ({
         cancelEvent?.();
       }
     },
-    [onAction, cancelEvent]
+    [onAction, cancelEvent, open]
   );
 
   useEffect(() => {
@@ -66,37 +69,48 @@ const SpeedDial: React.FC<SpeedDialProps> = ({
 
   const [butFocus, setButFocus] = useState<IconSpeed>(ActionBut);
 
+  const onSetFucntion = (fucn?: () => void) => {
+    if (open) {
+      setOpen(false);
+      fucn?.();
+      setButFocus({
+        color: ActionBut.color,
+        icons: IconExit(<ImExit className="text-lg" />),
+      });
+      setOnAction(true);
+    }
+  };
+
   return (
     <div
       ref={ref}
-      className="fixed z-30 bottom-[5.5rem] right-[2rem] flex flex-col items-center space-y-2"
+      className={`fixed ${
+        onAction ? "bottom-8 z-50" : "bottom-[5.5rem] z-30"
+      }  right-[2rem] flex flex-col items-center space-y-2 transition-all duration-300`}
     >
-      <div className="relative">
-        <button
+      <div className="relative z-30">
+        <ButtonSpeedDial
+          open={open}
+          icon={<IoMdMove className="text-lg" />}
+          label="สลับตำแหน่ง"
           onClick={() => {
-            if (open) {
-              setOpen(false);
-              onClickCalculator?.();
-              setButFocus({
-                color: ActionBut.color,
-                icons: IconExit(<ImExit className="text-lg" />),
-              });
-              setOnAction(true);
-            }
+            onSetFucntion(onClickMove);
           }}
-          className={`absolute bottom-14 bg-gray-500 hover:bg-gray-400 text-white w-12 h-12 flex items-center justify-center rounded-full shadow-lg transition-all duration-300 ease-in-out transform cursor-pointer ${
-            open
-              ? "opacity-100 translate-y-0 delay-100 pointer-events-auto"
-              : "opacity-0 translate-y-8 delay-0 pointer-events-none "
-          }`}
-        >
-          <TbCalculatorFilled className="text-lg" />
-        </button>
+        ></ButtonSpeedDial>
+        <ButtonSpeedDial
+          bottom="bottom-14"
+          delay="delay-100"
+          open={open}
+          icon={<TbSum className="text-lg" />}
+          label="รวมราคา"
+          onClick={() => {
+            onSetFucntion(onClickCalculator);
+          }}
+        ></ButtonSpeedDial>
 
         <button
           onClick={() => {
             if (onAction) {
-              console.log(onAction, "onbut");
               setButFocus(ActionBut);
               cancelEvent?.();
               setOpen(false);

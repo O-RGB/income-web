@@ -10,9 +10,14 @@ import Analytics from "../../modals/analytics/analytics";
 import { GrSettingsOption } from "react-icons/gr";
 import { CalLineChart, CalSumOfMonth } from "../../modals/analytics/lib";
 import ButtonCommon from "@/components/common/button";
-import { FcSettings } from "react-icons/fc";
+import { FcCalculator, FcPieChart, FcSettings } from "react-icons/fc";
 import { IconsModelList } from "@/utils/models/icons";
 import CategorySummary from "@/components/tools/summary/category/category-summary";
+import Draggable from "@/components/tools/dnd";
+import { MdOutlineMoveDown } from "react-icons/md";
+import { AiFillCalculator } from "react-icons/ai";
+import CalculatorModals from "@/components/modals/calculator/calculator";
+import { IoMdMove } from "react-icons/io";
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
@@ -46,6 +51,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   const [analytics, setAnalytics] = useState<boolean>(false);
   const [countDraft, setCountDraft] = useState<number>(0);
   const [headForm] = Form.useForm();
+  const [onClickCalculator, setCalculator] = useState<boolean>(false);
 
   const countDraftIndex = (mode: "-" | "+") => {
     setCountDraft((value) => {
@@ -241,6 +247,11 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         open={analytics}
         close={() => setAnalytics(false)}
       ></Analytics>
+
+      <CalculatorModals
+        open={onClickCalculator}
+        onClose={() => setCalculator(false)}
+      ></CalculatorModals>
       {/* incomesData: {JSON.stringify(incomesData)}
       firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
 
@@ -281,10 +292,12 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         ></SummaryOfDay>
         <ButtonCommon
           onClick={() => setAnalytics(!analytics)}
-          icon={<FaChartPie></FaChartPie>}
-        >
-          สรุป
-        </ButtonCommon>
+          icon={<FcPieChart className="text-2xl"></FcPieChart>}
+        ></ButtonCommon>
+        <ButtonCommon
+          onClick={() => setCalculator(!onClickCalculator)}
+          icon={<FcCalculator className="text-2xl"></FcCalculator>}
+        ></ButtonCommon>
       </div>
 
       <IncomeRender
