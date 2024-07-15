@@ -36,6 +36,7 @@ interface IncomeListProps extends IncomeConfigProps, IncomeActionLocalProps {
 
 const IncomeElement: React.FC<IncomeListProps> = ({
   onFocus,
+
   removeCommnet,
   closeAllDetail,
   income,
@@ -204,7 +205,6 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 <Button
                   size="small"
                   onClick={() => {
-                    action?.setFetchingDraft();
                     action?.onSaveEdit?.(income.sheetsIndex, itemIndex);
                   }}
                   icon={<FaSave className="text-"></FaSave>}
@@ -217,6 +217,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                   onClick={() => {
                     action?.onExitEdit?.(itemIndex);
                     closeAllDetail();
+                    action?.onSelectEdit?.(0, -1);
                   }}
                   icon={<BiExit className="text-lg"></BiExit>}
                   className={`!bg-orange-500 !text-white  flex items-center `}

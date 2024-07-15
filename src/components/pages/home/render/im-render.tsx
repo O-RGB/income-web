@@ -25,6 +25,7 @@ interface IncomeRenderProps {
   action?: IActionDayIncomesLists;
   headForm: FormInstance<any>;
   draftCount: number;
+  indexEdit?: number;
 }
 
 const IncomeRender: React.FC<IncomeRenderProps> = ({
@@ -35,6 +36,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   action,
   headForm,
   draftCount,
+  indexEdit,
 }) => {
   const { Facility } = useContext(MasterContext);
   const { addIncome, removeIncome, removeAll } = useCalculator();
@@ -43,7 +45,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   const [_date, setDate] = useState(new Date());
   const [onClickCalculator, setCalculator] = useState<boolean>(false);
   const [onMoving, setMoving] = useState<boolean>(false);
-  const [onEditing, setEditing] = useState<boolean>(false);
+
   const [closeDetail, setDateil] = useState<boolean>(false);
 
   const closeAllDetail = () => {
@@ -101,6 +103,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                     ></FloatingButton>
                   ) : (
                     <SpeedDial
+                      disabled={indexEdit !== undefined}
                       onClickMove={() => {
                         setMoving(true);
                       }}
@@ -116,7 +119,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                   )}
 
                   <FloatingButton
-                    disabled={onClickCalculator}
+                    disabled={onClickCalculator || indexEdit !== undefined}
                     icon={
                       draftCount > 0 ? (
                         <BiLayerPlus className="text-xl"></BiLayerPlus>
@@ -162,6 +165,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                       closeDetail={closeDetail}
                       closeAllDetail={closeAllDetail}
                       onMoving={onMoving}
+                      disabled={indexEdit ? jindex !== indexEdit : undefined}
                       onFocus={(fs, income) => {
                         if (fs) {
                           addIncome(income);

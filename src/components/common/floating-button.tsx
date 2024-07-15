@@ -21,15 +21,15 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
   disabled,
 }) => {
   const commonStyle =
-    "shadow-md  duration-300 rounded-full flex items-center justify-center text-white cursor-pointer";
+    "shadow-md  duration-300 rounded-full flex items-center justify-center text-white ";
   return (
     <>
       <div className="fixed z-30 bottom-8" style={{ right }}>
         <div
           onClick={disabled ? () => {} : onClick}
           className={`w-12 h-12 relative ${
-            disabled ? "bg-gray-300" : color
-          } ${hoverColor} ${commonStyle}`}
+            disabled ? "bg-gray-300" : `${color} ${hoverColor} cursor-pointer`
+          }  ${commonStyle}`}
         >
           {noti && (
             <div className="absolute -top-1 -right-1 w-5 h-5 font-bold rounded-full bg-red-500 text-white flex items-center justify-center text-xs">

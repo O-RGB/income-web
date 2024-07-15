@@ -15,12 +15,14 @@ interface SpeedDialProps {
   onClickCalculator?: () => void;
   onClickMove?: () => void;
   cancelEvent?: () => void;
+  disabled?: boolean;
 }
 
 const SpeedDial: React.FC<SpeedDialProps> = ({
   onClickCalculator,
   onClickMove,
   cancelEvent,
+  disabled = false,
 }) => {
   const [open, setOpen] = useState(false);
   const [onAction, setOnAction] = useState<boolean>(false);
@@ -109,7 +111,11 @@ const SpeedDial: React.FC<SpeedDialProps> = ({
         ></ButtonSpeedDial>
 
         <button
+          disabled={disabled}
           onClick={() => {
+            if (disabled) {
+              return;
+            }
             if (onAction) {
               setButFocus(ActionBut);
               cancelEvent?.();
@@ -119,7 +125,9 @@ const SpeedDial: React.FC<SpeedDialProps> = ({
               setOpen(!open);
             }
           }}
-          className={`${butFocus.color} text-white w-12 h-12 flex items-center justify-center rounded-full shadow-lg transform transition-transform duration-300`}
+          className={`${
+            disabled ? "bg-gray-300" : butFocus.color
+          } text-white w-12 h-12 flex items-center justify-center rounded-full shadow-lg transform transition-transform duration-300`}
         >
           {butFocus.icons}
         </button>
