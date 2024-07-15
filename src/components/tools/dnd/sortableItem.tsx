@@ -23,8 +23,8 @@ const SortableItem: React.FC<SortableItemProps> = ({
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} className="flex gap-3 items-center">
-      <div {...listeners}>{children}</div>
+    <div ref={setNodeRef} style={style} {...attributes} className="flex gap-1 items-center h-full ">
+      <div {...listeners} className="h-full">{children}</div>
       <div className="w-full">{noneMove}</div>
     </div>
   );

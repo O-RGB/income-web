@@ -1,4 +1,5 @@
 import {
+  closestCenter,
   DndContext,
   DragEndEvent,
   PointerSensor,
@@ -58,7 +59,7 @@ const Draggable: React.FC<DraggableProps> = ({
     );
   } else {
     return (
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
         <DroppableContainer id="droppable-1" className={className}>
           {items.map((income, index) => (
             <SortableItem
@@ -66,7 +67,7 @@ const Draggable: React.FC<DraggableProps> = ({
               id={`${income.indexOfList}`}
               noneMove={memoizedRenderItem(income, index)}
             >
-              <div className="touch-none">
+              <div className="touch-none h-full p-2">
                 <TfiLineDouble></TfiLineDouble>
               </div>
             </SortableItem>
