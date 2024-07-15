@@ -6,6 +6,7 @@ interface LayoutIncomeItemProps {
   actionTop?: React.ReactNode;
   colorTheme: ColorTheme;
   onMoving?: boolean;
+  isDisabled?: boolean;
 }
 
 const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
@@ -14,6 +15,7 @@ const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
   actionTop,
   colorTheme,
   onMoving = false,
+  isDisabled = false,
 }) => {
   const [show, setShow] = useState<boolean>(onMoving);
   useEffect(() => {
@@ -35,10 +37,10 @@ const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
             : initIncome.draft
             ? "max-h-[500px] border border-blue-500 rounded-md p-1  duration-700 "
             : "max-h-[200px] duration-1000"
-        } `}
+        } ${isDisabled ? "pointer-events-none cursor-not-allowed" : ""}`}
       >
         <div className={`w-full`}>
-          <div className="absolute top-0 right-0 flex gap-1 z-10">
+          <div className="absolute top-2 right-2 flex gap-1 z-10">
             {actionTop}
           </div>
 
@@ -47,9 +49,11 @@ const LayoutIncomeItem: React.FC<LayoutIncomeItemProps> = ({
               backdropFilter: "blur(5px)",
               WebkitBackdropFilter: "blur(5px)",
             }}
-            className={`flex flex-col px-3 py-2 gap-2  ${
+            className={`flex flex-col px-3 py-2 gap-2 ${initIncome.draft ? "pt-5" : ""} ${
               initIncome.fetching
                 ? "bg-gray-200"
+                : isDisabled
+                ? "opacity-50"
                 : colorTheme.background + " " + colorTheme.className
             }  ${
               initIncome.draft ? "" : ``

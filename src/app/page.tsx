@@ -5,7 +5,11 @@ import IncomeListInDay from "@/components/pages/home/income";
 
 import { MasterContext } from "@/contexts/master.context";
 import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
-import { AddIncomesList, DeleteIncome } from "@/fetcher/POST/incomes.post";
+import {
+  AddIncomesList,
+  DeleteIncome,
+  EditIncome,
+} from "@/fetcher/POST/incomes.post";
 import { getLocalByKey, setLocal } from "@/libs/local";
 import { useContext, useEffect, useRef, useState } from "react";
 
@@ -142,6 +146,20 @@ export default function Home() {
       } as IGeneralReturnFetch<undefined>;
     }
   };
+  const onEditIncome = async (input: IIncomeEditInput) => {
+    if (googleKey) {
+      initLoad({ waitAction: true });
+      return EditIncome(googleKey, input).finally(() => {
+        initLoad({ waitAction: false });
+      });
+    } else {
+      return {
+        incomes: undefined,
+        message: undefined,
+        success: false,
+      } as IGeneralReturnFetch<undefined>;
+    }
+  };
 
   //Setting
   const [openSetting, setSetting] = useState<boolean>(false);
@@ -232,6 +250,7 @@ export default function Home() {
         onAddIncome={onAddIncome}
         deleteIncome={onDeleteIncome}
         onSelectDate={setDateSelect}
+        onEditIncome={onEditIncome}
         incomes={incomes.income}
         loading={loading}
         version={version}

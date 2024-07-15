@@ -52,6 +52,8 @@ export async function Fetcher<Input = any, Result = any>(
   var formParam: FormData | undefined =
     param?.method === "POST" ? QueryPost(param.data) : undefined;
 
+  console.log(param?.data);
+
   //FETCH
   return await fetch(url, {
     method: param?.method ? param.method : "GET",

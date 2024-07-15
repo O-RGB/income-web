@@ -11,6 +11,7 @@ export class IncomeModel implements IIncome {
   delete: boolean = false;
   fetching: boolean = false;
   draft: boolean = false;
+  edit: boolean = false;
   indexOfList: number = 0;
   comment: string;
 
@@ -52,6 +53,7 @@ export class IncomeModel implements IIncome {
       day: this.day,
       types: this.types,
       name: this.name,
+      edit: this.edit,
       expensesCount: this.expensesCount,
       expensesPrice: this.expensesPrice,
       revenueCount: this.revenueCount,

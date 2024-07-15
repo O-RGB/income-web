@@ -7,11 +7,13 @@ interface RenderDetailProps {
   income: IIncome;
   open?: boolean;
   onClickDelete?: (sheetsIndex: number, index: number) => void;
+  onClickEdit?: (sheetsIndex: number, index: number) => void;
 }
 
 const RenderDetail: React.FC<RenderDetailProps> = ({
   open,
   onClickDelete,
+  onClickEdit,
   income,
   index,
 }) => {
@@ -31,7 +33,14 @@ const RenderDetail: React.FC<RenderDetailProps> = ({
             </div>
           </Button>
           <div className="flex gap-1">
-            <Button disabled type="text" size="small">
+            <Button
+              onClick={() => {
+                onClickEdit?.(income.sheetsIndex, index);
+              }}
+              // disabled
+              type="text"
+              size="small"
+            >
               <div className="flex items-center justify-center gap-1">
                 <RiEdit2Line className="text-xs" />
               </div>

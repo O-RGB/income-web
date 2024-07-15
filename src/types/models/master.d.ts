@@ -24,6 +24,9 @@ interface IActionDayIncomesLists {
   setDraft?: () => void;
   setDelete?: (indexOfDay: number, listIndex: number) => void;
   setDeleteOnClient?: (indexOfDay: number) => void;
+  onSelectEdit?: (sheetsIndex: number, index: number) => void;
+  onSaveEdit?: (sheetsIndex: number, index: number) => void;
+  onExitEdit?: (index: number) => void;
 }
 
 interface IGetDisplayCal {

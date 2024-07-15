@@ -2,6 +2,7 @@ interface UIMapingIncome {
   delete: boolean;
   fetching: boolean;
   draft: boolean;
+  edit: boolean;
   _priceType?: priceType;
   indexOfList: number;
 }
@@ -33,6 +34,12 @@ type priceType = "Expenses" | "Revenue";
 interface IncomeOfDay {
   day: number;
   income: IIncome[];
+}
+
+interface IIncomeEditInput {
+  sheetsIndex: number;
+  sheetsDateStr: string;
+  newIncome: IIncome[];
 }
 
 interface IIncomeAdd extends IIncome {}

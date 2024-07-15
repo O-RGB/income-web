@@ -65,3 +65,23 @@ export const DeleteIncome = (
     loading
   );
 };
+
+export const EditIncome = (
+  key: string,
+  input: IIncomeEditInput,
+  loading?: (load: boolean) => void
+) => {
+  return Fetcher<IIncomeEditInput, boolean>(
+    key,
+    {
+      method: "POST",
+      data: {
+        newIncome: input.newIncome,
+        sheetsDateStr: input.sheetsDateStr,
+        sheetsIndex: input.sheetsIndex,
+        query: "POST_edit_income",
+      },
+    },
+    loading
+  );
+};

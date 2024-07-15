@@ -13,7 +13,6 @@ import FloatingButton from "@/components/common/floating-button";
 import { MasterContext } from "@/contexts/master.context";
 import SpeedDial from "@/components/tools/speed-dial/speedDial";
 import { useCalculator } from "@/hooks/calculator-hooks";
-import Calculator from "@/components/common/calculator";
 import CalculatorMethod from "@/components/tools/calculator";
 import Draggable from "@/components/tools/dnd";
 import ButtonCommon from "@/components/common/button";
@@ -44,6 +43,12 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   const [_date, setDate] = useState(new Date());
   const [onClickCalculator, setCalculator] = useState<boolean>(false);
   const [onMoving, setMoving] = useState<boolean>(false);
+  const [onEditing, setEditing] = useState<boolean>(false);
+  const [closeDetail, setDateil] = useState<boolean>(false);
+
+  const closeAllDetail = () => {
+    setDateil(!closeDetail);
+  };
 
   useEffect(() => {
     if (incomes.length > 0 || dateSelect !== _date) {
@@ -54,7 +59,23 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   }, [incomes]);
 
   return (
-    <>
+    <Form
+      form={headForm}
+      layout="vertical"
+      onFinish={(e) => {
+        const d = DynamicKeysToArray(e);
+        var yt: IIncome[] = [];
+        d.map((data) => {
+          const dat = hanndelInputIncome(data, dateSelect);
+          yt.push(dat);
+        });
+
+        if (action) {
+          action.setFetchingDraft();
+          action.setAdd?.(yt);
+        }
+      }}
+    >
       <div key={`incom-day-${dateSelect.getDate()}`}>
         {loading.pageLoad ? (
           <div className="h-56 flex justify-center items-center">
@@ -130,62 +151,45 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
               </div>
             )}
 
-            <Form
-              form={headForm}
-              layout="vertical"
-              onFinish={(e) => {
-                const d = DynamicKeysToArray(e);
-                var yt: IIncome[] = [];
-                d.map((data) => {
-                  const dat = hanndelInputIncome(data, dateSelect);
-                  yt.push(dat);
-                });
-
-                if (action) {
-                  action.setFetchingDraft();
-                  action.setAdd?.(yt);
-                }
-              }}
-            >
-              <Draggable
-                incomes={_incomes}
-                onMoving={onMoving}
-                className="flex flex-col-reverse pb-32"
-                renderItem={(node, jindex) => {
-                  return (
-                    <div key={`incom-${dateSelect.getDate()}-${jindex}`}>
-                      <IncomeElement
-                        onMoving={onMoving}
-                        onFocus={(fs, income) => {
-                          if (fs) {
-                            addIncome(income);
-                          } else {
-                            removeIncome(income.sheetsIndex);
-                          }
-                        }}
-                        focusMode={onClickCalculator}
-                        icons={Facility.iconModel}
-                        removeCommnet={(_, index) => {
-                          headForm.setFieldValue("comment_" + index, undefined);
-                        }}
-                        deleteOnClient={action?.setDeleteOnClient}
-                        deleteOnServer={action?.setDelete}
-                        lockAction={
-                          loading.waitActioning ? loading.waitActioning : false
+            <Draggable
+              incomes={_incomes}
+              onMoving={onMoving}
+              className="flex flex-col-reverse pb-32"
+              renderItem={(node, jindex) => {
+                return (
+                  <div key={`incom-${dateSelect.getDate()}-${jindex}`}>
+                    <IncomeElement
+                      closeDetail={closeDetail}
+                      closeAllDetail={closeAllDetail}
+                      onMoving={onMoving}
+                      onFocus={(fs, income) => {
+                        if (fs) {
+                          addIncome(income);
+                        } else {
+                          removeIncome(income.sheetsIndex);
                         }
-                        master={master}
-                        itemIndex={jindex}
-                        income={node}
-                      ></IncomeElement>
-                    </div>
-                  );
-                }}
-              ></Draggable>
-            </Form>
+                      }}
+                      focusMode={onClickCalculator}
+                      icons={Facility.iconModel}
+                      removeCommnet={(_, index) => {
+                        headForm.setFieldValue("comment_" + index, undefined);
+                      }}
+                      action={action}
+                      lockAction={
+                        loading.waitActioning ? loading.waitActioning : false
+                      }
+                      master={master}
+                      itemIndex={jindex}
+                      income={node}
+                    ></IncomeElement>
+                  </div>
+                );
+              }}
+            ></Draggable>
           </div>
         )}
       </div>
-    </>
+    </Form>
   );
 };
 

@@ -39,6 +39,26 @@ export const DynamicKeysToArray = (obj: PathName): IncomeFormInput[] => {
   return changed;
 };
 
+export const genIncomeKeyByIndex = (index: number, income: IIncome) => {
+  let mapping: any = {};
+  let price = 0;
+  let count = 0;
+  if (income._priceType === "Expenses") {
+    price = income.expensesPrice;
+    count = income.expensesCount;
+  } else {
+    price = income.revenuePrice;
+    count = income.expensesCount;
+  }
+  mapping[`name_${index}`] = income.name;
+  mapping[`price_${index}`] = price;
+  mapping[`types_${index}`] = income.types;
+  mapping[`count_${index}`] = count;
+  mapping[`priceType_${index}`] = income._priceType;
+  mapping[`comment_${index}`] = income.comment;
+  return mapping;
+};
+
 export const hanndelInputIncome = (
   input: IncomeFormInput,
   day: Date,
@@ -71,6 +91,7 @@ export const hanndelInputIncome = (
     day: day,
     delete: false,
     draft: false,
+    edit: false,
     name: input.name.trim(),
     fetching: true,
     sheetsIndex: sheetsIndex,

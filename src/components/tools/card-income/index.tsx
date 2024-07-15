@@ -8,40 +8,53 @@ import RenderDetail from "./form/render-input/box-detail";
 import RenderIncomeCard from "./form/render-input";
 import ButtomSheets from "@/components/common/buttomSheets";
 import Category from "@/components/pages/category";
+import { BiExit } from "react-icons/bi";
+import { FaSave } from "react-icons/fa";
+import { RiDeleteBin2Line } from "react-icons/ri";
 
-interface IncomeListProps {
+interface IncomeConfigProps {
+  focusMode?: boolean;
+  onMoving?: boolean;
+  disabled?: boolean;
+  closeDetail: boolean;
+}
+
+interface IncomeActionLocalProps {
+  removeCommnet?: (income: IIncome, index: number) => void;
+  onFocus?: (focus: boolean, income: IIncome) => void;
+  closeAllDetail: () => void;
+}
+
+interface IncomeListProps extends IncomeConfigProps, IncomeActionLocalProps {
   income: IIncome;
-  master: IMasterDataImcomes;
   itemIndex: number;
   lockAction: boolean;
-  focusMode?: boolean;
+  master: IMasterDataImcomes;
   icons?: IconsModelList;
-  deleteOnClient?: (index: number) => void;
-  deleteOnServer?: (sheetsIndex: number, listIndex: number) => void;
-  removeCommnet?: (income: IIncome, index: number) => void;
-  onSelectEdit?: (index: number) => void;
-  onFocus?: (focus: boolean, income: IIncome) => void;
-  onMoving?: boolean;
+  action?: IActionDayIncomesLists;
 }
 
 const IncomeElement: React.FC<IncomeListProps> = ({
+  onFocus,
+  removeCommnet,
+  closeAllDetail,
   income,
   master,
-  focusMode = false,
-  removeCommnet,
   itemIndex,
-  lockAction = false,
-  deleteOnClient,
-  deleteOnServer,
-  onSelectEdit,
   icons,
-  onFocus,
   onMoving,
+  focusMode = false,
+  lockAction = false,
+  disabled = false,
+  closeDetail,
+  action,
 }) => {
-  const isDraft = income.draft;
+  const isDraft = income.draft || income.edit;
   const loading = income.fetching;
   const isDelete = income.delete;
   const active = onMoving;
+  const isDisabled = disabled;
+  const edit = income.edit;
 
   const [deleteAll, setDeleteAll] = useState<boolean>(false);
   const [buttom, setButtom] = useState<boolean>(false);
@@ -136,12 +149,17 @@ const IncomeElement: React.FC<IncomeListProps> = ({
     }
   }, [focusMode]);
 
+  useEffect(() => {
+    setDetail(false);
+  }, [closeDetail]);
+
   if (deleteAll) {
     return <></>;
   }
 
   return (
     <>
+      {/* {debug} */}
       <ButtomSheets
         onClose={() => {
           setButtom(false);
@@ -160,21 +178,54 @@ const IncomeElement: React.FC<IncomeListProps> = ({
         } duration-300`}
       >
         <LayoutIncomeItem
+          isDisabled={isDisabled}
           onMoving={onMoving}
           colorTheme={colorTheme}
           actionTop={
-            isDraft === true && (
-              <Button
-                size="small"
-                onClick={() => {
-                  setTimeout(() => {
-                    deleteOnClient?.(itemIndex);
-                  }, 100);
-                }}
-                disabled={loading}
-                icon={<IoMdRemove className="text-lg"></IoMdRemove>}
-                className="!bg-red-500 !text-white scale-75"
-              ></Button>
+            isDraft === true && edit == false ? (
+              <div className="flex gap-1">
+                <Button
+                  size="small"
+                  onClick={() => {
+                    setTimeout(() => {
+                      action?.setDeleteOnClient?.(itemIndex);
+                    }, 100);
+                    closeAllDetail();
+                  }}
+                  disabled={loading}
+                  icon={
+                    <RiDeleteBin2Line className="text-lg"></RiDeleteBin2Line>
+                  }
+                  className={`!bg-red-500 !text-white `}
+                ></Button>
+              </div>
+            ) : edit ? (
+              <>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    action?.setFetchingDraft();
+                    action?.onSaveEdit?.(income.sheetsIndex, itemIndex);
+                  }}
+                  icon={<FaSave className="text-"></FaSave>}
+                  className={`!bg-green-500 !text-white  flex items-center `}
+                >
+                  <div className="text-xs">แก้ไข</div>
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    action?.onExitEdit?.(itemIndex);
+                    closeAllDetail();
+                  }}
+                  icon={<BiExit className="text-lg"></BiExit>}
+                  className={`!bg-orange-500 !text-white  flex items-center `}
+                >
+                  <div className="text-xs">ปิด</div>
+                </Button>
+              </>
+            ) : (
+              <></>
             )
           }
           initIncome={income}
@@ -205,7 +256,11 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 open={onDetail && !lockAction}
                 index={itemIndex}
                 income={income}
-                onClickDelete={deleteOnServer}
+                onClickDelete={action?.setDelete}
+                onClickEdit={(s, i) => {
+                  closeAllDetail();
+                  action?.onSelectEdit?.(s, i);
+                }}
               ></RenderDetail>
             </div>
           )}

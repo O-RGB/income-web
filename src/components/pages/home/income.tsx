@@ -3,21 +3,18 @@ import React, { useEffect, useState } from "react";
 import DetailOfMonth from "@/components/pages/detail-of-month/detail-of-month";
 import IncomeRender from "./render/im-render";
 import { Button, Form } from "antd";
-import BarChart from "@/components/common/charts/bar-chart";
 import SummaryOfDay from "../../tools/summary/summaryOfDay";
-import { FaChartPie } from "react-icons/fa6";
 import Analytics from "../../modals/analytics/analytics";
-import { GrSettingsOption } from "react-icons/gr";
-import { CalLineChart, CalSumOfMonth } from "../../modals/analytics/lib";
+import { CalSumOfMonth } from "../../modals/analytics/lib";
 import ButtonCommon from "@/components/common/button";
 import { FcCalculator, FcPieChart, FcSettings } from "react-icons/fc";
-import { IconsModelList } from "@/utils/models/icons";
 import CategorySummary from "@/components/tools/summary/category/category-summary";
-import Draggable from "@/components/tools/dnd";
-import { MdOutlineMoveDown } from "react-icons/md";
-import { AiFillCalculator } from "react-icons/ai";
 import CalculatorModals from "@/components/modals/calculator/calculator";
-import { IoMdMove } from "react-icons/io";
+import {
+  DynamicKeysToArray,
+  genIncomeKeyByIndex,
+  hanndelInputIncome,
+} from "./render/im-lib";
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
@@ -27,6 +24,9 @@ interface IncomeListInDayProps {
   ) => Promise<IGeneralReturnFetch<IIncome[] | undefined>>;
   deleteIncome?: (
     input: IIncomeDelete
+  ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
+  onEditIncome: (
+    input: IIncomeEditInput
   ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
   onSelectDate: (date: Date) => void;
   onClickSetting?: () => void;
@@ -41,6 +41,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   onAddIncome,
   deleteIncome,
   onSelectDate,
+  onEditIncome,
   dateSelect,
   onClickSetting,
   loading,
@@ -89,7 +90,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   };
 
   const fetchingByIndex = (index: number) => {
-    var _clone: IIncome[] = incomesData;
+    var _clone: IIncome[] = [...incomesData];
     setIncomes([]);
     setCountDraft(0);
 
@@ -104,13 +105,14 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     // }, 100);
   };
   const updateSheetsAndFetch = async () => {
-    var _clone: IIncome[] = incomesData;
+    var _clone: IIncome[] = [...incomesData];
     setCountDraft(0);
 
     let fetch = _clone.map((data) => {
       if (data.draft && !data.delete) {
         data.fetching = true;
         data.draft = false;
+        data.edit = false;
         data.name = "กำลังส่ง";
       }
       return data;
@@ -171,6 +173,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       indexOfList: clone.length,
       delete: false,
       fetching: false,
+      edit: false,
       draft: true,
       comment: "",
     };
@@ -218,6 +221,79 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     } else {
       updateSheetsIndex(clone);
     }
+  };
+
+  const onExitEdit = async (listIndex: number) => {
+    let clone = [...incomesData];
+    setIncomes([]);
+    var edit = clone[listIndex];
+    edit.draft = false;
+    edit.edit = false;
+    edit.fetching = false;
+    updateSheetsIndex(clone);
+  };
+
+  const editOnServer = async (sheetsIndex: number, listIndex: number) => {
+    let clone = [...incomesData];
+    setIncomes([]);
+    var backup: IIncome = { ...clone[listIndex] };
+    updateSheetsAndFetch();
+
+    const valueUpdate = headForm.getFieldsValue();
+    const keyUpdate = DynamicKeysToArray(valueUpdate);
+
+    var incomeUpdate: IIncome[] = [];
+    keyUpdate.map((data) => {
+      const dat = hanndelInputIncome(data, dateSelect);
+      incomeUpdate.push(dat);
+    });
+
+    if (incomeUpdate.length > 1) {
+      return;
+    }
+
+    let update = incomeUpdate[0];
+    update.sheetsIndex = sheetsIndex;
+    const res = await onEditIncome({
+      newIncome: [update],
+      sheetsDateStr: dateSelect.toISOString().split("T")[0],
+      sheetsIndex: sheetsIndex,
+    });
+
+    if (res) {
+      editOnClient(0, listIndex, update);
+    } else {
+      editOnClient(0, listIndex, backup);
+    }
+  };
+  const editOnClient = async (
+    sheetsIndex: number,
+    listIndex: number,
+    incomeUpdated?: IIncome
+  ) => {
+    let clone = [...incomesData];
+    var edit = clone[listIndex];
+    if (incomeUpdated) {
+      clone[listIndex] = incomeUpdated;
+      edit = incomeUpdated;
+    }
+    clone.map((data) => {
+      if (data.delete === false) {
+        data.draft = false;
+        data.edit = false;
+        data.fetching = false;
+      }
+    });
+
+    setIncomes([]);
+    if (!incomeUpdated) {
+      edit.draft = true;
+      edit.edit = true;
+    }
+    updateSheetsIndex(clone);
+
+    let map = genIncomeKeyByIndex(listIndex, edit);
+    headForm.setFieldsValue(map);
   };
 
   const [chartData, setChartData] = useState<ILineChart>();
@@ -308,6 +384,9 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           setDelete: deleteOnServer,
           setAdd: addIncomes,
           setFetchingDraft: updateSheetsAndFetch,
+          onSelectEdit: editOnClient,
+          onExitEdit: onExitEdit,
+          onSaveEdit: editOnServer,
         }}
         incomes={incomesData}
         dateSelect={dateSelect}
