@@ -113,7 +113,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                       icon={<FaSave className="text-lg"></FaSave>}
                       right="6rem"
                       onClick={() => {
-                        // headForm.submit();
+                        headForm.submit();
                       }}
                     ></FloatingButton>
                   ) : (
