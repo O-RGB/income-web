@@ -13,7 +13,7 @@ interface IMasterDataImcomes {
 }
 
 interface IActionDayIncomesLists {
-  setFetchingDraft: () => Promise<void>;
+  setFetchingDraft: () => Promise<IIncome[]>;
   setUpdate?: (indexUpdated: number, income: IIncome) => void;
   setAdd: (incomesList: IIncome[]) => Promise<
     {
@@ -27,7 +27,7 @@ interface IActionDayIncomesLists {
   onSelectEdit?: (sheetsIndex: number, index: number) => void;
   onSaveEdit?: (sheetsIndex: number, index: number) => void;
   onExitEdit?: (index: number) => void;
-  editSheetsIndexServer?: (sheetsIndex?: number[]) => Promise<void>;
+  editSheetsIndexServer?: (income: IIncome[]) => Promise<void>;
 }
 
 interface IGetDisplayCal {

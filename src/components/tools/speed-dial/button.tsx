@@ -35,6 +35,7 @@ const ButtonSpeedDial: React.FC<ButtonSpeedDialProps> = ({
             {label}
           </div>
           <button
+            type="button"
             onClick={onClick}
             className={` ${color} text-white w-12 h-12 flex items-center justify-center rounded-full shadow-lg duration-300`}
           >

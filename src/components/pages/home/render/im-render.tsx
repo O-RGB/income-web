@@ -47,14 +47,20 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   const [onMoving, setMoving] = useState<boolean>(false);
 
   const [closeDetail, setDateil] = useState<boolean>(false);
-  const [onItemMove, setItemMove] = useState<number[]>([]);
+  const [onItemMove, setItemMove] = useState<IIncome[]>([]);
 
-  const setItemMoveIndex = (sheetsIndex: number[] = []) => {
-    setItemMove(sheetsIndex);
+  const setItemMoveIndex = (incomeUpdate: IIncome[] = []) => {
+    setItemMove(incomeUpdate);
   };
   const onSaveItemMoveIndex = () => {
-    setMoving(false)
+    setMoving(false);
     action?.editSheetsIndexServer?.(onItemMove);
+  };
+
+  const onCancalMoveIndex = () => {
+    setMoving(false);
+    const clone = [..._incomes];
+    setIncomesTemp(clone);
   };
 
   const closeAllDetail = () => {
@@ -74,6 +80,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
       form={headForm}
       layout="vertical"
       onFinish={(e) => {
+        console.log("on FINISH");
         const d = DynamicKeysToArray(e);
         var yt: IIncome[] = [];
         d.map((data) => {
@@ -107,7 +114,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                       icon={<FaSave className="text-lg"></FaSave>}
                       right="6rem"
                       onClick={() => {
-                        headForm.submit();
+                        // headForm.submit();
                       }}
                     ></FloatingButton>
                   ) : (
@@ -121,7 +128,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                       }}
                       cancelEvent={() => {
                         setCalculator(false);
-                        setMoving(false);
+                        onCancalMoveIndex();
                         removeAll();
                       }}
                     ></SpeedDial>

@@ -111,6 +111,7 @@ const SpeedDial: React.FC<SpeedDialProps> = ({
         ></ButtonSpeedDial>
 
         <button
+          type="button"
           disabled={disabled}
           onClick={() => {
             if (disabled) {

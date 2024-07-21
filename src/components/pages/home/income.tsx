@@ -78,7 +78,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     on: "AUTO" | "CLOSE" = "AUTO"
   ) => {
     var _clone: IIncome[] = [];
-    _clone = incomes;
+    _clone = [...incomes];
 
     if (on === "AUTO" && firstIndexSheets >= 0) {
       let startIndex = firstIndexSheets;
@@ -92,6 +92,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     }
 
     setIncomes(_clone);
+
+    return _clone;
   };
 
   const fetchingByIndex = (index: number) => {
@@ -109,12 +111,14 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     //   setIncomes(_clone);
     // }, 100);
   };
-  const updateSheetsAndFetch = async () => {
-    var _clone: IIncome[] = [...incomesData];
+  const updateSheetsAndFetch = async (
+    setIncome?: IIncome[],
+    mode: "DRAFT" | "ALL" = "DRAFT"
+  ) => {
+    var _clone: IIncome[] = setIncome ? setIncome : [...incomesData];
     setCountDraft(0);
-
     let fetch = _clone.map((data) => {
-      if (data.draft && !data.delete) {
+      if (mode === "DRAFT" ? data.draft && !data.delete : true) {
         data.fetching = true;
         data.draft = false;
         data.edit = false;
@@ -122,7 +126,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       }
       return data;
     });
-    await updateSheetsIndex(fetch);
+    return await updateSheetsIndex(fetch);
   };
   const addIncomes = async (incomesList: IIncome[]) => {
     let addReslut: { index: number; result: boolean }[] = [];
@@ -145,7 +149,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
             _priceType: inSheets.expensesPrice > 0 ? "Expenses" : "Revenue",
           };
-          console.log(clone[index]);
           addReslut.push({
             index: index,
             result: true,
@@ -308,47 +311,66 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     headForm.setFieldsValue(map);
   };
 
-  const editSheetsIndexServer = async (sheetsIndex: number[] = []) => {
-    if (sheetsIndex.length === 0) {
+  const editSheetsIndexServer = async (incomeUpdate: IIncome[]) => {
+    if (incomeUpdate.length === 0) {
       return;
     }
-    let clone = [...incomes];
-    const resetIncome = () => setIncomes(incomes);
-    updateSheetsAndFetch();
-    onMoveIncome?.({
+
+    var clone = [...incomeUpdate];
+
+    let fetch: IIncome[] = [];
+    for (let index = 0; index < incomeUpdate.length; index++) {
+      let element: IIncome = { ...incomeUpdate[index] };
+      element.expensesCount = 0;
+      element.expensesPrice = 0;
+      element.revenueCount = 0;
+      element.revenuePrice = 0;
+      element.types = "";
+      element.name = "กำลังย้าย";
+      element.fetching = true;
+      fetch.push(element);
+    }
+    setIncomes(fetch);
+
+    const sheetsIndex = incomeUpdate.map((data) => data.sheetsIndex);
+
+    await onMoveIncome?.({
       rowIndexMove: sheetsIndex,
       sheetsDate: dateSelect.toISOString().split("T")[0],
-    }).then((data) => {
-      if (data.success) {
-        setIncomes([]);
-        let mapItem = new Map<number, IIncome>();
-        let itemUpdate: IIncome[] = [];
-        clone.map((data) => mapItem.set(data.sheetsIndex, data));
+    })
+      .then((data) => {
+        if (data.success) {
+          let mapItem = new Map<number, IIncome>();
+          let updateList: IIncome[] = [];
+          clone.map((data) => {
+            data.fetching = false;
+            mapItem.set(data.sheetsIndex, data);
+          });
 
-        if (mapItem.size === 0) {
-          resetIncome();
-          return;
-        }
-
-        sheetsIndex.map((item, index) => {
-          let getItemByMaping: IIncome | undefined = mapItem.get(item);
-          if (!getItemByMaping) {
-            resetIncome();
+          if (mapItem.size === 0) {
             return;
           }
 
-          getItemByMaping.sheetsIndex = firstIndexSheets + index;
-          itemUpdate.push(getItemByMaping);
-        });
+          sheetsIndex.map((item, index) => {
+            let getItemByMaping: IIncome | undefined = mapItem.get(item);
+            if (!getItemByMaping) {
+              return;
+            }
+            getItemByMaping.sheetsIndex = firstIndexSheets + index;
+            updateList.push(getItemByMaping);
+          });
 
-        if (itemUpdate.length !== clone.length) {
-          resetIncome();
-          return;
+          if (updateList.length !== incomeUpdate.length) {
+            return;
+          }
+          setIncomes([]);
+          updateSheetsIndex(updateList);
+        } else {
         }
-
-        setIncomes(itemUpdate);
-      }
-    });
+      })
+      .catch((er) => {
+        console.error(er);
+      });
   };
 
   const [chartData, setChartData] = useState<ILineChart>();
