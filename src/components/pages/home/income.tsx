@@ -158,6 +158,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
       updateSheetsIndex(clone, "CLOSE");
       setCountDraft(0);
+      setIndexEdit([]);
     }
 
     return addReslut;
@@ -322,23 +323,35 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       return;
     }
 
-    var clone = [...incomeUpdate];
+    var clone: IIncome[] = [];
+    [...incomeUpdate].map((data) => {
+      if (!data.delete) {
+        clone.push(data);
+      }
+    });
 
     let fetch: IIncome[] = [];
     for (let index = 0; index < incomeUpdate.length; index++) {
       let element: IIncome = { ...incomeUpdate[index] };
-      element.expensesCount = 0;
-      element.expensesPrice = 0;
-      element.revenueCount = 0;
-      element.revenuePrice = 0;
-      element.types = "";
-      element.name = "กำลังย้าย";
-      element.fetching = true;
-      fetch.push(element);
+      if (!element.delete) {
+        element.expensesCount = 0;
+        element.expensesPrice = 0;
+        element.revenueCount = 0;
+        element.revenuePrice = 0;
+        element.types = "";
+        element.name = "กำลังย้าย";
+        element.fetching = true;
+        fetch.push(element);
+      }
     }
     setIncomes(fetch);
 
-    const sheetsIndex = incomeUpdate.map((data) => data.sheetsIndex);
+    let sheetsIndex: number[] = [];
+    incomeUpdate.map((data) => {
+      if (!data.delete) {
+        sheetsIndex.push(data.sheetsIndex);
+      }
+    });
 
     await onMoveIncome?.({
       rowIndexMove: sheetsIndex,
@@ -366,7 +379,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
             updateList.push(getItemByMaping);
           });
 
-          if (updateList.length !== incomeUpdate.length) {
+          if (updateList.length !== clone.length) {
             return;
           }
           setIncomes([]);
