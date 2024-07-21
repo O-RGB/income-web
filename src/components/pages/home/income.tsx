@@ -428,7 +428,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           icon={<FcCalculator className="text-2xl"></FcCalculator>}
         ></ButtonCommon>
       </div>
-      firstIndexSheets:{JSON.stringify(firstIndexSheets)}
+
       <IncomeRender
         headForm={headForm}
         action={{

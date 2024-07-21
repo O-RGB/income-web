@@ -95,8 +95,8 @@ const Draggable: React.FC<DraggableProps> = ({
               noneMove={memoizedRenderItem(income, index)}
             >
               <div className="touch-none h-full p-2">
-                index:{index} <br />
-                sheetsIndex:{income.sheetsIndex}
+                {/* index:{index} <br />
+                sheetsIndex:{income.sheetsIndex} */}
                 <TfiLineDouble></TfiLineDouble>
               </div>
             </SortableItem>

@@ -159,7 +159,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
 
   return (
     <>
-      {debug}
+      {/* {debug} */}
       <ButtomSheets
         onClose={() => {
           setButtom(false);
