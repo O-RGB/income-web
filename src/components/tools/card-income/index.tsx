@@ -36,7 +36,6 @@ interface IncomeListProps extends IncomeConfigProps, IncomeActionLocalProps {
 
 const IncomeElement: React.FC<IncomeListProps> = ({
   onFocus,
-
   removeCommnet,
   closeAllDetail,
   income,
@@ -160,7 +159,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
 
   return (
     <>
-      {/* {debug} */}
+      {debug}
       <ButtomSheets
         onClose={() => {
           setButtom(false);

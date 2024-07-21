@@ -42,6 +42,11 @@ interface IIncomeEditInput {
   newIncome: IIncome[];
 }
 
+interface IIncomeMoveInput {
+  rowIndexMove: number[];
+  sheetsDate: string;
+}
+
 interface IIncomeAdd extends IIncome {}
 interface IIncomesListAdd {
   incomes: IIncome[];

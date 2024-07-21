@@ -47,6 +47,15 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   const [onMoving, setMoving] = useState<boolean>(false);
 
   const [closeDetail, setDateil] = useState<boolean>(false);
+  const [onItemMove, setItemMove] = useState<number[]>([]);
+
+  const setItemMoveIndex = (sheetsIndex: number[] = []) => {
+    setItemMove(sheetsIndex);
+  };
+  const onSaveItemMoveIndex = () => {
+    setMoving(false)
+    action?.editSheetsIndexServer?.(onItemMove);
+  };
 
   const closeAllDetail = () => {
     setDateil(!closeDetail);
@@ -148,7 +157,11 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
             <CalculatorMethod show={onClickCalculator}></CalculatorMethod>
             {onMoving && (
               <div className="fixed z-30 bottom-9 left-6 text-white">
-                <ButtonCommon icon={<FaSave></FaSave>} color="bg-green-500">
+                <ButtonCommon
+                  onClick={onSaveItemMoveIndex}
+                  icon={<FaSave></FaSave>}
+                  color="bg-green-500"
+                >
                   Save
                 </ButtonCommon>
               </div>
@@ -157,6 +170,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
             <Draggable
               incomes={_incomes}
               onMoving={onMoving}
+              onItemMoveing={setItemMoveIndex}
               className="flex flex-col-reverse pb-32"
               renderItem={(node, jindex) => {
                 return (

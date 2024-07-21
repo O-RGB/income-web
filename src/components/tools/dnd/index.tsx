@@ -17,6 +17,7 @@ interface DraggableProps {
   renderItem?: (node: IIncome, index: number) => React.ReactNode;
   className?: string;
   onMoving?: boolean;
+  onItemMoveing?: (sheetsIndex: number[]) => void;
 }
 interface UpdateIndex {
   current: number;
@@ -28,13 +29,23 @@ const Draggable: React.FC<DraggableProps> = ({
   renderItem,
   className,
   onMoving,
+  onItemMoveing,
 }) => {
   const [items, setItems] = useState<IIncome[]>(incomes);
+  const [itemsUpdate, setItemsUpdate] = useState<IIncome[]>([]);
   const [updateIndex, setUpdateIndex] = useState<UpdateIndex[]>([]);
 
   useEffect(() => {
     setItems(incomes);
   }, [incomes]);
+
+  // การ update เร็วเกินไปจะทำให้ รูปภาพ CateIcons ไม่เปลี่ยนแปลง
+  useEffect(() => {
+    setItems([]);
+    setTimeout(() => {
+      setItems(incomes);
+    }, 10);
+  }, [onMoving]);
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
@@ -44,28 +55,15 @@ const Draggable: React.FC<DraggableProps> = ({
           (x) => +active.id === x.indexOfList
         );
         const overIndex = items.findIndex((x) => +over.id === x.indexOfList);
-
-        setItems((items) => arrayMove(items, activeIndex, overIndex));
-
-        setUpdateIndex((prevUpdateIndex) => {
-          const currentActive = items[activeIndex].indexOfList;
-          const newActive = items[overIndex].indexOfList;
-
-          let updated = false;
-          const newUpdateIndex = prevUpdateIndex.map((update) => {
-            if (update.current === currentActive) {
-              updated = true;
-              return { ...update, change: newActive };
-            }
-            return update;
-          });
-
-          if (!updated) {
-            newUpdateIndex.push({ current: currentActive, change: newActive });
-          }
-
-          return newUpdateIndex;
+        let getMoveing: IIncome[] = [];
+        setItems((items) => {
+          getMoveing = arrayMove(items, activeIndex, overIndex);
+          return getMoveing;
         });
+        const getSheetsMove: number[] = getMoveing.map(
+          (data) => data.sheetsIndex
+        );
+        onItemMoveing?.(getSheetsMove);
       }
     },
     [items]
@@ -89,7 +87,6 @@ const Draggable: React.FC<DraggableProps> = ({
   } else {
     return (
       <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
-        {/* {JSON.stringify(updateIndex)} */}
         <DroppableContainer id="droppable-1" className={className}>
           {items.map((income, index) => (
             <SortableItem
@@ -98,6 +95,8 @@ const Draggable: React.FC<DraggableProps> = ({
               noneMove={memoizedRenderItem(income, index)}
             >
               <div className="touch-none h-full p-2">
+                index:{index} <br />
+                sheetsIndex:{income.sheetsIndex}
                 <TfiLineDouble></TfiLineDouble>
               </div>
             </SortableItem>

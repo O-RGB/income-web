@@ -8,6 +8,7 @@ type POSTQueryName =
   | "POST_update_type"
   | "POST_delete_type"
   | "POST_edit_income"
+  | "POST_move_rows_income"
 type GETQueryName = "day" | "month" | "types" | "dup" | "display" | "config";
 
 interface IInitQuery {

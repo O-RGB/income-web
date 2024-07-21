@@ -27,6 +27,7 @@ interface IActionDayIncomesLists {
   onSelectEdit?: (sheetsIndex: number, index: number) => void;
   onSaveEdit?: (sheetsIndex: number, index: number) => void;
   onExitEdit?: (index: number) => void;
+  editSheetsIndexServer?: (sheetsIndex?: number[]) => Promise<void>;
 }
 
 interface IGetDisplayCal {

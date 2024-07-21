@@ -28,6 +28,9 @@ interface IncomeListInDayProps {
   onEditIncome: (
     input: IIncomeEditInput
   ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
+  onMoveIncome: (
+    input: IIncomeMoveInput
+  ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
   onSelectDate: (date: Date) => void;
   onClickSetting?: () => void;
   dateSelect: Date;
@@ -42,6 +45,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   deleteIncome,
   onSelectDate,
   onEditIncome,
+  onMoveIncome,
   dateSelect,
   onClickSetting,
   loading,
@@ -304,6 +308,49 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     headForm.setFieldsValue(map);
   };
 
+  const editSheetsIndexServer = async (sheetsIndex: number[] = []) => {
+    if (sheetsIndex.length === 0) {
+      return;
+    }
+    let clone = [...incomes];
+    const resetIncome = () => setIncomes(incomes);
+    updateSheetsAndFetch();
+    onMoveIncome?.({
+      rowIndexMove: sheetsIndex,
+      sheetsDate: dateSelect.toISOString().split("T")[0],
+    }).then((data) => {
+      if (data.success) {
+        setIncomes([]);
+        let mapItem = new Map<number, IIncome>();
+        let itemUpdate: IIncome[] = [];
+        clone.map((data) => mapItem.set(data.sheetsIndex, data));
+
+        if (mapItem.size === 0) {
+          resetIncome();
+          return;
+        }
+
+        sheetsIndex.map((item, index) => {
+          let getItemByMaping: IIncome | undefined = mapItem.get(item);
+          if (!getItemByMaping) {
+            resetIncome();
+            return;
+          }
+
+          getItemByMaping.sheetsIndex = firstIndexSheets + index;
+          itemUpdate.push(getItemByMaping);
+        });
+
+        if (itemUpdate.length !== clone.length) {
+          resetIncome();
+          return;
+        }
+
+        setIncomes(itemUpdate);
+      }
+    });
+  };
+
   const [chartData, setChartData] = useState<ILineChart>();
 
   useEffect(() => {
@@ -331,14 +378,12 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         open={analytics}
         close={() => setAnalytics(false)}
       ></Analytics>
-
       <CalculatorModals
         open={onClickCalculator}
         onClose={() => setCalculator(false)}
       ></CalculatorModals>
       {/* incomesData: {JSON.stringify(incomesData)}
       firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
-
       <div className="flex flex-col gap-1 relative">
         <div className="absolute top-1 text-[8px] text-gray-500">
           Version: {version} Bata test
@@ -383,7 +428,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           icon={<FcCalculator className="text-2xl"></FcCalculator>}
         ></ButtonCommon>
       </div>
-
+      firstIndexSheets:{JSON.stringify(firstIndexSheets)}
       <IncomeRender
         headForm={headForm}
         action={{
@@ -395,6 +440,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           onSelectEdit: editOnClient,
           onExitEdit: onExitEdit,
           onSaveEdit: editOnServer,
+          editSheetsIndexServer: editSheetsIndexServer,
         }}
         incomes={incomesData}
         dateSelect={dateSelect}

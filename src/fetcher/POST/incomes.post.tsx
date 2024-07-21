@@ -85,3 +85,21 @@ export const EditIncome = (
     loading
   );
 };
+export const MoveIncome = (
+  key: string,
+  input: IIncomeMoveInput,
+  loading?: (load: boolean) => void
+) => {
+  return Fetcher<IIncomeMoveInput, boolean>(
+    key,
+    {
+      method: "POST",
+      data: {
+        rowIndexMove: input.rowIndexMove,
+        sheetsDate: input.sheetsDate,
+        query: "POST_move_rows_income",
+      },
+    },
+    loading
+  );
+};
