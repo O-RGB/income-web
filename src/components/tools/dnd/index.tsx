@@ -63,22 +63,25 @@ const Draggable: React.FC<DraggableProps> = ({
   return (
     <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
       <DroppableContainer id="droppable-1" className={className}>
-        {items.map((income, index) => (
-          <SortableItem
-            disabled={!onMoving}
-            key={`key-${income.indexOfList}`}
-            id={`${income.indexOfList}`}
-            noneMove={renderItem?.(income, index)}
-          >
-            <div
-              className={`touch-none h-full  overflow-hidden ${
-                onMoving ? "w-8 p-2" : "w-0 p-0"
-              } transition-all duration-300`}
+        {items.map((income, index) => {
+          return (
+            <SortableItem
+              disabled={!onMoving}
+              deleteItem={income.delete}
+              key={`key-${income.indexOfList}`}
+              id={`${income.indexOfList}`}
+              noneMove={renderItem?.(income, index)}
             >
-              <TfiLineDouble></TfiLineDouble>
-            </div>
-          </SortableItem>
-        ))}
+              <div
+                className={`touch-none h-full  overflow-hidden ${
+                  onMoving ? "w-8 p-2" : "w-0 p-0"
+                } transition-all duration-300`}
+              >
+                <TfiLineDouble></TfiLineDouble>
+              </div>
+            </SortableItem>
+          );
+        })}
       </DroppableContainer>
     </DndContext>
   );

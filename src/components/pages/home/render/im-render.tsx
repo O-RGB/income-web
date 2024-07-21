@@ -25,7 +25,7 @@ interface IncomeRenderProps {
   action?: IActionDayIncomesLists;
   headForm: FormInstance<any>;
   draftCount: number;
-  indexEdit?: number;
+  indexEdit?: number[];
 }
 
 const IncomeRender: React.FC<IncomeRenderProps> = ({
@@ -36,7 +36,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   action,
   headForm,
   draftCount,
-  indexEdit,
+  indexEdit = [],
 }) => {
   const { Facility } = useContext(MasterContext);
   const { addIncome, removeIncome, removeAll } = useCalculator();
@@ -80,7 +80,6 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
       form={headForm}
       layout="vertical"
       onFinish={(e) => {
-        console.log("on FINISH");
         const d = DynamicKeysToArray(e);
         var yt: IIncome[] = [];
         d.map((data) => {
@@ -119,7 +118,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                     ></FloatingButton>
                   ) : (
                     <SpeedDial
-                      disabled={indexEdit !== undefined}
+                      disabled={indexEdit.length > 0}
                       onClickMove={() => {
                         setMoving(true);
                       }}
@@ -135,7 +134,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                   )}
 
                   <FloatingButton
-                    disabled={onClickCalculator || indexEdit !== undefined}
+                    disabled={onClickCalculator}
                     icon={
                       draftCount > 0 ? (
                         <BiLayerPlus className="text-xl"></BiLayerPlus>
@@ -152,7 +151,6 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                 </div>
               </div>
             </div>
-
             {_incomes.length === 0 && (
               <div className="text-xs flex w-full justify-center items-center h-40">
                 <div className="p-3 rounded-md bg-white/50 text-gray-800">
@@ -160,7 +158,6 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                 </div>
               </div>
             )}
-
             <CalculatorMethod show={onClickCalculator}></CalculatorMethod>
             {onMoving && (
               <div className="fixed z-30 bottom-9 left-6 text-white">
@@ -173,7 +170,6 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                 </ButtonCommon>
               </div>
             )}
-
             <Draggable
               incomes={_incomes}
               onMoving={onMoving}
@@ -186,7 +182,11 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                       closeDetail={closeDetail}
                       closeAllDetail={closeAllDetail}
                       onMoving={onMoving}
-                      disabled={indexEdit ? jindex !== indexEdit : undefined}
+                      disabled={
+                        indexEdit?.length > 0
+                          ? !indexEdit.includes(jindex)
+                          : undefined
+                      }
                       onFocus={(fs, income) => {
                         if (fs) {
                           addIncome(income);

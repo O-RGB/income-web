@@ -57,7 +57,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   const [countDraft, setCountDraft] = useState<number>(0);
   const [headForm] = Form.useForm();
   const [onClickCalculator, setCalculator] = useState<boolean>(false);
-  const [indexEdit, setIndexEdit] = useState<number>();
+  const [indexEdit, setIndexEdit] = useState<number[]>([]);
 
   const countDraftIndex = (mode: "-" | "+") => {
     setCountDraft((value) => {
@@ -188,6 +188,11 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
     clone = [...clone, newElement];
 
+    const indexDraft = clone.length - 1;
+    let cloneEditIndex: number[] = [...indexEdit];
+    cloneEditIndex.push(indexDraft);
+    setIndexEdit(cloneEditIndex);
+
     setTimeout(() => {
       setIncomes(clone);
     }, 100);
@@ -224,7 +229,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       if (!deleted) {
         countDraftIndex("-");
       }
-      // setCountDraft((value) => value - 1);
+      const deleteIndexEdit = indexEdit?.filter((data) => data !== listIndex);
+      setIndexEdit(deleteIndexEdit);
       updateSheetsIndex(incomeUpdate);
     } else {
       updateSheetsIndex(clone);
@@ -280,10 +286,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     incomeUpdated?: IIncome
   ) => {
     if (listIndex === -1) {
-      setIndexEdit(undefined);
+      setIndexEdit([]);
       return;
     }
-    setIndexEdit(listIndex);
+    setIndexEdit([listIndex]);
     let clone = [...incomesData];
     var edit = clone[listIndex];
     if (incomeUpdated) {
@@ -303,7 +309,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       edit.draft = true;
       edit.edit = true;
     } else {
-      setIndexEdit(undefined);
+      setIndexEdit([]);
     }
     updateSheetsIndex(clone);
 

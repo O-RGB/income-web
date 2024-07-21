@@ -1,5 +1,5 @@
 // components/SortableItem.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -8,6 +8,7 @@ interface SortableItemProps {
   children: React.ReactNode;
   noneMove?: React.ReactNode;
   disabled?: boolean;
+  deleteItem?: boolean;
 }
 
 const SortableItem: React.FC<SortableItemProps> = ({
@@ -15,6 +16,7 @@ const SortableItem: React.FC<SortableItemProps> = ({
   children,
   noneMove,
   disabled,
+  deleteItem,
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
@@ -24,12 +26,22 @@ const SortableItem: React.FC<SortableItemProps> = ({
     transition,
   };
 
+  const [hide, setHide] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (deleteItem) {
+      setTimeout(() => {
+        setHide(deleteItem);
+      }, 220);
+    }
+  }, [deleteItem]);
+
   return (
     <div
       ref={disabled ? undefined : setNodeRef}
       style={style}
       {...attributes}
-      className="flex gap-1 items-center h-full "
+      className={`flex gap-1 items-center h-full ${hide ? "hidden" : ""}`}
     >
       <div {...listeners} className="h-full">
         {children}
