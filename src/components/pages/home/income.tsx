@@ -130,7 +130,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   };
   const addIncomes = async (incomesList: IIncome[]) => {
     let addReslut: { index: number; result: boolean }[] = [];
-
     let clone = incomesData;
     setIncomes([]);
     const data = await onAddIncome(incomesList);
@@ -155,6 +154,11 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           });
         }
       });
+
+      if (incomes.length === 0 && res.length > 0) {
+        const firstInomes = res[0];
+        setFirstIndex(firstInomes.sheetsIndex);
+      }
 
       updateSheetsIndex(clone, "CLOSE");
       setCountDraft(0);
@@ -323,6 +327,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       return;
     }
 
+    // console.log("firstIndexSheets", firstIndexSheets);
+
     var clone: IIncome[] = [];
     [...incomeUpdate].map((data) => {
       if (!data.delete) {
@@ -396,6 +402,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
   useEffect(() => {
     if (incomes.length > 0) {
+      console.log("in user eefftecgt check incoem lenght ");
       setFirstIndex(incomes[0].sheetsIndex);
       setCountDraft(0);
       setIncomes(incomes);
@@ -423,8 +430,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         open={onClickCalculator}
         onClose={() => setCalculator(false)}
       ></CalculatorModals>
-      {/* incomesData: {JSON.stringify(incomesData)}
-      firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
+      {/* firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
       <div className="flex flex-col gap-1 relative">
         <div className="absolute top-1 text-[8px] text-gray-500">
           Version: {version} Bata test
@@ -469,7 +475,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
           icon={<FcCalculator className="text-2xl"></FcCalculator>}
         ></ButtonCommon>
       </div>
-
       <IncomeRender
         headForm={headForm}
         action={{

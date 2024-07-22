@@ -41,7 +41,7 @@ const SortableItem: React.FC<SortableItemProps> = ({
       ref={disabled ? undefined : setNodeRef}
       style={style}
       {...attributes}
-      className={`flex gap-1 items-center h-full ${hide ? "hidden" : ""}`}
+      className={`flex items-center h-full ${hide ? "hidden" : ""}`}
     >
       <div {...listeners} className="h-full">
         {children}

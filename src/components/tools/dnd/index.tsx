@@ -68,7 +68,7 @@ const Draggable: React.FC<DraggableProps> = ({
             <SortableItem
               disabled={!onMoving}
               deleteItem={income.delete}
-              key={`key-${income.indexOfList}`}
+              key={`key-${income.sheetsIndex}`}
               id={`${income.indexOfList}`}
               noneMove={renderItem?.(income, index)}
             >
