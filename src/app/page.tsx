@@ -5,12 +5,7 @@ import IncomeListInDay from "@/components/pages/home/income";
 
 import { MasterContext } from "@/contexts/master.context";
 import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
-import {
-  AddIncomesList,
-  DeleteIncome,
-  EditIncome,
-  MoveIncome,
-} from "@/fetcher/POST/incomes.post";
+
 import { getLocalByKey, setLocal } from "@/libs/local";
 import { useContext, useEffect, useRef, useState } from "react";
 
@@ -19,17 +14,12 @@ export default function Home() {
   const [wallpaper, setWallpaper] = useState<string>("");
   const [version, setVersion] = useState<string>();
   const abortControllerRef = useRef<AbortController | null>(null);
-
   const [incomes, setIncomes] = useState<{
     fetched: boolean;
     income: IIncome[];
   }>({
     fetched: false,
     income: [],
-  });
-  const [loading, setLoading] = useState<ILoading>({
-    pageLoad: true,
-    waitActioning: false,
   });
 
   const [dateTemp, setDateTemp] = useState<Date>(new Date());
@@ -52,21 +42,7 @@ export default function Home() {
 
     return { getUrl, version };
   };
-  const initLoad = ({
-    fetch,
-    waitAction,
-    dateChange,
-  }: {
-    fetch?: boolean;
-    waitAction?: boolean;
-    dateChange?: boolean;
-  }) => {
-    setLoading({
-      pageLoad: fetch ? true : false,
-      waitActioning: waitAction ? true : false,
-      dateChange: dateChange ? true : false,
-    });
-  };
+
   const getIncomeSheets = async (date?: Date, url?: string) => {
     const key = url ? url : googleKey !== "" ? googleKey : undefined;
     if (key) {
@@ -74,12 +50,9 @@ export default function Home() {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
-
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
-
-      initLoad({ fetch: true, waitAction: true });
-
+      Facility.initLoad({ fetch: true, waitAction: true });
       await FetchGetOfDay(
         key,
         date ? date : new Date(),
@@ -93,7 +66,7 @@ export default function Home() {
               income: incomes,
             });
             setTimeout(() => {
-              initLoad({ fetch: false, waitAction: false });
+              Facility.initLoad({ fetch: false, waitAction: false });
             }, 100);
           }
         })
@@ -103,76 +76,12 @@ export default function Home() {
             fetched: true,
             income: [],
           });
-          // initLoad({ fetch: false, waitAction: false });
         });
-      // .finally(() => {
-      //   setTimeout(() => {
-      //     initLoad({ fetch: false, waitAction: false });
-      //   }, 100);
-      // });
     } else {
       setIncomes({
         fetched: false,
         income: [],
       });
-      // initLoad({ fetch: false, waitAction: false });
-    }
-  };
-  const onAddIncome = async (income: IIncome[]) => {
-    if (googleKey) {
-      initLoad({ waitAction: true });
-      return AddIncomesList(googleKey, { incomes: income }).finally(() => {
-        Get.getDisplay(undefined, googleKey);
-        initLoad({ waitAction: false });
-      });
-    } else {
-      return {
-        incomes: undefined,
-        message: undefined,
-        success: false,
-      } as IGeneralReturnFetch<undefined>;
-    }
-  };
-  const onDeleteIncome = async (input: IIncomeDelete) => {
-    if (googleKey) {
-      initLoad({ waitAction: true });
-      return DeleteIncome(googleKey, input).finally(() => {
-        initLoad({ waitAction: false });
-      });
-    } else {
-      return {
-        incomes: undefined,
-        message: undefined,
-        success: false,
-      } as IGeneralReturnFetch<undefined>;
-    }
-  };
-  const onEditIncome = async (input: IIncomeEditInput) => {
-    if (googleKey) {
-      initLoad({ waitAction: true });
-      return EditIncome(googleKey, input).finally(() => {
-        initLoad({ waitAction: false });
-      });
-    } else {
-      return {
-        incomes: undefined,
-        message: undefined,
-        success: false,
-      } as IGeneralReturnFetch<undefined>;
-    }
-  };
-  const onMoveIncome = async (input: IIncomeMoveInput) => {
-    if (googleKey) {
-      initLoad({ waitAction: true });
-      return MoveIncome(googleKey, input).finally(() => {
-        initLoad({ waitAction: false });
-      });
-    } else {
-      return {
-        incomes: undefined,
-        message: undefined,
-        success: false,
-      } as IGeneralReturnFetch<undefined>;
     }
   };
 
@@ -187,14 +96,13 @@ export default function Home() {
       Get.getTypes(key);
       await Get.getDuplecate(key);
       await Get.getDisplay(undefined, key);
-      // initLoad({ fetch: false, dateChange: false });
     } else {
       Set.setGoogleKey("");
     }
   };
 
   useEffect(() => {
-    initLoad({ fetch: true, waitAction: true });
+    Facility.initLoad({ fetch: true, waitAction: true });
     localLoad().then((url) => {
       if (!incomes.fetched) {
         getData(url.getUrl ?? undefined, url.version ?? undefined);
@@ -203,7 +111,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    initLoad({ fetch: true, waitAction: true });
+    Facility.initLoad({ fetch: true, waitAction: true });
     setIncomes({ fetched: false, income: [] });
     const timeer = setTimeout(() => {
       getIncomeSheets(dateSelect);
@@ -262,13 +170,13 @@ export default function Home() {
           IGetDisplayCal: Facility.analytics,
         }}
         dateSelect={dateSelect}
-        onAddIncome={onAddIncome}
-        deleteIncome={onDeleteIncome}
+        onAddIncome={Set.addIncome}
+        deleteIncome={Set.deleteIncome}
         onSelectDate={setDateSelect}
-        onEditIncome={onEditIncome}
-        onMoveIncome={onMoveIncome}
+        onEditIncome={Set.editIncome}
+        onMoveIncome={Set.moveIncome}
         incomes={incomes.income}
-        loading={loading}
+        loading={Facility.loading}
         version={version}
       ></IncomeListInDay>
     </div>

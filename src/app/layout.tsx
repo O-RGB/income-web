@@ -15,35 +15,11 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  // Also supported by less commonly used
-  // interactiveWidget: 'resizes-visual',
 };
 
 export const metadata: Metadata = {
   title: "รายรับรายจ่าย",
   description: "แอปรายรับรายจ่ายน่ารัก ๆ น่าใช้ พร้อมตัวการ์ตูนน่ารัก",
-  // icons: {
-  //   icon: [
-  //     {
-  //       rel: "icon",
-  //       type: "image/png",
-  //       sizes: "192x192",
-  //       url: "/icon-192-192.png",
-  //     },
-  //     {
-  //       rel: "icon",
-  //       type: "image/png",
-  //       sizes: "512x512",
-  //       url: "/icon-512-512.png",
-  //     },
-  //     {
-  //       rel: "icon",
-  //       type: "image/ico",
-  //       url: "/favicon.ico",
-  //     },
-  //   ],
-  // },
-  // icons: ["/icon-192-192.png", "/icon-512-512.png"],
 
   openGraph: {
     title: "รายรับรายจ่าย",
@@ -89,7 +65,7 @@ export default function RootLayout({
           }}
         >
           <CalculatorProvider>
-            <MasterProvider> {children}</MasterProvider>
+            <MasterProvider>{children}</MasterProvider>
           </CalculatorProvider>
         </ConfigProvider>
       </body>

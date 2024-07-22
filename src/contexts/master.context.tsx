@@ -7,11 +7,16 @@ import {
   FetchGetDupOfMonth,
 } from "@/fetcher/GET/incomes.fetch";
 import { FetchTypesIncome } from "@/fetcher/GET/types.fetch";
+import {
+  AddIncomesList,
+  DeleteIncome,
+  EditIncome,
+  MoveIncome,
+} from "@/fetcher/POST/incomes.post";
 import { GenOption } from "@/libs/gen-options";
-import { getLocalByKey, setLocal } from "@/libs/local";
+import { setLocal } from "@/libs/local";
 import { ConfigList } from "@/utils/models/config";
 import { IconsModelList } from "@/utils/models/icons";
-import { Button, Modal } from "antd";
 import { createContext, FC, useEffect, useState } from "react";
 
 type MasterContextType = {
@@ -24,6 +29,8 @@ type MasterContextType = {
     autoSelect: RadioOptions[];
     analytics: IGetDisplayCal | undefined;
     iconModel: IconsModelList | undefined;
+    initLoad: (load: LoadType) => void;
+    loading: ILoading;
   };
   Get: {
     getTypes: (url?: string) => Promise<void>;
@@ -33,6 +40,18 @@ type MasterContextType = {
   };
   Set: {
     setGoogleKey: (key: string) => void;
+    addIncome: (
+      income: IIncome[]
+    ) => Promise<IGeneralReturnFetch<IIncome[] | undefined>>;
+    deleteIncome: (
+      input: IIncomeDelete
+    ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
+    editIncome: (
+      input: IIncomeEditInput
+    ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
+    moveIncome: (
+      input: IIncomeMoveInput
+    ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
   };
 };
 
@@ -50,6 +69,8 @@ export const MasterContext = createContext<MasterContextType>({
     analytics: undefined,
     autoSelect: [],
     iconModel: new IconsModelList(),
+    initLoad: async () => {},
+    loading: {},
   },
   Get: {
     getTypes: async () => {},
@@ -59,13 +80,16 @@ export const MasterContext = createContext<MasterContextType>({
   },
   Set: {
     setGoogleKey: () => {},
+    addIncome: async () => ({}),
+    deleteIncome: async () => ({}),
+    editIncome: async () => ({}),
+    moveIncome: async () => ({}),
   },
 });
 
 export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
   const [googleKey, setGoogleKey] = useState<string>();
   const [config, setConfig] = useState<ConfigList>();
-  const [version, setVersion] = useState<string>();
   const [isVersionOld, setVersionOld] = useState<boolean>(false);
   const [duplicateItems, setDuplicate] = useState<RadioOptions[]>([]);
   const [displayCal, setDisplayCal] = useState<IGetDisplayCal>();
@@ -74,8 +98,79 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
   );
   const [updateing, setUpdateing] = useState<boolean>(false);
   const [iconModel, setIconModel] = useState<IconsModelList>();
+
+  const [loading, setLoading] = useState<ILoading>({
+    pageLoad: true,
+    waitActioning: false,
+  });
+
+  const initLoad = ({ fetch, waitAction, dateChange }: LoadType) => {
+    setLoading({
+      pageLoad: fetch ? true : false,
+      waitActioning: waitAction ? true : false,
+      dateChange: dateChange ? true : false,
+    });
+  };
+
   const createIconsModel = () => {
     setIconModel(new IconsModelList());
+  };
+
+  const addIncome = async (income: IIncome[]) => {
+    if (googleKey) {
+      initLoad({ waitAction: true });
+      return AddIncomesList(googleKey, { incomes: income }).finally(() => {
+        initLoad({ waitAction: false });
+      });
+    } else {
+      return {
+        incomes: undefined,
+        message: undefined,
+        success: false,
+      } as IGeneralReturnFetch<undefined>;
+    }
+  };
+  const deleteIncome = async (input: IIncomeDelete) => {
+    if (googleKey) {
+      initLoad({ waitAction: true });
+      return DeleteIncome(googleKey, input).finally(() => {
+        initLoad({ waitAction: false });
+      });
+    } else {
+      return {
+        incomes: undefined,
+        message: undefined,
+        success: false,
+      } as IGeneralReturnFetch<undefined>;
+    }
+  };
+  const editIncome = async (input: IIncomeEditInput) => {
+    if (googleKey) {
+      initLoad({ waitAction: true });
+      return EditIncome(googleKey, input).finally(() => {
+        initLoad({ waitAction: false });
+      });
+    } else {
+      return {
+        incomes: undefined,
+        message: undefined,
+        success: false,
+      } as IGeneralReturnFetch<undefined>;
+    }
+  };
+  const moveIncome = async (input: IIncomeMoveInput) => {
+    if (googleKey) {
+      initLoad({ waitAction: true });
+      return MoveIncome(googleKey, input).finally(() => {
+        initLoad({ waitAction: false });
+      });
+    } else {
+      return {
+        incomes: undefined,
+        message: undefined,
+        success: false,
+      } as IGeneralReturnFetch<undefined>;
+    }
   };
 
   const getTypes = async (url?: string) => {
@@ -154,6 +249,8 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
           iconModel: iconModel,
           analytics: displayCal,
           autoSelect: duplicateItems,
+          initLoad: initLoad,
+          loading: loading,
         },
         Get: {
           getTypes: getTypes,
@@ -167,6 +264,10 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
         },
         Set: {
           setGoogleKey: setGoogleKey,
+          addIncome: addIncome,
+          deleteIncome: deleteIncome,
+          editIncome: editIncome,
+          moveIncome: moveIncome,
         },
       }}
     >

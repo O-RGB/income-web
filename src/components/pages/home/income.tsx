@@ -72,7 +72,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       }
     });
   };
-
   const updateSheetsIndex = async (
     incomes: IIncome[],
     on: "AUTO" | "CLOSE" = "AUTO"
@@ -95,7 +94,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
     return _clone;
   };
-
   const fetchingByIndex = (index: number) => {
     var _clone: IIncome[] = [...incomesData];
     setIncomes([]);
@@ -167,7 +165,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
     return addReslut;
   };
-
   const addDraft = () => {
     let clone = incomesData;
     setIncomes([]);
@@ -202,7 +199,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       setIncomes(clone);
     }, 100);
   };
-
   const deleteOnServer = async (sheetsIndex: number, listIndex: number) => {
     if (deleteIncome) {
       fetchingByIndex(listIndex);
@@ -215,7 +211,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       }
     }
   };
-
   const deleteOnClient = async (listIndex: number) => {
     let clone = incomesData;
     setIncomes([]);
@@ -241,7 +236,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       updateSheetsIndex(clone);
     }
   };
-
   const onExitEdit = async (listIndex: number) => {
     let clone = [...incomesData];
     setIncomes([]);
@@ -251,7 +245,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     edit.fetching = false;
     updateSheetsIndex(clone);
   };
-
   const editOnServer = async (sheetsIndex: number, listIndex: number) => {
     let clone = [...incomesData];
     setIncomes([]);
@@ -321,14 +314,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     let map = genIncomeKeyByIndex(listIndex, edit);
     headForm.setFieldsValue(map);
   };
-
   const editSheetsIndexServer = async (incomeUpdate: IIncome[]) => {
     if (incomeUpdate.length === 0) {
       return;
     }
-
-    // console.log("firstIndexSheets", firstIndexSheets);
-
     var clone: IIncome[] = [];
     [...incomeUpdate].map((data) => {
       if (!data.delete) {
@@ -398,11 +387,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       });
   };
 
-  const [chartData, setChartData] = useState<ILineChart>();
-
   useEffect(() => {
     if (incomes.length > 0) {
-      console.log("in user eefftecgt check incoem lenght ");
       setFirstIndex(incomes[0].sheetsIndex);
       setCountDraft(0);
       setIncomes(incomes);
@@ -411,13 +397,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       setFirstIndex(-1);
     }
   }, [incomes]);
-
-  useEffect(() => {
-    if (master.IGetDisplayCal) {
-      const data = CalSumOfMonth(master);
-      setChartData(data);
-    }
-  }, [master.IGetDisplayCal]);
 
   return (
     <div className="relative z-30 px-2 flex flex-col gap-2">
@@ -430,7 +409,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         open={onClickCalculator}
         onClose={() => setCalculator(false)}
       ></CalculatorModals>
-      {/* firstIndexSheets: {JSON.stringify(firstIndexSheets)} */}
+
       <div className="flex flex-col gap-1 relative">
         <div className="absolute top-1 text-[8px] text-gray-500">
           Version: {version} Bata test
@@ -458,7 +437,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        {/* <div className="text-xs  ">หมวดหมู่</div> */}
         <CategorySummary></CategorySummary>
       </div>
       <div className="flex gap-1">
