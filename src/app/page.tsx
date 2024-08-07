@@ -4,9 +4,15 @@ import SettingModal from "@/components/modals/setting";
 import IncomeListInDay from "@/components/pages/home/income";
 
 import { MasterContext } from "@/contexts/master.context";
+import {
+  convertDateToStoreName,
+  getIncomeByKey,
+  updateIncomesByStoreName,
+} from "@/database/incomes";
 import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
 
 import { getLocalByKey, setLocal } from "@/libs/local";
+import { IncomeModel } from "@/utils/models/income";
 import { useContext, useEffect, useRef, useState } from "react";
 
 export default function Home() {
@@ -43,6 +49,11 @@ export default function Home() {
     return { getUrl, version };
   };
 
+  const getIncomesOnLocal = async () => {
+    const store_name = convertDateToStoreName(dateSelect);
+    return await getIncomeByKey(store_name, `${dateSelect.getDate()}`);
+  };
+
   const getIncomeSheets = async (date?: Date, url?: string) => {
     const key = url ? url : googleKey !== "" ? googleKey : undefined;
     if (key) {
@@ -53,6 +64,17 @@ export default function Home() {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
       Facility.initLoad({ fetch: true, waitAction: true });
+      const dataInLocal = await getIncomesOnLocal();
+      if (dataInLocal) {
+        setIncomes({
+          fetched: false,
+          income: dataInLocal,
+        });
+        setTimeout(() => {
+          Facility.initLoad({ fetch: false, waitAction: false });
+        }, 100);
+      }
+
       await FetchGetOfDay(
         key,
         date ? date : new Date(),
@@ -61,6 +83,7 @@ export default function Home() {
       )
         .then((incomes) => {
           if (incomes) {
+            updateIncomesByStoreName(incomes, dateSelect);
             setIncomes({
               fetched: true,
               income: incomes,
@@ -114,6 +137,7 @@ export default function Home() {
     Facility.initLoad({ fetch: true, waitAction: true });
     setIncomes({ fetched: false, income: [] });
     const timeer = setTimeout(() => {
+      Set.setDateSelected(dateSelect);
       getIncomeSheets(dateSelect);
       if (dateTemp.getMonth() !== dateSelect.getMonth()) {
         Get.getDisplay(dateSelect);

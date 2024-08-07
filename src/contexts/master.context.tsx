@@ -1,6 +1,12 @@
 "use client";
 import CheckForUpdate from "@/components/modals/check-updated";
 import Login from "@/components/modals/login";
+import {
+  addIncomesLocal,
+  removeIncomesLocal,
+  updateIncomesLocal,
+} from "@/database/incomes";
+
 import { FetchConfig } from "@/fetcher/GET/config.fetch";
 import {
   FetchGetDisplayCal,
@@ -40,6 +46,7 @@ type MasterContextType = {
   };
   Set: {
     setGoogleKey: (key: string) => void;
+    setDateSelected: (date: Date) => void;
     addIncome: (
       income: IIncome[]
     ) => Promise<IGeneralReturnFetch<IIncome[] | undefined>>;
@@ -80,6 +87,7 @@ export const MasterContext = createContext<MasterContextType>({
   },
   Set: {
     setGoogleKey: () => {},
+    setDateSelected: () => {},
     addIncome: async () => ({}),
     deleteIncome: async () => ({}),
     editIncome: async () => ({}),
@@ -89,6 +97,7 @@ export const MasterContext = createContext<MasterContextType>({
 
 export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
   const [googleKey, setGoogleKey] = useState<string>();
+  const [dateSelected, setDateSelected] = useState<Date>();
   const [config, setConfig] = useState<ConfigList>();
   const [isVersionOld, setVersionOld] = useState<boolean>(false);
   const [duplicateItems, setDuplicate] = useState<RadioOptions[]>([]);
@@ -120,6 +129,9 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     if (googleKey) {
       initLoad({ waitAction: true });
       return AddIncomesList(googleKey, { incomes: income }).finally(() => {
+        if (dateSelected) {
+          addIncomesLocal(income, dateSelected);
+        }
         initLoad({ waitAction: false });
       });
     } else {
@@ -134,6 +146,9 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     if (googleKey) {
       initLoad({ waitAction: true });
       return DeleteIncome(googleKey, input).finally(() => {
+        if (dateSelected) {
+          removeIncomesLocal(input.sheetsIndex, dateSelected);
+        }
         initLoad({ waitAction: false });
       });
     } else {
@@ -148,6 +163,9 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     if (googleKey) {
       initLoad({ waitAction: true });
       return EditIncome(googleKey, input).finally(() => {
+        if (dateSelected) {
+          updateIncomesLocal(input.newIncome[0], dateSelected);
+        }
         initLoad({ waitAction: false });
       });
     } else {
@@ -264,6 +282,7 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
         },
         Set: {
           setGoogleKey: setGoogleKey,
+          setDateSelected: setDateSelected,
           addIncome: addIncome,
           deleteIncome: deleteIncome,
           editIncome: editIncome,

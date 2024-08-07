@@ -134,7 +134,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                   )}
 
                   <FloatingButton
-                    disabled={onClickCalculator}
+                    disabled={onClickCalculator || onMoving}
                     icon={
                       draftCount > 0 ? (
                         <BiLayerPlus className="text-xl"></BiLayerPlus>

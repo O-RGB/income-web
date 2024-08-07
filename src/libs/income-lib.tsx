@@ -34,6 +34,8 @@ export const MapingTypeToLabel = (
   }
 };
 
+
+
 // const SetIncomeToArrayIndex = (data: IncomeModel[]) => {
 //   const arrayOfDay: Map<number, IIncome[]> = GenArrayToKey();
 //   data.map((data) => {

@@ -7,7 +7,8 @@ export const FetchGetOfDay = async (
   url: string,
   setDay: Date,
   loading?: (load: boolean) => void,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  cache?: RequestCache | undefined
 ) => {
   const initDate = DateFormat(setDay, "MM-DD-YYYY");
   const res = await Fetcher<{ day: string }, any[]>(
@@ -19,7 +20,8 @@ export const FetchGetOfDay = async (
       },
     },
     loading,
-    signal
+    signal,
+    cache
   );
 
   if (res.success === true) {

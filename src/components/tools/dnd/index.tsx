@@ -68,10 +68,10 @@ const Draggable: React.FC<DraggableProps> = ({
             <SortableItem
               disabled={!onMoving}
               deleteItem={income.delete}
-              key={`key-${income.sheetsIndex}`}
+              key={`key-${income.sheetsIndex}-${index}`}
               id={`${income.indexOfList}`}
               noneMove={renderItem?.(income, index)}
-            >
+            > 
               <div
                 className={`touch-none h-full  overflow-hidden ${
                   onMoving ? "w-8 p-2" : "w-0 p-0"

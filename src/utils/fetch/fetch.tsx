@@ -32,7 +32,8 @@ export async function Fetcher<Input = any, Result = any>(
   key: string,
   param?: IFetcher<Input, IInitQuery>,
   loading?: (load: boolean) => void,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  cache?: RequestCache | undefined
 ): Promise<IGeneralReturnFetch<Result | undefined>> {
   //LOAD
   loading?.(true);
@@ -61,7 +62,7 @@ export async function Fetcher<Input = any, Result = any>(
     signal: signal,
     // cache: "no-store",
     // mode: "cors",
-    cache: "no-cache",
+    cache: cache ?? "no-cache",
   })
     .then((response) => {
       return response.json();
