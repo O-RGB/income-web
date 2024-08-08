@@ -5,7 +5,6 @@ import IncomeRender from "./render/im-render";
 import { Button, Form } from "antd";
 import SummaryOfDay from "../../tools/summary/summaryOfDay";
 import Analytics from "../../modals/analytics/analytics";
-import { CalSumOfMonth } from "../../modals/analytics/lib";
 import ButtonCommon from "@/components/common/button";
 import { FcCalculator, FcPieChart, FcSettings } from "react-icons/fc";
 import CategorySummary from "@/components/tools/summary/category/category-summary";
@@ -15,6 +14,7 @@ import {
   genIncomeKeyByIndex,
   hanndelInputIncome,
 } from "./render/im-lib";
+import { addIncomesLocal } from "@/database/incomes";
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
@@ -135,19 +135,21 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     const data = await onAddIncome(incomesList);
     const res = data.data;
     if (res && data.success) {
+      let LocalDatas: IIncome[] = [];
       res?.map((inSheets) => {
         const index = inSheets.indexOfList;
         const _check = clone[index];
         if (_check) {
-          clone[index] = {
+          let concatData: IIncome = {
             ...clone[index],
             ...inSheets,
             draft: false,
             delete: false,
             fetching: false,
-
             _priceType: inSheets.expensesPrice > 0 ? "Expenses" : "Revenue",
           };
+          LocalDatas.push(concatData);
+          clone[index] = concatData;
           addReslut.push({
             index: index,
             result: true,
@@ -158,6 +160,10 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       if (incomes.length === 0 && res.length > 0) {
         const firstInomes = res[0];
         setFirstIndex(firstInomes.sheetsIndex);
+      }
+
+      if (dateSelect) {
+        addIncomesLocal(LocalDatas, dateSelect);
       }
 
       updateSheetsIndex(clone, "CLOSE");

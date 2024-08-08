@@ -86,7 +86,12 @@ export const updateIncomesLocal = async (
       (data) => data.sheetsIndex === incomes.sheetsIndex
     );
     if (index >= 0) {
-      existingEntry[index] = incomes;
+      existingEntry[index] = {
+        ...incomes,
+        fetching: false,
+        draft: false,
+        edit: false,
+      };
     }
     await store.put(existingEntry, `${key}`);
   }

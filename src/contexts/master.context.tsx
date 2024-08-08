@@ -129,9 +129,6 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     if (googleKey) {
       initLoad({ waitAction: true });
       return AddIncomesList(googleKey, { incomes: income }).finally(() => {
-        if (dateSelected) {
-          addIncomesLocal(income, dateSelected);
-        }
         initLoad({ waitAction: false });
       });
     } else {
