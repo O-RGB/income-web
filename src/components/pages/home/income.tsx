@@ -447,6 +447,14 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     initIncomeData(incomesLocal);
   }, [incomesLocal]);
 
+  useEffect(() => {
+    setFirstIndex(-1);
+    setCountDraft(0);
+    setCalculator(false);
+    setIndexEdit([]);
+    headForm.resetFields();
+  }, [dateSelect]);
+
   return (
     <div className="relative z-30 px-2 flex flex-col gap-2">
       <Analytics
