@@ -31,19 +31,25 @@ export const updateIncomesByStoreName = async (
   daySelected: Date,
   store_name?: string
 ) => {
-  let store_key = store_name ? store_name : convertDateToStoreName(daySelected);
-  const db = await getDB(store_key);
-  const tx = db.transaction(store_key, "readwrite");
-  const store = tx.objectStore(store_key);
-  const key = daySelected.getDate();
-  const existingEntry = await store.get(`${key}`);
-  if (existingEntry) {
-    await store.put(incomes, `${key}`);
-  } else {
-    setIncomesByStoreName(incomes, daySelected);
-    console.error(`No entry found for key: ${key}`);
+  try {
+    let store_key = store_name
+      ? store_name
+      : convertDateToStoreName(daySelected);
+    const db = await getDB(store_key);
+    const tx = db.transaction(store_key, "readwrite");
+    const store = tx.objectStore(store_key);
+    const key = daySelected.getDate();
+    const existingEntry = await store.get(`${key}`);
+    if (existingEntry) {
+      await store.put(incomes, `${key}`);
+    } else {
+      setIncomesByStoreName(incomes, daySelected);
+      console.error(`No entry found for key: ${key}`);
+    }
+    await tx.done;
+  } catch (error) {
+    console.error(error);
   }
-  await tx.done;
 };
 
 export const addIncomesLocal = async (

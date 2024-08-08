@@ -411,6 +411,8 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     setIncomes([]);
     const draft = clone.filter((d) => d.draft !== false);
     let newIncomes = [...localFetch, ...draft];
+
+    console.log("set state", newIncomes);
     setIncomes(newIncomes);
   };
 
@@ -418,6 +420,9 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     incomesFetch: IIncome[],
     localFetch: IIncome[]
   ) => {
+    if (incomesFetch.length > 0 && localFetch.length === 0) {
+      return incomesFetch;
+    }
     let updateFetch: IIncome[] = [];
     let dataNotSave: IIncome[] = [];
     localFetch.map((ins) => {
@@ -437,12 +442,15 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         }
       }
     });
+
     return updateFetch;
   };
 
   useEffect(() => {
+    console.log("incomes", incomes);
     if (incomesLocal) {
       const update = updateDataBySheetsIndex(incomes, incomesLocal);
+      // console.log("update", update);
       updateIncomeLocal(update);
     } else {
       initIncomeData(incomes);
@@ -451,9 +459,11 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
   useEffect(() => {
     initIncomeData(incomesLocal);
+    console.log("incomesLocal", incomesLocal);
   }, [incomesLocal]);
 
   useEffect(() => {
+    // console.log("dateSelect" )
     setFirstIndex(-1);
     setCountDraft(0);
     setCalculator(false);

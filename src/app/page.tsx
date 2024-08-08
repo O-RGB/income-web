@@ -65,6 +65,7 @@ export default function Home() {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
       Facility.initLoad({ fetch: true, waitAction: true });
+
       const dataInLocal = await getIncomesOnLocal();
       if (dataInLocal) {
         setIncomesLocal(dataInLocal);
