@@ -18,6 +18,7 @@ import {
 
 interface IncomeListInDayProps {
   incomes: IIncome[];
+  incomesLocal: IIncome[];
   master: IMasterDataImcomes;
   onAddIncome: (
     income: IIncome[]
@@ -41,6 +42,7 @@ interface IncomeListInDayProps {
 const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
   master,
   incomes,
+  incomesLocal,
   onAddIncome,
   deleteIncome,
   onSelectDate,
@@ -387,7 +389,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       });
   };
 
-  useEffect(() => {
+  const initIncomeData = (incomes: IIncome[]) => {
     if (incomes.length > 0) {
       setFirstIndex(incomes[0].sheetsIndex);
       setCountDraft(0);
@@ -396,7 +398,54 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
       setIncomes([]);
       setFirstIndex(-1);
     }
+  };
+
+  const updateIncomeLocal = (localFetch: IIncome[]) => {
+    let clone = [...incomesData];
+    setIncomes([]);
+    const draft = clone.filter((d) => d.draft !== false);
+    let newIncomes = [...localFetch, ...draft];
+    setIncomes(newIncomes);
+  };
+
+  const updateDataBySheetsIndex = (
+    incomesFetch: IIncome[],
+    localFetch: IIncome[]
+  ) => {
+    let updateFetch: IIncome[] = [];
+    let dataNotSave: IIncome[] = [];
+    localFetch.map((ins) => {
+      if (ins.delete === false) {
+        let data = incomesFetch.findIndex(
+          (x) => x.sheetsIndex === ins.sheetsIndex
+        );
+        if (data >= 0) {
+          updateFetch.push({
+            ...incomesFetch[data],
+            fetching: false,
+            delete: false,
+            edit: false,
+          });
+        } else {
+          dataNotSave.push(incomesFetch[data]);
+        }
+      }
+    });
+    return updateFetch;
+  };
+
+  useEffect(() => {
+    if (incomesLocal) {
+      const update = updateDataBySheetsIndex(incomes, incomesLocal);
+      updateIncomeLocal(update);
+    } else {
+      initIncomeData(incomes);
+    }
   }, [incomes]);
+
+  useEffect(() => {
+    initIncomeData(incomesLocal);
+  }, [incomesLocal]);
 
   return (
     <div className="relative z-30 px-2 flex flex-col gap-2">

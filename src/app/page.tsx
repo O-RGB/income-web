@@ -27,6 +27,7 @@ export default function Home() {
     fetched: false,
     income: [],
   });
+  const [incomesLocal, setIncomesLocal] = useState<IIncome[]>([]);
 
   const [dateTemp, setDateTemp] = useState<Date>(new Date());
   const [dateSelect, setDateSelect] = useState<Date>(new Date());
@@ -66,10 +67,7 @@ export default function Home() {
       Facility.initLoad({ fetch: true, waitAction: true });
       const dataInLocal = await getIncomesOnLocal();
       if (dataInLocal) {
-        setIncomes({
-          fetched: false,
-          income: dataInLocal,
-        });
+        setIncomesLocal(dataInLocal);
         setTimeout(() => {
           Facility.initLoad({ fetch: false, waitAction: false });
         }, 100);
@@ -84,9 +82,12 @@ export default function Home() {
         .then((incomes) => {
           if (incomes) {
             updateIncomesByStoreName(incomes, dateSelect);
-            setIncomes({
-              fetched: true,
-              income: incomes,
+            setIncomes((value) => {
+              const draft = value.income.filter(
+                (draft) => draft.draft === true
+              );
+              console.log(draft);
+              return { fetched: true, income: [...incomes, ...draft] };
             });
             setTimeout(() => {
               Facility.initLoad({ fetch: false, waitAction: false });
@@ -200,6 +201,7 @@ export default function Home() {
         onEditIncome={Set.editIncome}
         onMoveIncome={Set.moveIncome}
         incomes={incomes.income}
+        incomesLocal={incomesLocal}
         loading={Facility.loading}
         version={version}
       ></IncomeListInDay>
