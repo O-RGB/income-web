@@ -5,13 +5,23 @@ import { getStoreNameByDate } from "./lib";
 export const getIncomeByKey = async (
   store_name: string,
   key: string
-): Promise<IncomeModel[]> => {
-  const db = await getDB(store_name);
-  const tx = db.transaction(store_name, "readonly");
-  const store = tx.objectStore(store_name);
-  const data = await store.get(key);
-  await tx.done;
-  return data;
+): Promise<IncomeModel[] | undefined> => {
+  // console.log("DB: getIncomeByKey")
+  try {
+    const db = await getDB(store_name);
+    const tx = db.transaction(store_name, "readonly");
+    const store = tx.objectStore(store_name);
+    const data = await store.get(key);
+
+    await tx.done;
+    if (data) {
+      return data;
+    } else {
+      return undefined;
+    }
+  } catch (error) {
+    return undefined;
+  }
 };
 
 export const setIncomesByStoreName = async (
@@ -19,6 +29,7 @@ export const setIncomesByStoreName = async (
   daySelected: Date,
   store_name?: string
 ) => {
+  // console.log("DB: setIncomesByStoreName")
   let store_key = store_name ? store_name : convertDateToStoreName(daySelected);
   const db = await getDB(store_key);
   const tx = db.transaction(store_key, "readwrite");
@@ -31,6 +42,7 @@ export const updateIncomesByStoreName = async (
   daySelected: Date,
   store_name?: string
 ) => {
+  // console.log("DB: updateIncomesByStoreName")
   try {
     let store_key = store_name
       ? store_name
@@ -43,12 +55,15 @@ export const updateIncomesByStoreName = async (
     if (existingEntry) {
       await store.put(incomes, `${key}`);
     } else {
-      setIncomesByStoreName(incomes, daySelected);
-      console.error(`No entry found for key: ${key}`);
+      await setIncomesByStoreName(incomes, daySelected);
+      // console.error(`No entry found for key: ${key}`);
+      return false;
     }
     await tx.done;
+    return true;
   } catch (error) {
     console.error(error);
+    return false;
   }
 };
 
@@ -57,6 +72,7 @@ export const addIncomesLocal = async (
   daySelected: Date,
   store_name?: string
 ) => {
+  // console.log("DB: addIncomesLocal")
   let store_key = store_name ? store_name : convertDateToStoreName(daySelected);
   const db = await getDB(store_key);
   const tx = db.transaction(store_key, "readwrite");
@@ -79,6 +95,7 @@ export const updateIncomesLocal = async (
   daySelected: Date,
   store_name?: string
 ) => {
+  // console.log("DB: updateIncomesLocal")
   let store_key = store_name ? store_name : convertDateToStoreName(daySelected);
   const db = await getDB(store_key);
   const tx = db.transaction(store_key, "readwrite");
@@ -110,6 +127,7 @@ export const removeIncomesLocal = async (
   daySelected: Date,
   store_name?: string
 ) => {
+  // console.log("DB: removeIncomesLocal")
   let store_key = store_name ? store_name : convertDateToStoreName(daySelected);
   const db = await getDB(store_key);
   const tx = db.transaction(store_key, "readwrite");
@@ -131,6 +149,7 @@ export const updateIncomesByIncomsSheets = async (
   daySelected: Date,
   store_name?: string
 ) => {
+  // console.log("DB: updateIncomesByIncomsSheets")
   let store_key = store_name ? store_name : convertDateToStoreName(daySelected);
   const db = await getDB(store_key);
   const tx = db.transaction(store_key, "readwrite");

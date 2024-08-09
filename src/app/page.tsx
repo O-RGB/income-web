@@ -72,6 +72,8 @@ export default function Home() {
         setTimeout(() => {
           Facility.initLoad({ fetch: false, waitAction: false });
         }, 100);
+      } else {
+        setIncomesLocal([]);
       }
 
       await FetchGetOfDay(
@@ -87,7 +89,6 @@ export default function Home() {
               const draft = value.income.filter(
                 (draft) => draft.draft === true
               );
-              console.log(draft);
               return { fetched: true, income: [...incomes, ...draft] };
             });
             setTimeout(() => {
@@ -118,6 +119,7 @@ export default function Home() {
     if (key) {
       Get.getConfig(key, version);
       getIncomeSheets(undefined, key);
+      Get.getTypesDB(key);
       Get.getTypes(key);
       await Get.getDuplecate(key);
       await Get.getDisplay(undefined, key);

@@ -420,6 +420,9 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     incomesFetch: IIncome[],
     localFetch: IIncome[]
   ) => {
+
+    console.log("incomesFetch", incomesFetch)
+    console.log("localFetch", localFetch)
     if (incomesFetch.length > 0 && localFetch.length === 0) {
       return incomesFetch;
     }
@@ -469,6 +472,7 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     setCalculator(false);
     setIndexEdit([]);
     headForm.resetFields();
+    setIncomes([]);
   }, [dateSelect]);
 
   return (

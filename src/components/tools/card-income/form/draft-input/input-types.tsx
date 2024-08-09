@@ -35,7 +35,7 @@ const IncomeInputTypes: React.FC<IncomeInputTypesProps> = ({
         type={selectValue?.typeId !== "T00" ? "primary" : "default"}
         onClick={onClick}
       >
-        <div className="text-xs">{selectValue?.name}</div>
+        <div className="text-xs">{selectValue ? selectValue.name : "ไม่กำหนด"}</div>
       </Button>
     </>
   );

@@ -6,6 +6,7 @@ import {
   removeIncomesLocal,
   updateIncomesLocal,
 } from "@/database/incomes";
+import { getTypesLocal, setTypesLocal } from "@/database/types";
 
 import { FetchConfig } from "@/fetcher/GET/config.fetch";
 import {
@@ -40,6 +41,7 @@ type MasterContextType = {
   };
   Get: {
     getTypes: (url?: string) => Promise<void>;
+    getTypesDB: (url?: string) => Promise<void>;
     getDuplecate: (url?: string) => Promise<void>;
     getDisplay: (date?: Date, url?: string) => Promise<void>;
     getConfig: (url?: string, version?: string) => Promise<void>;
@@ -80,6 +82,7 @@ export const MasterContext = createContext<MasterContextType>({
     loading: {},
   },
   Get: {
+    getTypesDB: async () => {},
     getTypes: async () => {},
     getDuplecate: async () => {},
     getDisplay: async () => {},
@@ -188,12 +191,20 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     }
   };
 
+  const getTypesDB = async (url?: string) => {
+    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+    if (key) {
+      const typesLocal = await getTypesLocal();
+      setTypesLocal(typesLocal);
+    }
+  };
   const getTypes = async (url?: string) => {
     const key = url ? url : googleKey !== "" ? googleKey : undefined;
     if (key) {
-      const incomes = await FetchTypesIncome(key);
+      const incomes: IIncomeTypes[] | undefined = await FetchTypesIncome(key);
       if (incomes) {
         setIncomeTypesOptions(incomes);
+        setTypesLocal(incomes);
       }
     }
   };
@@ -268,6 +279,7 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
           loading: loading,
         },
         Get: {
+          getTypesDB: getTypesDB,
           getTypes: getTypes,
           getConfig: getConfig,
           getDisplay: getDisplay,
