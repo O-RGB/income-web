@@ -6,6 +6,7 @@ import { CreateType, DeleteType, EditType } from "@/fetcher/POST/types.post";
 import { getLocalByKey } from "@/libs/local";
 import TypesManager from "../../form/types/types";
 import { MasterContext } from "@/contexts/master.context";
+import { LocalStorageGoogleKey } from "@/localstorage";
 
 interface CategoryProps {
   options: IIncomeTypes[];
@@ -25,7 +26,7 @@ const Category: React.FC<CategoryProps> = ({
     form.resetFields();
   };
   const createNewType = async (type: IIncomeTypes) => {
-    const key = getLocalByKey("google_sheets");
+    const key = await LocalStorageGoogleKey();
     let return_value = false;
     if (key) {
       const cal = await CreateType(key, type);
@@ -52,7 +53,7 @@ const Category: React.FC<CategoryProps> = ({
     return return_value;
   };
   const editType = async (type: IIncomeTypes) => {
-    const key = getLocalByKey("google_sheets");
+    const key = await LocalStorageGoogleKey();
     let return_value = false;
     if (key) {
       const cal = await EditType(key, type);
@@ -78,7 +79,7 @@ const Category: React.FC<CategoryProps> = ({
     return return_value;
   };
   const deleteType = async (index: number, indexOfList: number) => {
-    const key = getLocalByKey("google_sheets");
+    const key = await LocalStorageGoogleKey();
     let return_value = false;
     if (key) {
       const cal = await DeleteType(key, index);

@@ -1,11 +1,7 @@
 "use client";
 import CheckForUpdate from "@/components/modals/check-updated";
 import Login from "@/components/modals/login";
-import {
-  addIncomesLocal,
-  removeIncomesLocal,
-  updateIncomesLocal,
-} from "@/database/incomes";
+import { removeIncomesLocal, updateIncomesLocal } from "@/database/incomes";
 import { getTypesLocal, setTypesLocal } from "@/database/types";
 
 import { FetchConfig } from "@/fetcher/GET/config.fetch";
@@ -28,40 +24,10 @@ import { createContext, FC, useEffect, useState } from "react";
 
 type MasterContextType = {
   googleKey: string | undefined;
-  Master: {
-    category: IIncomeTypes[];
-    config: ConfigList | undefined;
-  };
-  Facility: {
-    autoSelect: RadioOptions[];
-    analytics: IGetDisplayCal | undefined;
-    iconModel: IconsModelList | undefined;
-    initLoad: (load: LoadType) => void;
-    loading: ILoading;
-  };
-  Get: {
-    getTypes: (url?: string) => Promise<void>;
-    getTypesDB: (url?: string) => Promise<void>;
-    getDuplecate: (url?: string) => Promise<void>;
-    getDisplay: (date?: Date, url?: string) => Promise<void>;
-    getConfig: (url?: string, version?: string) => Promise<void>;
-  };
-  Set: {
-    setGoogleKey: (key: string) => void;
-    setDateSelected: (date: Date) => void;
-    addIncome: (
-      income: IIncome[]
-    ) => Promise<IGeneralReturnFetch<IIncome[] | undefined>>;
-    deleteIncome: (
-      input: IIncomeDelete
-    ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
-    editIncome: (
-      input: IIncomeEditInput
-    ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
-    moveIncome: (
-      input: IIncomeMoveInput
-    ) => Promise<IGeneralReturnFetch<boolean | undefined>>;
-  };
+  Master: ICMaster;
+  Facility: ICFacility;
+  Get: ICGet;
+  Set: ICSet;
 };
 
 type MasterProviderProps = {
@@ -75,6 +41,7 @@ export const MasterContext = createContext<MasterContextType>({
     config: undefined,
   },
   Facility: {
+    dateSelected: new Date(),
     analytics: undefined,
     autoSelect: [],
     iconModel: new IconsModelList(),
@@ -82,7 +49,6 @@ export const MasterContext = createContext<MasterContextType>({
     loading: {},
   },
   Get: {
-    getTypesDB: async () => {},
     getTypes: async () => {},
     getDuplecate: async () => {},
     getDisplay: async () => {},
@@ -100,7 +66,7 @@ export const MasterContext = createContext<MasterContextType>({
 
 export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
   const [googleKey, setGoogleKey] = useState<string>();
-  const [dateSelected, setDateSelected] = useState<Date>();
+  const [dateSelected, setDateSelected] = useState<Date>(new Date());
   const [config, setConfig] = useState<ConfigList>();
   const [isVersionOld, setVersionOld] = useState<boolean>(false);
   const [duplicateItems, setDuplicate] = useState<RadioOptions[]>([]);
@@ -110,7 +76,6 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
   );
   const [updateing, setUpdateing] = useState<boolean>(false);
   const [iconModel, setIconModel] = useState<IconsModelList>();
-
   const [loading, setLoading] = useState<ILoading>({
     pageLoad: true,
     waitActioning: false,
@@ -191,17 +156,15 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     }
   };
 
-  const getTypesDB = async (url?: string) => {
-    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+  const getTypes = async (API_KEY?: string, setting?: { local?: boolean }) => {
+    const key = API_KEY ? API_KEY : googleKey !== "" ? googleKey : undefined;
     if (key) {
-      const typesLocal = await getTypesLocal();
-      setTypesLocal(typesLocal);
-    }
-  };
-  const getTypes = async (url?: string) => {
-    const key = url ? url : googleKey !== "" ? googleKey : undefined;
-    if (key) {
-      const incomes: IIncomeTypes[] | undefined = await FetchTypesIncome(key);
+      let incomes: IIncomeTypes[] | undefined = undefined;
+      if (setting ? setting.local : false) {
+        incomes = await getTypesLocal();
+      } else {
+        incomes = await FetchTypesIncome(key);
+      }
       if (incomes) {
         setIncomeTypesOptions(incomes);
         setTypesLocal(incomes);
@@ -209,8 +172,8 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     }
   };
 
-  const getDuplecate = async (url?: string) => {
-    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+  const getDuplecate = async (API_KEY?: string) => {
+    const key = API_KEY ? API_KEY : googleKey !== "" ? googleKey : undefined;
     if (key) {
       const incomes = await FetchGetDupOfMonth(key);
       if (incomes) {
@@ -223,8 +186,8 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     }
   };
 
-  const getDisplay = async (date: Date = new Date(), url?: string) => {
-    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+  const getDisplay = async (API_KEY?: string, date: Date = new Date()) => {
+    const key = API_KEY ? API_KEY : googleKey !== "" ? googleKey : undefined;
     if (key) {
       const cal = await FetchGetDisplayCal(key, date);
       if (cal) {
@@ -233,8 +196,8 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     }
   };
 
-  const getConfig = async (url?: string, version?: string) => {
-    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+  const getConfig = async (API_KEY?: string, version?: string) => {
+    const key = API_KEY ? API_KEY : googleKey !== "" ? googleKey : undefined;
     if (key) {
       const config = await FetchConfig(key);
       if (config) {
@@ -272,6 +235,7 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
       value={{
         googleKey: googleKey,
         Facility: {
+          dateSelected: dateSelected,
           iconModel: iconModel,
           analytics: displayCal,
           autoSelect: duplicateItems,
@@ -279,7 +243,6 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
           loading: loading,
         },
         Get: {
-          getTypesDB: getTypesDB,
           getTypes: getTypes,
           getConfig: getConfig,
           getDisplay: getDisplay,

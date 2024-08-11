@@ -22,10 +22,11 @@ interface IncomeRenderProps {
   dateSelect: Date;
   incomes: IIncome[];
   loading: ILoading;
-  action?: IActionDayIncomesLists;
+  functions?: IClientActionIncomes;
   headForm: FormInstance<any>;
   draftCount: number;
   indexEdit?: number[];
+  Set: ICSet;
 }
 
 const IncomeRender: React.FC<IncomeRenderProps> = ({
@@ -33,11 +34,16 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   dateSelect,
   incomes,
   loading,
-  action,
+  functions,
   headForm,
   draftCount,
   indexEdit = [],
+  Set,
 }) => {
+  const action = functions?.action;
+  const handle = functions?.handle;
+  const event = functions?.event;
+
   const { Facility } = useContext(MasterContext);
   const { addIncome, removeIncome, removeAll } = useCalculator();
   //not re render
@@ -49,12 +55,66 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
   const [closeDetail, setDateil] = useState<boolean>(false);
   const [onItemMove, setItemMove] = useState<IIncome[]>([]);
 
+  const mappingFormKeyToIncome = (value: any): IIncome[] => {
+    const d = DynamicKeysToArray(value);
+    var incomes: IIncome[] = [];
+    d.map((data) => {
+      const dat = hanndelInputIncome(data, dateSelect);
+      incomes.push(dat);
+    });
+    return incomes;
+  };
+
+  const onFinishSaveIncomes = (value: any) => {
+    if (!action && !handle) {
+      return;
+    }
+    const incomes = mappingFormKeyToIncome(value);
+    handle!.handleFetchingDraft?.();
+    action!.setServerAdd?.({
+      dateSelect: dateSelect,
+      incomes: incomes,
+      server: Set,
+    });
+  };
+
   const setItemMoveIndex = (incomeUpdate: IIncome[] = []) => {
     setItemMove(incomeUpdate);
   };
   const onSaveItemMoveIndex = () => {
     setMoving(false);
-    action?.editSheetsIndexServer?.(onItemMove);
+    action?.setServerMoveIndex?.({
+      dateSelect: dateSelect,
+      incomes: onItemMove,
+      server: Set,
+    });
+  };
+
+  const onDeleteItem = async (index: IClientIndex, on: IClientOn) => {
+    console.log(on)
+    if (on === "SERVER") {
+      action?.setServerDelete?.(index, {
+        dateSelect: dateSelect,
+        server: Set,
+      });
+    } else {
+      event?.onDelete?.(index);
+    }
+  };
+
+  const onSelectItem = async (index: IClientIndex, income: IIncome) => {
+    event?.onSelectEdit?.(index, {
+      headForm: headForm,
+      income: income,
+    });
+  };
+
+  const onEditItem = async (index: IClientIndex) => {
+    action?.setServerEdit?.(index, {
+      headForm: headForm,
+      dateSelect: dateSelect,
+      server: Set,
+    });
   };
 
   const onCancalMoveIndex = () => {
@@ -63,7 +123,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
     setIncomesTemp(clone);
   };
 
-  const closeAllDetail = () => {
+  const closeExpanded = () => {
     setDateil(!closeDetail);
   };
 
@@ -71,28 +131,11 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
     if (incomes.length > 0 || dateSelect !== _date) {
       setIncomesTemp(incomes);
       setDate(dateSelect);
-      removeAll();
     }
   }, [incomes]);
 
   return (
-    <Form
-      form={headForm}
-      layout="vertical"
-      onFinish={(e) => {
-        const d = DynamicKeysToArray(e);
-        var yt: IIncome[] = [];
-        d.map((data) => {
-          const dat = hanndelInputIncome(data, dateSelect);
-          yt.push(dat);
-        });
-
-        if (action) {
-          action.setFetchingDraft();
-          action.setAdd?.(yt);
-        }
-      }}
-    >
+    <Form form={headForm} layout="vertical" onFinish={onFinishSaveIncomes}>
       <div key={`incom-day-${dateSelect.getDate()}`}>
         {loading.pageLoad ? (
           <div className="h-56 flex justify-center items-center">
@@ -103,6 +146,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
             <div>
               <div className="w-full flex justify-between items-center ">
                 <div></div>
+
                 <div className="flex gap-2">
                   {draftCount > 0 ? (
                     <FloatingButton
@@ -112,9 +156,7 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                       hoverColor="hover:bg-green-400"
                       icon={<FaSave className="text-lg"></FaSave>}
                       right="6rem"
-                      onClick={() => {
-                        headForm.submit();
-                      }}
+                      onClick={() => headForm.submit()}
                     ></FloatingButton>
                   ) : (
                     <SpeedDial
@@ -142,11 +184,13 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                         <FaPlus className="text-lg"></FaPlus>
                       )
                     }
-                    onClick={
-                      loading.waitActioning == false
-                        ? action?.setDraft
-                        : () => {}
-                    }
+                    onClick={() => {
+                      if (!loading.waitActioning) {
+                        handle!.handleClientDraft?.({
+                          dateSelect: dateSelect,
+                        });
+                      }
+                    }}
                   ></FloatingButton>
                 </div>
               </div>
@@ -179,33 +223,38 @@ const IncomeRender: React.FC<IncomeRenderProps> = ({
                 return (
                   <div key={`incom-${dateSelect.getDate()}-${jindex}`}>
                     <IncomeElement
-                      closeDetail={closeDetail}
-                      closeAllDetail={closeAllDetail}
-                      onMoving={onMoving}
+                      expanded={closeDetail}
+                      closeExpanded={closeExpanded}
+                      moving={onMoving}
                       disabled={
                         indexEdit?.length > 0
                           ? !indexEdit.includes(jindex)
                           : undefined
                       }
-                      onFocus={(fs, income) => {
+                      onFocusChange={(income, fs) => {
                         if (fs) {
                           addIncome(income);
                         } else {
                           removeIncome(income.sheetsIndex);
                         }
                       }}
-                      focusMode={onClickCalculator}
+                      focus={onClickCalculator}
                       icons={Facility.iconModel}
-                      removeCommnet={(_, index) => {
+                      onCommentChange={(_, index) => {
                         headForm.setFieldValue("comment_" + index, undefined);
                       }}
-                      action={action}
                       lockAction={
                         loading.waitActioning ? loading.waitActioning : false
                       }
                       master={master}
                       itemIndex={jindex}
                       income={node}
+                      onExitEdit={event?.onExitEdit}
+                      onSaveEdit={onEditItem}
+                      // onSelectEdit={onSelectItem}
+                      // onDelete={onDeleteItem}
+                      onClickDelete={onDeleteItem}
+                      onClickEdit={onSelectItem}
                     ></IncomeElement>
                   </div>
                 );

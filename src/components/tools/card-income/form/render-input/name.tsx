@@ -1,6 +1,4 @@
-import { Mali } from "next/font/google";
 import React from "react";
-
 
 interface RenderNameProps {
   name: string;
@@ -16,9 +14,9 @@ const RenderName: React.FC<RenderNameProps> = ({
   return (
     <>
       <div
-        className={`${
-          _priceType === "Expenses" ? "" : "text-end"
-        }  w-[80%] ${colorTheme?.text}`}
+        className={`${_priceType === "Expenses" ? "" : "text-end"}  w-[80%] ${
+          colorTheme?.text
+        }`}
       >
         {name}
       </div>

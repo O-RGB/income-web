@@ -1,10 +1,8 @@
-import InputCommon from "@/components/common/input";
-import { AutoComplete, Divider, Form, Input, Select, SelectProps } from "antd";
+import { Form, Select, SelectProps } from "antd";
 import React, { useEffect, useState } from "react";
 import "./label.css";
 import AutoCompleteCommon from "@/components/common/autocomplete";
-import SelectCommon from "@/components/common/select";
-const { Option } = Select;
+
 interface IncomeInputNameProps {
   name: string;
   lable?: string;

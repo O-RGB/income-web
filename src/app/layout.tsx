@@ -4,6 +4,7 @@ import "./globals.css";
 import { ConfigProvider } from "antd";
 import { MasterProvider } from "@/contexts/master.context";
 import { CalculatorProvider } from "@/contexts/calculator.context";
+import { IncomesProvider } from "@/contexts/incomes.context";
 
 const inter = Mali({
   subsets: ["thai"],
@@ -65,7 +66,9 @@ export default function RootLayout({
           }}
         >
           <CalculatorProvider>
-            <MasterProvider>{children}</MasterProvider>
+            <IncomesProvider>
+              <MasterProvider>{children}</MasterProvider>
+            </IncomesProvider>
           </CalculatorProvider>
         </ConfigProvider>
       </body>

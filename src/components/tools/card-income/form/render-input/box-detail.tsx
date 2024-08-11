@@ -2,12 +2,10 @@ import { Button, Popconfirm } from "antd";
 import React from "react";
 import { RiGpsFill, RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
 
-interface RenderDetailProps {
+interface RenderDetailProps extends Partial<ICardDetailOptions> {
   index: number;
   income: IIncome;
   open?: boolean;
-  onClickDelete?: (sheetsIndex: number, index: number) => void;
-  onClickEdit?: (sheetsIndex: number, index: number) => void;
 }
 
 const RenderDetail: React.FC<RenderDetailProps> = ({
@@ -35,7 +33,13 @@ const RenderDetail: React.FC<RenderDetailProps> = ({
           <div className="flex gap-1">
             <Button
               onClick={() => {
-                onClickEdit?.(income.sheetsIndex, index);
+                onClickEdit?.(
+                  {
+                    listIndex: index,
+                    sheetsIndex: income.sheetsIndex,
+                  },
+                  income
+                );
               }}
               // disabled
               type="text"
@@ -49,7 +53,13 @@ const RenderDetail: React.FC<RenderDetailProps> = ({
               title="ลบรายการนี้"
               description="ยืนยันการลบรายการแล้วใช่ไหม?"
               onConfirm={() => {
-                onClickDelete?.(income.sheetsIndex, index);
+                onClickDelete?.(
+                  {
+                    listIndex: index,
+                    sheetsIndex: income.sheetsIndex,
+                  },
+                  "SERVER"
+                );
               }}
               okText="ลบออก"
               cancelText="ยกเลิก"

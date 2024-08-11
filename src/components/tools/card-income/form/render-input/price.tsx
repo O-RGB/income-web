@@ -1,5 +1,4 @@
 import { NumberFormat } from "@/libs/number";
-import { Mali } from "next/font/google";
 import React from "react";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 

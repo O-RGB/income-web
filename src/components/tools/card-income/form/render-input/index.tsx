@@ -1,5 +1,4 @@
-
-import React, { useEffect } from "react";
+import React from "react";
 import { MdOutlineEditNote } from "react-icons/md";
 import RenderDay from "./day";
 import RenderName from "./name";

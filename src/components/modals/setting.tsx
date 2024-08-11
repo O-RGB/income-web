@@ -2,6 +2,7 @@ import { Modal } from "antd";
 import React from "react";
 import WallpaperForm from "../form/wallpaper/wallpaper-form";
 import GoogleSheetsUrl from "../form/google-sheets-url";
+import CacheLocal from "../form/cache";
 
 interface SettingModalProps {
   open?: boolean;
@@ -31,6 +32,7 @@ const SettingModal: React.FC<SettingModalProps> = ({
         first={false}
         onFinish={onChangeGoogleSheetKey}
       ></GoogleSheetsUrl>
+      <CacheLocal></CacheLocal>
     </Modal>
   );
 };

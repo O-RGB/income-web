@@ -9,7 +9,7 @@ export const setLocal = (key: string, data: string) => {
   return true;
 };
 
-export const getLocalByKey = (keys: string) => {
+export const getLocalByKey = async (keys: string) => {
   return localStorage.getItem(keys) || null;
 };
 

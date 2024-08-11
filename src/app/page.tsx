@@ -2,7 +2,7 @@
 
 import SettingModal from "@/components/modals/setting";
 import IncomeListInDay from "@/components/pages/home/income";
-
+import { GOOGLE_LOCAL_KEY, WALLPAPER_LOCAL_KEY } from "@/config/config";
 import { MasterContext } from "@/contexts/master.context";
 import {
   convertDateToStoreName,
@@ -11,77 +11,82 @@ import {
 } from "@/database/incomes";
 import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
 
-import { getLocalByKey, setLocal } from "@/libs/local";
-import { IncomeModel } from "@/utils/models/income";
+import { setLocal } from "@/libs/local";
+import { LocalStorageAllData } from "@/localstorage";
 import { useContext, useEffect, useRef, useState } from "react";
 
 export default function Home() {
-  const { Get, Master, Set, googleKey, Facility } = useContext(MasterContext);
-  const [wallpaper, setWallpaper] = useState<string>("");
-  const [version, setVersion] = useState<string>();
-  const abortControllerRef = useRef<AbortController | null>(null);
+  // Master
+  const { Get, Set, Master, googleKey, Facility } = useContext(MasterContext);
+
+  // Incomes
+  const _ResetIncomes = { fetched: true, income: [] };
   const [incomes, setIncomes] = useState<{
     fetched: boolean;
     income: IIncome[];
-  }>({
-    fetched: false,
-    income: [],
-  });
+  }>(_ResetIncomes);
   const [incomesLocal, setIncomesLocal] = useState<IIncome[]>([]);
 
+  // Date
   const [dateTemp, setDateTemp] = useState<Date>(new Date());
-  const [dateSelect, setDateSelect] = useState<Date>(new Date());
+  const dateSelect = Facility.dateSelected;
 
-  const localLoad = async () => {
-    let getUrl = getLocalByKey("google_sheets");
-    let wallpaper = getLocalByKey("wallpaper");
-    let version = getLocalByKey("version");
+  // Setting
+  const [openSetting, setSetting] = useState<boolean>(false);
+  const [wallpaper, setWallpaper] = useState<string>("");
+  const [version, setVersion] = useState<string>();
+
+  // Fetch
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const setLoad = ({
+    isLoad = false,
+    delay = 100,
+  }: {
+    isLoad?: boolean;
+    delay?: number;
+  }) => {
+    setTimeout(() => {
+      Facility.initLoad({ fetch: isLoad, waitAction: isLoad });
+    }, delay);
+  };
+
+  const GetLocalStorage = async () => {
+    const { getUrl, version, wallpaper } = await LocalStorageAllData();
     if (getUrl) {
       Set.setGoogleKey(getUrl);
     }
     if (wallpaper) {
       setWallpaper(wallpaper);
     }
-
     if (version) {
       setVersion(version);
     }
-
     return { getUrl, version };
   };
 
-  const getIncomesOnLocal = async () => {
+  const LocalIncomes = async () => {
     const store_name = convertDateToStoreName(dateSelect);
-    return await getIncomeByKey(store_name, `${dateSelect.getDate()}`);
+    const local = await getIncomeByKey(store_name, `${dateSelect.getDate()}`);
+    if (local) {
+      setIncomesLocal(local);
+      setLoad({});
+    } else {
+      setIncomesLocal([]);
+    }
   };
 
-  const getIncomeSheets = async (date?: Date, url?: string) => {
-    const key = url ? url : googleKey !== "" ? googleKey : undefined;
+  const getIncomeSheets = async (API_KEY?: string, date: Date = new Date()) => {
+    const key = API_KEY ? API_KEY : googleKey !== "" ? googleKey : undefined;
     if (key) {
-      // ยกเลิก fetch ก่อนหน้าถ้ามี
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
-      Facility.initLoad({ fetch: true, waitAction: true });
 
-      const dataInLocal = await getIncomesOnLocal();
-      if (dataInLocal) {
-        setIncomesLocal(dataInLocal);
-        setTimeout(() => {
-          Facility.initLoad({ fetch: false, waitAction: false });
-        }, 100);
-      } else {
-        setIncomesLocal([]);
-      }
-
-      await FetchGetOfDay(
-        key,
-        date ? date : new Date(),
-        undefined,
-        abortController.signal
-      )
+      LocalIncomes();
+      await FetchGetOfDay(key, date, undefined, abortController.signal)
         .then((incomes) => {
           if (incomes) {
             updateIncomesByStoreName(incomes, dateSelect);
@@ -91,60 +96,57 @@ export default function Home() {
               );
               return { fetched: true, income: [...incomes, ...draft] };
             });
-            setTimeout(() => {
-              Facility.initLoad({ fetch: false, waitAction: false });
-            }, 100);
+            setLoad({});
           }
         })
         .catch((e) => {
-          console.log(e);
-          setIncomes({
-            fetched: true,
-            income: [],
-          });
+          setIncomes(_ResetIncomes);
         });
     } else {
-      setIncomes({
-        fetched: false,
-        income: [],
-      });
+      setIncomes(_ResetIncomes);
     }
   };
 
-  //Setting
-  const [openSetting, setSetting] = useState<boolean>(false);
-
-  const getData = async (url?: string, version?: string) => {
-    const key = url ? url : googleKey !== "" ? googleKey : undefined;
-    if (key) {
-      Get.getConfig(key, version);
-      getIncomeSheets(undefined, key);
-      Get.getTypesDB(key);
-      Get.getTypes(key);
-      await Get.getDuplecate(key);
-      await Get.getDisplay(undefined, key);
-    } else {
-      Set.setGoogleKey("");
-    }
+  const getData = async (API_KEY?: string, version?: string) => {
+    // Check Config Version Server
+    Get.getConfig(API_KEY, version);
+    // Get Incomes Data
+    getIncomeSheets(API_KEY);
+    // Get Types on Local
+    Get.getTypes(API_KEY, { local: true });
+    // Get Types For Mapping Local Data
+    Get.getTypes(API_KEY);
+    // Get Autocomplete
+    await Get.getDuplecate(API_KEY);
+    // Get Analysis
+    await Get.getDisplay(API_KEY);
   };
 
+  // First Render
   useEffect(() => {
-    Facility.initLoad({ fetch: true, waitAction: true });
-    localLoad().then((url) => {
-      if (!incomes.fetched) {
-        getData(url.getUrl ?? undefined, url.version ?? undefined);
-      }
-    });
+    setLoad({ isLoad: true });
+    // if (!incomes.fetched) {
+      GetLocalStorage().then((params) => {
+        console.log(params.getUrl)
+        if (params.getUrl) {
+          Set.setGoogleKey(params.getUrl);
+          getData(params.getUrl ?? undefined, params.version ?? undefined);
+        }
+      });
+    // }
   }, []);
 
+  // On Date Change
   useEffect(() => {
-    Facility.initLoad({ fetch: true, waitAction: true });
-    setIncomes({ fetched: false, income: [] });
+    setLoad({ isLoad: true });
+    setIncomes(_ResetIncomes);
     const timeer = setTimeout(() => {
       Set.setDateSelected(dateSelect);
-      getIncomeSheets(dateSelect);
+      getIncomeSheets(undefined, dateSelect);
+      // When the date of the selected month is not the same
       if (dateTemp.getMonth() !== dateSelect.getMonth()) {
-        Get.getDisplay(dateSelect);
+        // Get new analysis
+        Get.getDisplay(undefined, dateSelect);
       }
       setDateTemp(dateSelect);
     }, 100);
@@ -171,13 +173,13 @@ export default function Home() {
 
       <SettingModal
         onChangeGoogleSheetKey={(e) => {
-          const res = setLocal("google_sheets", e.google_sheets);
+          const res = setLocal(GOOGLE_LOCAL_KEY, e.google_sheets);
           if (res) {
             window.location.reload();
           }
         }}
         onChangeWallpaper={(url) => {
-          const res = setLocal("wallpaper", url ?? "");
+          const res = setLocal(WALLPAPER_LOCAL_KEY, url ?? "");
           if (res) {
             setWallpaper(url ?? "");
           }
@@ -189,6 +191,13 @@ export default function Home() {
       ></SettingModal>
 
       <IncomeListInDay
+        version={version}
+        dateSelect={dateSelect}
+        onSelectDate={Set.setDateSelected}
+        incomes={incomes.income}
+        incomesLocal={incomesLocal}
+        loading={Facility.loading}
+        Set={Set}
         onClickSetting={() => {
           setSetting(true);
         }}
@@ -197,16 +206,6 @@ export default function Home() {
           typesOfItems: Master.category,
           IGetDisplayCal: Facility.analytics,
         }}
-        dateSelect={dateSelect}
-        onAddIncome={Set.addIncome}
-        deleteIncome={Set.deleteIncome}
-        onSelectDate={setDateSelect}
-        onEditIncome={Set.editIncome}
-        onMoveIncome={Set.moveIncome}
-        incomes={incomes.income}
-        incomesLocal={incomesLocal}
-        loading={Facility.loading}
-        version={version}
       ></IncomeListInDay>
     </div>
   );

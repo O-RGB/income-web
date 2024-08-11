@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import LayoutIncomeItem from "./layout/layout-income";
 import { Button } from "antd";
-import { IoMdRemove } from "react-icons/io";
 import { IconsModelList } from "@/utils/models/icons";
 import DraftInput from "./form/draft-input";
 import RenderDetail from "./form/render-input/box-detail";
@@ -12,47 +11,37 @@ import { BiExit } from "react-icons/bi";
 import { FaSave } from "react-icons/fa";
 import { RiDeleteBin2Line } from "react-icons/ri";
 
-interface IncomeConfigProps {
-  focusMode?: boolean;
-  onMoving?: boolean;
-  disabled?: boolean;
-  closeDetail: boolean;
-}
-
-interface IncomeActionLocalProps {
-  removeCommnet?: (income: IIncome, index: number) => void;
-  onFocus?: (focus: boolean, income: IIncome) => void;
-  closeAllDetail: () => void;
-}
-
-interface IncomeListProps extends IncomeConfigProps, IncomeActionLocalProps {
+interface IncomeListProps extends ICardIncomes, ICardIncomesConfigs {
   income: IIncome;
   itemIndex: number;
   lockAction: boolean;
   master: IMasterDataImcomes;
   icons?: IconsModelList;
-  action?: IActionDayIncomesLists;
 }
 
 const IncomeElement: React.FC<IncomeListProps> = ({
-  onFocus,
-  removeCommnet,
-  closeAllDetail,
+  onCommentChange,
+  onFocusChange,
+  closeExpanded,
+  onExitEdit,
+  onSaveEdit,
+  onSelectEdit,
+  onClickDelete,
+  onClickEdit,
   income,
   master,
   itemIndex,
   icons,
-  onMoving,
-  focusMode = false,
+  moving,
+  expanded,
+  focus: fucus = false,
   lockAction = false,
   disabled = false,
-  closeDetail,
-  action,
 }) => {
   const isDraft = income.draft || income.edit;
   const loading = income.fetching;
   const isDelete = income.delete;
-  const active = onMoving;
+  const active = moving;
   const isDisabled = disabled;
   const edit = income.edit;
 
@@ -80,8 +69,8 @@ const IncomeElement: React.FC<IncomeListProps> = ({
         };
 
   const onClickIncomeHandel = () => {
-    if (focusMode) {
-      onFocus?.(!focus, income);
+    if (fucus) {
+      onFocusChange?.(income, !focus);
       setFocus(!focus);
       return;
     }
@@ -109,6 +98,9 @@ const IncomeElement: React.FC<IncomeListProps> = ({
         </div>
         <div className={`${income.delete ? "text-red-500" : "text-green-500"}`}>
           delete: {JSON.stringify(income.delete)}
+        </div>
+        <div className={`${income.edit ? "text-red-500" : "text-green-500"}`}>
+          edit: {JSON.stringify(income.edit)}
         </div>
         <div>itemIndex: {itemIndex}</div>
         <div className={`${onDetail ? "text-red-500" : "text-green-500"}`}>
@@ -142,16 +134,16 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   }, [loading]);
 
   useEffect(() => {
-    if (focusMode) {
+    if (fucus) {
       setDetail(false);
     } else {
       setFocus(false);
     }
-  }, [focusMode]);
+  }, [fucus]);
 
   useEffect(() => {
     setDetail(false);
-  }, [closeDetail]);
+  }, [expanded]);
 
   if (deleteAll) {
     return <></>;
@@ -160,6 +152,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   return (
     <>
       {/* {debug} */}
+
       <ButtomSheets
         onClose={() => {
           setButtom(false);
@@ -179,7 +172,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
       >
         <LayoutIncomeItem
           isDisabled={isDisabled}
-          onMoving={onMoving}
+          onMoving={moving}
           colorTheme={colorTheme}
           actionTop={
             isDraft === true && edit == false ? (
@@ -188,9 +181,14 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                   size="small"
                   onClick={() => {
                     setTimeout(() => {
-                      action?.setDeleteOnClient?.(itemIndex);
+                      onClickDelete?.(
+                        {
+                          listIndex: itemIndex,
+                          sheetsIndex: 0,
+                        },
+                        "CLIENT"
+                      );
                     }, 100);
-                    closeAllDetail();
                   }}
                   disabled={loading}
                   icon={
@@ -204,7 +202,10 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 <Button
                   size="small"
                   onClick={() => {
-                    action?.onSaveEdit?.(income.sheetsIndex, itemIndex);
+                    onSaveEdit?.({
+                      listIndex: itemIndex,
+                      sheetsIndex: income.sheetsIndex,
+                    });
                   }}
                   icon={<FaSave className="text-"></FaSave>}
                   className={`!bg-green-500 !text-white  flex items-center `}
@@ -214,9 +215,14 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 <Button
                   size="small"
                   onClick={() => {
-                    action?.onExitEdit?.(itemIndex);
-                    closeAllDetail();
-                    action?.onSelectEdit?.(0, -1);
+                    onExitEdit?.({ listIndex: itemIndex });
+                    let index: IClientIndex = {
+                      sheetsIndex: 0,
+                      listIndex: -1,
+                    };
+                    let obj: IClientSelectEdit = { income };
+                    closeExpanded();
+                    onSelectEdit?.(index, obj);
                   }}
                   icon={<BiExit className="text-lg"></BiExit>}
                   className={`!bg-orange-500 !text-white  flex items-center `}
@@ -237,7 +243,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               income={income}
               index={itemIndex}
               master={master}
-              onRemoveNote={removeCommnet}
+              onRemoveNote={onCommentChange}
             ></DraftInput>
           ) : (
             <RenderIncomeCard
@@ -256,10 +262,10 @@ const IncomeElement: React.FC<IncomeListProps> = ({
                 open={onDetail && !lockAction}
                 index={itemIndex}
                 income={income}
-                onClickDelete={action?.setDelete}
-                onClickEdit={(s, i) => {
-                  closeAllDetail();
-                  action?.onSelectEdit?.(s, i);
+                onClickDelete={onClickDelete}
+                onClickEdit={(index) => {
+                  closeExpanded();
+                  onClickEdit?.(index, income);
                 }}
               ></RenderDetail>
             </div>

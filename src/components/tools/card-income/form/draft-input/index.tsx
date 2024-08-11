@@ -1,5 +1,5 @@
 import { Form, Button } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MdOutlineEditNote } from "react-icons/md";
 import IncomeComment from "./input-comment";
 import IncomeInputCountItem from "./input-count-item";
@@ -7,8 +7,6 @@ import IncomeInputName from "./input-name";
 import IncomeInputPrice from "./input-price";
 import IncomePriceType from "./input-price-type";
 import IncomeInputTypes from "./input-types";
-import ButtomSheets from "@/components/common/buttomSheets";
-import Category from "@/components/pages/category";
 
 interface DraftInputProps {
   income: IIncome;

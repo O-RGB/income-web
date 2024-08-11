@@ -1,7 +1,6 @@
 import RadioCommon from "@/components/common/radio";
-import { Form, Radio, RadioChangeEvent } from "antd";
-import { Option } from "antd/es/mentions";
-import React, { useEffect } from "react";
+import { Form, RadioChangeEvent } from "antd";
+import React from "react";
 import "./label.css";
 interface IncomePriceTypeProps {
   name: string;

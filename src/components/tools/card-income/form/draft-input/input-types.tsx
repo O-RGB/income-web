@@ -1,6 +1,4 @@
-import InputCommon from "@/components/common/input";
-import SelectCommon from "@/components/common/select";
-import { Button, Form, Input } from "antd";
+import { Button } from "antd";
 import React, { useEffect, useState } from "react";
 import "./label.css";
 
@@ -35,7 +33,9 @@ const IncomeInputTypes: React.FC<IncomeInputTypesProps> = ({
         type={selectValue?.typeId !== "T00" ? "primary" : "default"}
         onClick={onClick}
       >
-        <div className="text-xs">{selectValue ? selectValue.name : "ไม่กำหนด"}</div>
+        <div className="text-xs">
+          {selectValue ? selectValue.name : "ไม่กำหนด"}
+        </div>
       </Button>
     </>
   );

@@ -1,6 +1,6 @@
 import InputNumberCommon from "@/components/common/inputNumber";
-import { Form, Input } from "antd";
-import React, { useEffect } from "react";
+import { Form } from "antd";
+import React from "react";
 import "./label.css";
 interface IncomeInputPriceProps {
   name: string;

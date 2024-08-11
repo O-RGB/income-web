@@ -13,9 +13,13 @@ export const setTypesLocal = async (types: IIncomeTypes[]) => {
 };
 
 export const getTypesLocal = async (): Promise<IIncomeTypes[]> => {
-  const store_key = "Types";
-  const db = await getDB(store_key);
-  const tx = db.transaction(store_key, "readonly");
-  const store = tx.objectStore(store_key);
-  return (await store.getAll()) as any;
+  try {
+    const store_key = "Types";
+    const db = await getDB(store_key);
+    const tx = db.transaction(store_key, "readonly");
+    const store = tx.objectStore(store_key);
+    return (await store.getAll()) as any;
+  } catch (error) {
+    return [];
+  }
 };
