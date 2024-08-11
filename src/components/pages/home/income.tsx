@@ -58,11 +58,16 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     onSelectDate(date);
   };
 
-  const setIncomes = (localFetch: IIncome[]) => {
-    let clone = Incomes;
+  const setIncomes = (incoming: IIncome[] = []) => {
+    let clone = [...Incomes];
     setIncomeData([]);
-    const draft = clone.filter((d) => d.draft !== false || d.edit !== false);
-    let newIncomes = [...localFetch, ...draft];
+    let ignore: IIncome[] = [];
+    if (clone.length > 0) {
+      ignore = clone.filter(
+        (d) => d && (d.draft !== false || d.edit !== false)
+      );
+    }
+    let newIncomes = [...incoming, ...ignore];
     setIncomeData(newIncomes);
   };
 
@@ -75,6 +80,25 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     }
     let updateFetch: IIncome[] = [];
     let dataNotSave: IIncome[] = [];
+
+    // incomesFetch.map((ins) => {
+    //   if (ins.delete === false) {
+    //     let data = localFetch.findIndex(
+    //       (x) => x.sheetsIndex === ins.sheetsIndex
+    //     );
+    //     if (data >= 0) {
+    //       updateFetch.push({
+    //         ...localFetch[data],
+    //         fetching: false,
+    //         delete: false,
+    //         edit: false,
+    //       });
+    //     } else {
+    //       dataNotSave.push(localFetch[data]);
+    //     }
+    //   }
+    // });
+
     localFetch.map((ins) => {
       if (ins.delete === false) {
         let data = incomesFetch.findIndex(
@@ -88,22 +112,45 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
             edit: false,
           });
         } else {
-          dataNotSave.push(incomesFetch[data]);
+          if (incomesFetch[data]) {
+            dataNotSave.push(incomesFetch[data]);
+          }
         }
       }
     });
 
-    return updateFetch;
+    return [...updateFetch, ...dataNotSave];
+  };
+
+  const dateDisplayIsNotCurrent = (firstIncomes: IIncome | undefined) => {
+    if (!firstIncomes) {
+      return true;
+    }
+    let incomingData: Date = firstIncomes.day;
+
+    let incomingMonth: number = incomingData.getMonth();
+    let incomingYear: number = incomingData.getFullYear();
+
+    let currentMonth: number = dateSelect.getMonth();
+    let currentYear: number = dateSelect.getFullYear();
+
+    console.log("Incoming", incomingMonth, incomingYear);
+    console.log("Current", currentMonth, currentYear);
+
+    if (incomingMonth === currentMonth && incomingYear === currentYear) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   useEffect(() => {
-    if (incomesLocal) {
-      const update = mappingIncomesServerToLocal(incomes, incomesLocal);
-      setIncomes(update);
-    } else {
-      setIncomes(incomes);
-      // setIncomeData(incomes);
-    }
+    // if (incomesLocal) {
+    const update = mappingIncomesServerToLocal(incomes, incomesLocal);
+    setIncomes(update);
+    // } else {
+    //   setIncomes(incomes);
+    // }
   }, [incomes]);
 
   useEffect(() => {

@@ -69,6 +69,7 @@ export default function Home() {
     const store_name = convertDateToStoreName(dateSelect);
     const local = await getIncomeByKey(store_name, `${dateSelect.getDate()}`);
     if (local) {
+      console.log("local",local)
       setIncomesLocal(local);
       setLoad({});
     } else {
@@ -85,7 +86,7 @@ export default function Home() {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
 
-      LocalIncomes();
+      await LocalIncomes();
       await FetchGetOfDay(key, date, undefined, abortController.signal)
         .then((incomes) => {
           if (incomes) {
@@ -125,15 +126,12 @@ export default function Home() {
   // First Render
   useEffect(() => {
     setLoad({ isLoad: true });
-    // if (!incomes.fetched) {
-      GetLocalStorage().then((params) => {
-        console.log(params.getUrl)
-        if (params.getUrl) {
-          Set.setGoogleKey(params.getUrl);
-          getData(params.getUrl ?? undefined, params.version ?? undefined);
-        }
-      });
-    // }
+    GetLocalStorage().then((params) => {
+      if (params.getUrl) {
+        Set.setGoogleKey(params.getUrl);
+        getData(params.getUrl ?? undefined, params.version ?? undefined);
+      }
+    });
   }, []);
 
   // On Date Change
