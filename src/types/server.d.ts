@@ -22,6 +22,7 @@ interface ICGet {
   getDuplecate: (API_KEY?: string) => Promise<void>;
   getDisplay: (API_KEY?: string, date?: Date) => Promise<void>;
   getConfig: (API_KEY?: string, version?: string) => Promise<void>;
+  getIncomeByTypeId: (typeId: string) => Promise<Map<string, IncomeModel[]> | undefined>
 }
 
 type IServerReturn<T> = Promise<IGeneralReturnFetch<T | undefined>>;

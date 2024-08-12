@@ -8,6 +8,7 @@ import { FetchConfig } from "@/fetcher/GET/config.fetch";
 import {
   FetchGetDisplayCal,
   FetchGetDupOfMonth,
+  GetIncomeByTypeId,
 } from "@/fetcher/GET/incomes.fetch";
 import { FetchTypesIncome } from "@/fetcher/GET/types.fetch";
 import {
@@ -53,6 +54,7 @@ export const MasterContext = createContext<MasterContextType>({
     getDuplecate: async () => {},
     getDisplay: async () => {},
     getConfig: async () => {},
+    getIncomeByTypeId: async () => undefined,
   },
   Set: {
     setGoogleKey: () => {},
@@ -156,6 +158,15 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     }
   };
 
+  const getIncomeByTypeId = async (typeId: string) => {
+    if (googleKey) {
+      const data = await GetIncomeByTypeId(googleKey, { typeId });
+      return data;
+    } else {
+      return undefined;
+    }
+  };
+
   const getTypes = async (API_KEY?: string, setting?: { local?: boolean }) => {
     const key = API_KEY ? API_KEY : googleKey !== "" ? googleKey : undefined;
     if (key) {
@@ -247,6 +258,7 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
           getConfig: getConfig,
           getDisplay: getDisplay,
           getDuplecate: getDuplecate,
+          getIncomeByTypeId: getIncomeByTypeId,
         },
         Master: {
           category: IncomeTypesOptions,

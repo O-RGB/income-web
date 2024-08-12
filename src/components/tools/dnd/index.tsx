@@ -1,26 +1,11 @@
-import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+import { closestCenter, DndContext, DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import React, { useEffect, useState, useCallback } from "react";
 import DroppableContainer from "./droppableContainer";
 import SortableItem from "./sortableItem";
 import { TfiLineDouble } from "react-icons/tfi";
 
-interface DraggableProps {
-  incomes: IIncome[];
-  renderItem?: (node: IIncome, index: number) => React.ReactNode;
-  className?: string;
-  onMoving?: boolean;
-  onItemMoveing?: (incomeUpdate: IIncome[]) => void;
-}
-
-const Draggable: React.FC<DraggableProps> = ({
+const Draggable: React.FC<IPanelDraggable> = ({
   incomes,
   renderItem,
   className,
@@ -71,7 +56,7 @@ const Draggable: React.FC<DraggableProps> = ({
               key={`key-${income.sheetsIndex}-${index}`}
               id={`${income.indexOfList}`}
               noneMove={renderItem?.(income, index)}
-            > 
+            >
               <div
                 className={`touch-none h-full  overflow-hidden ${
                   onMoving ? "w-8 p-2" : "w-0 p-0"

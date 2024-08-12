@@ -1,8 +1,6 @@
 import { useMaster } from "@/hooks/master-hooks";
-import { NumberFormat } from "@/libs/number";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./remove-scrollbar.css";
-import { IconsModelList } from "@/utils/models/icons";
 import CategoryIcons from "./render-icons";
 
 interface CategoryAnalytics {
@@ -11,11 +9,14 @@ interface CategoryAnalytics {
   price: number;
 }
 
-interface CategorySummaryProps {}
+interface CategorySummaryProps extends Pick<IPanelAction, "onClickCategory"> {}
 
-const CategorySummary: React.FC<CategorySummaryProps> = ({}) => {
+const CategorySummary: React.FC<CategorySummaryProps> = ({
+  onClickCategory,
+}) => {
   const { Facility } = useMaster();
   const [analytics, setAnalytics] = useState<CategoryAnalytics[]>([]);
+  const [onActive, setActive] = useState<number>(-1);
 
   useEffect(() => {
     let cal: CategoryAnalytics[] = [];
@@ -51,6 +52,16 @@ const CategorySummary: React.FC<CategorySummaryProps> = ({}) => {
           return (
             <React.Fragment key={`week-ana-${index}`}>
               <CategoryIcons
+                onClick={() => {
+                  if (index === onActive) {
+                    setActive(-1);
+                    onClickCategory?.();
+                  } else {
+                    setActive(index);
+                    onClickCategory?.(data.typeId);
+                  }
+                }}
+                active={onActive === index}
                 price={data.price}
                 render={data.render}
               ></CategoryIcons>

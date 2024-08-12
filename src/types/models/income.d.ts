@@ -29,6 +29,11 @@ interface IIncome extends UIMapingIncome {
   comment: string;
 }
 
+interface IIncomeFilter {
+  key: string;
+  income: IIncome[];
+}
+
 type priceType = "Expenses" | "Revenue";
 
 interface IncomeOfDay {
@@ -63,4 +68,11 @@ interface ColorTheme {
   background: string;
   text: string;
   className: string;
+}
+
+interface IGetIncomesByTypeIdInput {
+  typeId: string;
+}
+interface IGetIncomesByTypeId {
+  [key: string]: any[];
 }

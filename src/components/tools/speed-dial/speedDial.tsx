@@ -6,17 +6,6 @@ import { IoGridSharp } from "react-icons/io5";
 import { TbSum } from "react-icons/tb";
 import ButtonSpeedDial from "./button";
 
-interface IconSpeed {
-  icons: React.ReactNode;
-  color: string;
-}
-
-interface SpeedDialProps {
-  onClickCalculator?: () => void;
-  onClickMove?: () => void;
-  cancelEvent?: () => void;
-  disabled?: boolean;
-}
 
 const SpeedDial: React.FC<SpeedDialProps> = ({
   onClickCalculator,

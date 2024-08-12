@@ -4,7 +4,7 @@ import {
   DynamicKeysToArray,
   genIncomeKeyByIndex,
   hanndelInputIncome,
-} from "@/components/pages/home/render/im-lib";
+} from "@/components/pages/home/render/panel-lib";
 import { addIncomesLocal } from "@/database/incomes";
 import { FormInstance } from "antd";
 import { createContext, FC, useEffect, useState } from "react";
@@ -106,7 +106,7 @@ export const IncomesProvider: FC<IncomesProviderProps> = ({ children }) => {
       //Animation
       incomeUpdate = clone.map((_, i) => {
         if (i === arrIndex) {
-          _.delete = true; 
+          _.delete = true;
         }
         return _;
       });

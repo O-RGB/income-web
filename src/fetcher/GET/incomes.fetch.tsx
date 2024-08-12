@@ -125,3 +125,47 @@ export const FetchGetDisplayCal = async (
   }
   return undefined;
 };
+
+export const GetIncomeByTypeId = async (
+  key: string,
+  input: IGetIncomesByTypeIdInput
+) => {
+  const res = await Fetcher<IGetIncomesByTypeIdInput, IGetIncomesByTypeId>(
+    key,
+    {
+      method: "POST",
+      data: {
+        typeId: input.typeId,
+        query: "POST_get_data_of_type",
+      },
+    }
+  );
+  if (res.success === true) {
+    var income = new Map<string, IncomeModel[]>();
+    const data = res.data!;
+    const keys = Object.keys(data);
+    keys.map((k) => {
+      const incomeTemp = data[k];
+      let incomeList: IncomeModel[] = [];
+      incomeTemp.map((ins) => {
+        const convert = new IncomeModel(
+          ins[0],
+          0,
+          ins[1],
+          ins[2],
+          ins[3],
+          ins[4],
+          ins[5],
+          ins[6],
+          ins[7],
+          ins[8]
+        );
+        incomeList.push(convert);
+      });
+      income.set(k, incomeList);
+    });
+    console.log(income);
+
+    return income;
+  }
+};

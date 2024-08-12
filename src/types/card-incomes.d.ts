@@ -1,3 +1,5 @@
+type ICardSize = "default" | "small";
+
 interface ICardIncomes
   extends Partial<IClientEventIncomes>,
     ICardDetailOptions {
@@ -11,9 +13,18 @@ interface ICardIncomesConfigs {
   moving?: boolean;
   disabled?: boolean;
   expanded: boolean;
+  size?: ICardSize;
 }
 
 interface ICardDetailOptions {
   onClickEdit: (index: IClientIndex, income: IIncome) => void;
   onClickDelete: (index: IClientIndex, on: IClientOn) => void;
+}
+
+interface ICardIncomeListProps extends ICardIncomes, ICardIncomesConfigs {
+  income: IIncome;
+  itemIndex: number;
+  lockAction: boolean;
+  master: IMasterDataImcomes;
+  icons?: IconsModelList;
 }

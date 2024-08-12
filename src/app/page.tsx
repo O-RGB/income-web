@@ -13,6 +13,7 @@ import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
 
 import { setLocal } from "@/libs/local";
 import { LocalStorageAllData } from "@/localstorage";
+import { IncomeModel } from "@/utils/models/income";
 import { useContext, useEffect, useRef, useState } from "react";
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
     fetched: boolean;
     income: IIncome[];
   }>(_ResetIncomes);
+  const [incomesFilter, setIncomesFilter] = useState<IIncomeFilter[]>([]);
   const [incomesLocal, setIncomesLocal] = useState<IIncome[]>([]);
 
   // Date
@@ -38,6 +40,30 @@ export default function Home() {
 
   // Fetch
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Filter
+  const [onFilterCategory, setFilterCategory] = useState<boolean>(false);
+
+  const onClickCategory = async (typeId?: string) => {
+    if (typeId) {
+      setLoad({ isLoad: true });
+      const mapping = await Get.getIncomeByTypeId(typeId);
+      if (mapping) {
+        let incomeFilter: IIncomeFilter[] = [];
+        const keys = Array.from(mapping.keys());
+        keys.map((key) => {
+          const income = mapping.get(key);
+          incomeFilter.push({ key: key, income: income ?? [] });
+        });
+        setIncomesFilter(incomeFilter);
+      }
+      setFilterCategory(true);
+      setLoad({ isLoad: false });
+    } else {
+      setFilterCategory(false);
+      Set.setDateSelected(new Date());
+    }
+  };
 
   const setLoad = ({
     isLoad = false,
@@ -69,7 +95,7 @@ export default function Home() {
     const store_name = convertDateToStoreName(dateSelect);
     const local = await getIncomeByKey(store_name, `${dateSelect.getDate()}`);
     if (local) {
-      console.log("local",local)
+      console.log("local", local);
       setIncomesLocal(local);
       setLoad({});
     } else {
@@ -199,11 +225,14 @@ export default function Home() {
         onClickSetting={() => {
           setSetting(true);
         }}
+        onFilterCategory={onFilterCategory}
+        onClickCategory={onClickCategory}
         master={{
           dupOfMonth: Facility.autoSelect,
           typesOfItems: Master.category,
           IGetDisplayCal: Facility.analytics,
         }}
+        incomesFilter={incomesFilter}
       ></IncomeListInDay>
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import DetailOfMonth from "@/components/pages/detail-of-month/detail-of-month";
-import IncomeRender from "./render/im-render";
+import IncomeRender from "./render/panel-front";
 import { Button, Form } from "antd";
 import SummaryOfDay from "../../tools/summary/summaryOfDay";
 import Analytics from "../../modals/analytics/analytics";
@@ -11,28 +11,19 @@ import CategorySummary from "@/components/tools/summary/category/category-summar
 import CalculatorModals from "@/components/modals/calculator/calculator";
 import { useIncomes } from "@/hooks/incomes-hooks";
 
-interface IncomeListInDayProps {
-  incomes: IIncome[];
-  incomesLocal: IIncome[];
-  master: IMasterDataImcomes;
-  onSelectDate: (date: Date) => void;
-  onClickSetting?: () => void;
-  dateSelect: Date;
-  loading: ILoading;
-  version?: string;
-  Set: ICSet;
-}
-
-const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
+const IncomeListInDay: React.FC<IPanelIncomes> = ({
   master,
   incomes,
   incomesLocal,
   onSelectDate,
   dateSelect,
   onClickSetting,
+  onClickCategory,
   loading,
   version,
   Set,
+  onFilterCategory,
+  incomesFilter,
 }) => {
   const {
     Incomes,
@@ -81,24 +72,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
     let updateFetch: IIncome[] = [];
     let dataNotSave: IIncome[] = [];
 
-    // incomesFetch.map((ins) => {
-    //   if (ins.delete === false) {
-    //     let data = localFetch.findIndex(
-    //       (x) => x.sheetsIndex === ins.sheetsIndex
-    //     );
-    //     if (data >= 0) {
-    //       updateFetch.push({
-    //         ...localFetch[data],
-    //         fetching: false,
-    //         delete: false,
-    //         edit: false,
-    //       });
-    //     } else {
-    //       dataNotSave.push(localFetch[data]);
-    //     }
-    //   }
-    // });
-
     localFetch.map((ins) => {
       if (ins.delete === false) {
         let data = incomesFetch.findIndex(
@@ -133,9 +106,6 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
 
     let currentMonth: number = dateSelect.getMonth();
     let currentYear: number = dateSelect.getFullYear();
-
-    console.log("Incoming", incomingMonth, incomingYear);
-    console.log("Current", currentMonth, currentYear);
 
     if (incomingMonth === currentMonth && incomingYear === currentYear) {
       return true;
@@ -191,19 +161,21 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        <CategorySummary></CategorySummary>
+        <CategorySummary onClickCategory={onClickCategory}></CategorySummary>
       </div>
-      <div className="flex gap-1">
-        <SummaryOfDay date={dateSelect} incomeOfday={Incomes}></SummaryOfDay>
-        <ButtonCommon
-          onClick={() => setAnalytics(!analytics)}
-          icon={<FcPieChart className="text-2xl"></FcPieChart>}
-        ></ButtonCommon>
-        <ButtonCommon
-          onClick={() => setCalculator(!onClickCalculator)}
-          icon={<FcCalculator className="text-2xl"></FcCalculator>}
-        ></ButtonCommon>
-      </div>
+      {!onFilterCategory && (
+        <div className="flex gap-1">
+          <SummaryOfDay date={dateSelect} incomeOfday={Incomes}></SummaryOfDay>
+          <ButtonCommon
+            onClick={() => setAnalytics(!analytics)}
+            icon={<FcPieChart className="text-2xl"></FcPieChart>}
+          ></ButtonCommon>
+          <ButtonCommon
+            onClick={() => setCalculator(!onClickCalculator)}
+            icon={<FcCalculator className="text-2xl"></FcCalculator>}
+          ></ButtonCommon>
+        </div>
+      )}
 
       <IncomeRender
         headForm={headForm}
@@ -212,9 +184,11 @@ const IncomeListInDay: React.FC<IncomeListInDayProps> = ({
         incomes={Incomes}
         dateSelect={dateSelect}
         loading={loading}
-        draftCount={valueStore.countDraft}
+        countDraft={valueStore.countDraft}
+        indexEditing={valueStore.indexEditing}
         master={master}
-        indexEdit={valueStore.indexEditing}
+        onFilterCategory={onFilterCategory}
+        incomesFilter={incomesFilter}
       ></IncomeRender>
     </div>
   );

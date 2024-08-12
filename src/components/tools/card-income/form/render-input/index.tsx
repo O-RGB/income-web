@@ -14,6 +14,7 @@ interface RenderIncomeCardProps {
   master: IMasterDataImcomes;
   colorTheme: ColorTheme;
   loading: boolean;
+  size: ICardSize;
 }
 
 const RenderIncomeCard: React.FC<RenderIncomeCardProps> = ({
@@ -24,6 +25,7 @@ const RenderIncomeCard: React.FC<RenderIncomeCardProps> = ({
   master,
   colorTheme,
   loading,
+  size,
 }) => {
   return (
     <>
@@ -56,22 +58,24 @@ const RenderIncomeCard: React.FC<RenderIncomeCardProps> = ({
           </div>
 
           <div>
-            <RenderType
-              icons={icons}
-              typesOfItems={master.typesOfItems}
-              comment={
-                income.comment && (
-                  <div className="line-clamp-1 opacity-50 text-[10px] flex gap-1 items-center">
-                    <span>
-                      <MdOutlineEditNote></MdOutlineEditNote>
-                    </span>
-                    <span>{income.comment}</span>
-                  </div>
-                )
-              }
-              _priceType={income._priceType}
-              types={income.types}
-            ></RenderType>
+            {size === "default" && (
+              <RenderType
+                icons={icons}
+                typesOfItems={master.typesOfItems}
+                comment={
+                  income.comment && (
+                    <div className="line-clamp-1 opacity-50 text-[10px] flex gap-1 items-center">
+                      <span>
+                        <MdOutlineEditNote></MdOutlineEditNote>
+                      </span>
+                      <span>{income.comment}</span>
+                    </div>
+                  )
+                }
+                _priceType={income._priceType}
+                types={income.types}
+              ></RenderType>
+            )}
           </div>
         </div>
         <div className={`flex gap-2 items-start `}>

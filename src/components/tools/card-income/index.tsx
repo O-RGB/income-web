@@ -11,15 +11,7 @@ import { BiExit } from "react-icons/bi";
 import { FaSave } from "react-icons/fa";
 import { RiDeleteBin2Line } from "react-icons/ri";
 
-interface IncomeListProps extends ICardIncomes, ICardIncomesConfigs {
-  income: IIncome;
-  itemIndex: number;
-  lockAction: boolean;
-  master: IMasterDataImcomes;
-  icons?: IconsModelList;
-}
-
-const IncomeElement: React.FC<IncomeListProps> = ({
+const IncomeElement: React.FC<ICardIncomeListProps> = ({
   onCommentChange,
   onFocusChange,
   closeExpanded,
@@ -34,21 +26,23 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   icons,
   moving,
   expanded,
-  focus: fucus = false,
+  focus = false,
   lockAction = false,
   disabled = false,
+  size = "default",
 }) => {
   const isDraft = income.draft || income.edit;
   const loading = income.fetching;
   const isDelete = income.delete;
-  const active = moving;
   const isDisabled = disabled;
   const edit = income.edit;
+
+  const active = moving;
 
   const [deleteAll, setDeleteAll] = useState<boolean>(false);
   const [buttom, setButtom] = useState<boolean>(false);
   const [category, setCategory] = useState<string>("T00");
-  const [focus, setFocus] = useState<boolean>(false);
+  const [isFocus, setFocus] = useState<boolean>(false);
 
   const [onDetail, setDetail] = useState<boolean>(false);
   const colorTheme: ColorTheme =
@@ -58,20 +52,20 @@ const IncomeElement: React.FC<IncomeListProps> = ({
           background: "bg-white/70",
           color: "#ff5c5c",
           text: "text-gray-700",
-          className: focus ? "!bg-red-900/20" : "",
+          className: isFocus ? "!bg-red-900/20" : "",
         }
       : {
           priceType: "Revenue",
           background: "bg-white/70",
           color: "#3dc940",
           text: "text-gray-700",
-          className: focus ? "!bg-red-900/20" : "",
+          className: isFocus ? "!bg-red-900/20" : "",
         };
 
   const onClickIncomeHandel = () => {
-    if (fucus) {
-      onFocusChange?.(income, !focus);
-      setFocus(!focus);
+    if (focus) {
+      onFocusChange?.(income, !isFocus);
+      setFocus(!isFocus);
       return;
     }
 
@@ -134,12 +128,12 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   }, [loading]);
 
   useEffect(() => {
-    if (fucus) {
+    if (focus) {
       setDetail(false);
     } else {
       setFocus(false);
     }
-  }, [fucus]);
+  }, [focus]);
 
   useEffect(() => {
     setDetail(false);
@@ -152,7 +146,6 @@ const IncomeElement: React.FC<IncomeListProps> = ({
   return (
     <>
       {/* {debug} */}
-
       <ButtomSheets
         onClose={() => {
           setButtom(false);
@@ -247,6 +240,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
             ></DraftInput>
           ) : (
             <RenderIncomeCard
+              size={size}
               income={income}
               isDraft={isDraft}
               icons={icons}
@@ -256,6 +250,7 @@ const IncomeElement: React.FC<IncomeListProps> = ({
               onClick={onClickIncomeHandel}
             ></RenderIncomeCard>
           )}
+
           {!isDraft && !loading && (
             <div className={`${lockAction ? "pointer-events-none" : ""}`}>
               <RenderDetail
