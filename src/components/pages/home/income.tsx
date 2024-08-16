@@ -123,9 +123,9 @@ const IncomeListInDay: React.FC<IPanelIncomes> = ({
     // }
   }, [incomes]);
 
-  useEffect(() => {
-    setIncomes(incomesLocal);
-  }, [incomesLocal]);
+  // useEffect(() => {
+  //   setIncomes(incomesLocal);
+  // }, [incomesLocal]);
 
   return (
     <div className="relative z-30 px-2 flex flex-col gap-2">

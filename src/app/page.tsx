@@ -13,7 +13,6 @@ import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
 
 import { setLocal } from "@/libs/local";
 import { LocalStorageAllData } from "@/localstorage";
-import { IncomeModel } from "@/utils/models/income";
 import { useContext, useEffect, useRef, useState } from "react";
 
 export default function Home() {
@@ -95,7 +94,6 @@ export default function Home() {
     const store_name = convertDateToStoreName(dateSelect);
     const local = await getIncomeByKey(store_name, `${dateSelect.getDate()}`);
     if (local) {
-      console.log("local", local);
       setIncomesLocal(local);
       setLoad({});
     } else {
@@ -112,7 +110,7 @@ export default function Home() {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
 
-      await LocalIncomes();
+      // await LocalIncomes();
       await FetchGetOfDay(key, date, undefined, abortController.signal)
         .then((incomes) => {
           if (incomes) {
