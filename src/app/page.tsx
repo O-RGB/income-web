@@ -9,7 +9,7 @@ import {
   getIncomeByKey,
   updateIncomesByStoreName,
 } from "@/database/incomes";
-import { FetchGetOfDay } from "@/fetcher/GET/incomes.fetch";
+import { FetchGetOfDay } from "@/fetcher/POST/incomes.post";
 
 import { setLocal } from "@/libs/local";
 import { LocalStorageAllData } from "@/localstorage";
@@ -77,17 +77,17 @@ export default function Home() {
   };
 
   const GetLocalStorage = async () => {
-    const { getUrl, version, wallpaper } = await LocalStorageAllData();
+    const { getUrl, wallpaper } = await LocalStorageAllData();
     if (getUrl) {
       Set.setGoogleKey(getUrl);
     }
     if (wallpaper) {
       setWallpaper(wallpaper);
     }
-    if (version) {
-      setVersion(version);
-    }
-    return { getUrl, version };
+    // if (version) {
+    //   setVersion(version);
+    // }
+    return { getUrl };
   };
 
   const LocalIncomes = async () => {
@@ -132,9 +132,9 @@ export default function Home() {
     }
   };
 
-  const getData = async (API_KEY?: string, version?: string) => {
+  const getData = async (API_KEY?: string) => {
     // Check Config Version Server
-    Get.getConfig(API_KEY, version);
+    // Get.getConfig(API_KEY, version);
     // Get Incomes Data
     getIncomeSheets(API_KEY);
     // Get Types on Local
@@ -153,7 +153,9 @@ export default function Home() {
     GetLocalStorage().then((params) => {
       if (params.getUrl) {
         Set.setGoogleKey(params.getUrl);
-        getData(params.getUrl ?? undefined, params.version ?? undefined);
+        getData(params.getUrl ?? undefined);
+
+        // FetchGetOfDay(params.getUrl,new Date()).then((res) => console.log(res))
       }
     });
   }, []);

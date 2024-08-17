@@ -15,11 +15,15 @@ const GoogleSheetsUrl: React.FC<GoogleSheetsUrlProps> = ({
   const [form] = Form.useForm();
   const [oninput, setInput] = useState<boolean>(false);
 
-  useEffect(() => {
-    const data = getLocalByKey("google_sheets");
+  const initSetting = async () => {
+    const data = await getLocalByKey("google_sheets");
     if (data) {
       form.setFieldValue("google_sheets", data);
     }
+  };
+
+  useEffect(() => {
+    initSetting();
   }, []);
   return (
     <>

@@ -140,9 +140,9 @@ const IncomeListInDay: React.FC<IPanelIncomes> = ({
       ></CalculatorModals>
 
       <div className="flex flex-col gap-1 relative">
-        <div className="absolute top-1 text-[8px] text-gray-500">
+        {/* <div className="absolute top-1 text-[8px] text-gray-500">
           Version: {version} Bata test
-        </div>
+        </div> */}
 
         <div className="flex justify-between items-center ">
           <DetailOfMonth

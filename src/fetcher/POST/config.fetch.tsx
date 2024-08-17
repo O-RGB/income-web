@@ -4,8 +4,9 @@ import { Config, ConfigList } from "@/utils/models/config";
 
 export const FetchConfig = async (key: string) => {
   const res = await Fetcher<undefined, any[]>(key, {
+    method: "POST",
     data: {
-      query: "config",
+      query: "POST_get_config",
     },
   });
   if (res.success === true) {

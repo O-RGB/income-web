@@ -1,3 +1,4 @@
+const API_URL = process.env.API_URL;
 interface IFetcher<Input = any, query = any> {
   data?: Input | query;
   method?: "GET" | "POST";
@@ -29,7 +30,7 @@ function QueryPost(params: any): FormData {
 }
 
 export async function Fetcher<Input = any, Result = any>(
-  key: string,
+  google_sheets: string,
   param?: IFetcher<Input, IInitQuery>,
   loading?: (load: boolean) => void,
   signal?: AbortSignal,
@@ -38,25 +39,31 @@ export async function Fetcher<Input = any, Result = any>(
   //LOAD
   loading?.(true);
   //GET
-  var url: string = "https://script.google.com/macros/s/" + key;
+  // var url: string = "https://script.google.com/macros/s/" + key;
 
-  if (!url.endsWith("exec")) {
-    url = url + "/exec";
+  // if (!url.endsWith("exec")) {
+  //   url = url + "/exec";
+  // }
+
+  // url =
+  //   param?.method === "GET" || param?.method === undefined
+  //     ? url + QueryGet(param?.data)
+  //     : url;
+
+  if (!API_URL) {
+    return {};
   }
-
-  url =
-    param?.method === "GET" || param?.method === undefined
-      ? url + QueryGet(param?.data)
-      : url;
 
   //POST
   var formParam: FormData | undefined =
     param?.method === "POST" ? QueryPost(param.data) : undefined;
 
-    console.log(formParam)
+  if (formParam) {
+    formParam.set("url", google_sheets);
+  }
 
   //FETCH
-  return await fetch(url, {
+  return await fetch(API_URL, {
     method: param?.method ? param.method : "GET",
     body: formParam,
     signal: signal,

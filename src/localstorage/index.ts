@@ -8,8 +8,8 @@ import { getLocalByKey } from "@/libs/local";
 export const LocalStorageAllData = async () => {
   let getUrl = await LocalStorageGoogleKey();
   let wallpaper = await LocalStorageWallpaper();
-  let version = await LocalStorageVersion();
-  return { getUrl, wallpaper, version };
+  // let version = await LocalStorageVersion();
+  return { getUrl, wallpaper };
 };
 
 export const LocalStorageGoogleKey = async () => {
@@ -20,7 +20,7 @@ export const LocalStorageWallpaper = async () => {
   let wallpaper = await getLocalByKey(WALLPAPER_LOCAL_KEY);
   return wallpaper;
 };
-export const LocalStorageVersion = async () => {
-  let version = await getLocalByKey(VERSION_LOCAL_KEY);
-  return version;
-};
+// export const LocalStorageVersion = async () => {
+//   let version = await getLocalByKey(VERSION_LOCAL_KEY);
+//   return version;
+// };

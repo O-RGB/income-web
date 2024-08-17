@@ -3,20 +3,17 @@ import CheckForUpdate from "@/components/modals/check-updated";
 import Login from "@/components/modals/login";
 import { removeIncomesLocal, updateIncomesLocal } from "@/database/incomes";
 import { getTypesLocal, setTypesLocal } from "@/database/types";
-
-import { FetchConfig } from "@/fetcher/GET/config.fetch";
-import {
-  FetchGetDisplayCal,
-  FetchGetDupOfMonth,
-  GetIncomeByTypeId,
-} from "@/fetcher/GET/incomes.fetch";
-import { FetchTypesIncome } from "@/fetcher/GET/types.fetch";
+import { FetchConfig } from "@/fetcher/POST/config.fetch";
 import {
   AddIncomesList,
   DeleteIncome,
   EditIncome,
+  FetchGetDisplayCal,
+  FetchGetDupOfMonth,
+  GetIncomeByTypeId,
   MoveIncome,
 } from "@/fetcher/POST/incomes.post";
+import { FetchTypesIncome } from "@/fetcher/POST/types.post";
 import { GenOption } from "@/libs/gen-options";
 import { setLocal } from "@/libs/local";
 import { ConfigList } from "@/utils/models/config";
@@ -187,6 +184,7 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
     const key = API_KEY ? API_KEY : googleKey !== "" ? googleKey : undefined;
     if (key) {
       const incomes = await FetchGetDupOfMonth(key);
+      console.log("incomes", incomes);
       if (incomes) {
         const convent = incomes.map((data) => {
           return { name: data, value: data };
@@ -210,16 +208,16 @@ export const MasterProvider: FC<MasterProviderProps> = ({ children }) => {
   const getConfig = async (API_KEY?: string, version?: string) => {
     const key = API_KEY ? API_KEY : googleKey !== "" ? googleKey : undefined;
     if (key) {
-      const config = await FetchConfig(key);
-      if (config) {
-        setConfig(config);
-        const data = config.getValueByName("version");
-        if (data) {
-          if (data.value !== version) {
-            setVersionOld(true);
-          }
-        }
-      }
+      // const config = await FetchConfig(key);
+      // if (config) {
+      //   setConfig(config);
+      //   const data = config.getValueByName("version");
+      //   if (data) {
+      //     if (data.value !== version) {
+      //       setVersionOld(true);
+      //     }
+      //   }
+      // }
     }
   };
 
