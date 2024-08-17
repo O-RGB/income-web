@@ -38,12 +38,6 @@ export async function Fetcher<Input = any, Result = any>(
 ): Promise<IGeneralReturnFetch<Result | undefined>> {
   //LOAD
   loading?.(true);
-  //GET
-  // var url: string = "https://script.google.com/macros/s/" + key;
-
-  // if (!url.endsWith("exec")) {
-  //   url = url + "/exec";
-  // }
 
   // url =
   //   param?.method === "GET" || param?.method === undefined
@@ -52,6 +46,13 @@ export async function Fetcher<Input = any, Result = any>(
 
   if (!API_URL) {
     return {};
+  }
+
+  // GEN API KEY
+  var APIURL: string = "https://script.google.com/macros/s/" + API_URL;
+
+  if (!APIURL.endsWith("exec")) {
+    APIURL = APIURL + "/exec";
   }
 
   //POST
@@ -63,7 +64,7 @@ export async function Fetcher<Input = any, Result = any>(
   }
 
   //FETCH
-  return await fetch(API_URL, {
+  return await fetch(APIURL, {
     method: param?.method ? param.method : "GET",
     body: formParam,
     signal: signal,
