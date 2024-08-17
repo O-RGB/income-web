@@ -149,7 +149,7 @@ export default function Home() {
 
   // First Render
   useEffect(() => {
-    console.log("const API_URL = process.env.API_URL;",process.env.API_URL)
+    console.log("const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;",process.env.NEXT_PUBLIC_API_URL)
     setLoad({ isLoad: true });
     GetLocalStorage().then((params) => {
       if (params.getUrl) {

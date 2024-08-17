@@ -1,4 +1,4 @@
-const API_URL = process.env.API_URL;
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 interface IFetcher<Input = any, query = any> {
   data?: Input | query;
   method?: "GET" | "POST";
@@ -44,16 +44,16 @@ export async function Fetcher<Input = any, Result = any>(
   //     ? url + QueryGet(param?.data)
   //     : url;
 
-  if (!API_URL) {
+  if (!NEXT_PUBLIC_API_URL) {
     return {};
   }
 
-  // GEN API KEY
-  var APIURL: string = "https://script.google.com/macros/s/" + API_URL;
+  // // GEN API KEY
+  // var APIURL: string = "https://script.google.com/macros/s/" + NEXT_PUBLIC_API_URL;
 
-  if (!APIURL.endsWith("exec")) {
-    APIURL = APIURL + "/exec";
-  }
+  // if (!APIURL.endsWith("exec")) {
+  //   APIURL = APIURL + "/exec";
+  // }
 
   //POST
   var formParam: FormData | undefined =
@@ -64,7 +64,7 @@ export async function Fetcher<Input = any, Result = any>(
   }
 
   //FETCH
-  return await fetch(APIURL, {
+  return await fetch(NEXT_PUBLIC_API_URL, {
     method: param?.method ? param.method : "GET",
     body: formParam,
     signal: signal,
